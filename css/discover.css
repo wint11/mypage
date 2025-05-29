@@ -1,0 +1,15 @@
+/* discover.css */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-light);
+  font-family: "Microsoft YaHei", sans-serif;
+}
+
+.message {
+  color: #666;
+  font-size: 1.5rem;
+}
