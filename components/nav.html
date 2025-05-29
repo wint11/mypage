@@ -1,3 +1,4 @@
+<!-- components/nav.html -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
   <div class="container">
     <a class="navbar-brand" href="#">
@@ -22,9 +23,11 @@
         <li class="nav-item">
           <a class="nav-link" href="../views/feedback.html">建议反馈</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../views/login.html">登录 / 注册</a>
-        </li>
+
+        <!-- 用户状态区域 -->
+        <ul class="navbar-nav" id="user-nav">
+          <!-- 动态内容由 JS 插入 -->
+        </ul>
       </ul>
     </div>
   </div>
