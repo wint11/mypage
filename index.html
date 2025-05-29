@@ -264,13 +264,13 @@
 
 
 <script>
-    fetch('htmls/nav.html')
+    fetch('components/nav.html')
       .then(res => res.text())
       .then(html => {
         document.getElementById('nav-container').innerHTML = html;
       });
 
-    fetch('htmls/footer.html')
+    fetch('components/footer.html')
       .then(res => res.text())
       .then(html => {
         document.getElementById('footer-container').innerHTML = html;
