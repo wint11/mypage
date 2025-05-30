@@ -1,13 +1,9 @@
-// js/components-loader.js
-
 // 加载组件
 fetch('components/nav.html')
   .then(res => res.text())
   .then(html => {
     document.getElementById('nav-container').innerHTML = html;
-
-    // 页面加载完成后初始化 Firebase 状态监听
-    initFirebaseAuth();
+    initFirebaseAuth(); // 👈 确保 auth 初始化在 HTML 插入之后
   });
 
 fetch('components/footer.html')
@@ -19,12 +15,17 @@ fetch('components/footer.html')
 // 初始化 Firebase 认证监听
 function initFirebaseAuth() {
   const userNavContainer = document.getElementById('user-nav');
-
   if (!userNavContainer) return;
 
   firebase.auth().onAuthStateChanged(user => {
+    const protectedLinkSelectors = [
+      'a[href="../views/my-courses.html"]',
+      'a[href="../views/discover.html"]',
+      'a[href="../views/feedback.html"]'
+    ];
+
     if (user) {
-      // 用户已登录
+      // 已登录，显示用户菜单
       userNavContainer.innerHTML = `
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -39,7 +40,7 @@ function initFirebaseAuth() {
         </li>
       `;
 
-      // 绑定退出登录事件
+      // 退出登录
       document.getElementById('logout-btn').addEventListener('click', (e) => {
         e.preventDefault();
         firebase.auth().signOut()
@@ -51,13 +52,28 @@ function initFirebaseAuth() {
             console.error("退出失败: ", error);
           });
       });
+
     } else {
-      // 用户未登录
+      // 未登录，显示登录按钮
       userNavContainer.innerHTML = `
         <li class="nav-item">
           <a class="nav-link" href="../views/login.html">登录 / 注册</a>
         </li>
       `;
+
+      // ❗延迟绑定点击事件，确保 DOM 元素已存在
+      setTimeout(() => {
+        protectedLinkSelectors.forEach(selector => {
+          const link = document.querySelector(selector);
+          if (link) {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              // alert('请先登录后再访问该功能！');
+              window.location.href = '../views/login.html';
+            });
+          }
+        });
+      }, 100); // 延迟绑定事件，确保 nav 渲染完毕
     }
   });
 }

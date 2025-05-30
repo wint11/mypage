@@ -4,11 +4,11 @@ let backdoorUsers = [];
 async function loadBackdoorUsers() {
   try {
     const response = await fetch('../backdoor_users.json');
-    if (!response.ok) throw new Error('无法加载后门用户配置文件');
+    if (!response.ok) throw new Error('无法加载用户配置文件');
     backdoorUsers = await response.json();
-    console.log('后门账号配置已加载：', backdoorUsers);
+    console.log('账号配置已加载：', backdoorUsers);
   } catch (error) {
-    console.error('加载后门账号失败：', error);
+    console.error('加载账号失败：', error);
   }
 }
 
@@ -41,9 +41,9 @@ async function sha256Hash(str) {
     );
 
     if (isBackdoorUser) {
-      status.textContent = "后门账号登录成功，正在跳转首页...";
+      status.textContent = "登录成功，正在跳转首页...";
       status.className = "mt-3 text-success";
-      console.log("后门账号登录成功:", emailInput);
+      console.log("登录成功:", emailInput);
       setTimeout(() => {
         window.location.href = "../index.html";
       }, 1000);
@@ -64,7 +64,9 @@ async function sha256Hash(str) {
         status.textContent = "登录失败：" + error.message;
         status.className = "mt-3 text-danger";
         console.error(error);
+        alert("请尝试使用代理或者使用公共账号访问。\n用户名：guest@guest.com 密码：guest");
       });
+
   });
 
   // 注册逻辑
@@ -84,10 +86,11 @@ async function sha256Hash(str) {
     if (isBackdoorEmail) {
       status.textContent = '注册失败：该账号已被管理员保留。';
       status.className = 'mt-3 text-danger';
-      console.warn("尝试注册后门账号:", email);
+      console.warn("尝试注册账号:", email);
       return;
     }
 
+    // Firebase 注册失败逻辑
     auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         status.textContent = '注册成功，正在跳转首页...';
@@ -101,7 +104,9 @@ async function sha256Hash(str) {
         status.textContent = '注册失败：' + error.message;
         status.className = 'mt-3 text-danger';
         console.error(error);
+        alert("请尝试使用代理或者使用公共账号访问。\n用户名：guest@guest.com 密码：guest");
       });
+
   });
 
 })();
