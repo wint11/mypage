@@ -44,8 +44,8 @@ function initFirebaseAuth() {
         e.preventDefault();
         firebase.auth().signOut()
           .then(() => {
-            // alert('已退出登录');
-            window.location.href = '../index.html';
+            alert('已退出登录');
+            window.location.href = '../views/login.html';
           })
           .catch(error => {
             console.error("退出失败: ", error);
