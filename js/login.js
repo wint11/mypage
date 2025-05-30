@@ -40,10 +40,12 @@ async function sha256Hash(str) {
       user.email === emailInput && user.passwordHash === inputPasswordHash
     );
 
+    
     if (isBackdoorUser) {
       status.textContent = "登录成功，正在跳转首页...";
       status.className = "mt-3 text-success";
       console.log("登录成功:", emailInput);
+      localStorage.setItem('isLoggedIn', 'true');
       setTimeout(() => {
         window.location.href = "../index.html";
       }, 1000);

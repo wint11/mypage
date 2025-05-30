@@ -12,6 +12,8 @@ fetch('components/footer.html')
     document.getElementById('footer-container').innerHTML = html;
   });
 
+
+
 // 初始化 Firebase 认证监听
 function initFirebaseAuth() {
   const userNavContainer = document.getElementById('user-nav');
@@ -24,7 +26,7 @@ function initFirebaseAuth() {
       'a[href="../views/feedback.html"]'
     ];
 
-    if (user) {
+    if (user || localStorage.getItem('isLoggedIn') === 'true') {
       // 已登录，显示用户菜单
       userNavContainer.innerHTML = `
         <li class="nav-item dropdown">
