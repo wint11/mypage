@@ -2,16 +2,273 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <title>线性代数 - 无限习题链</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>探索发现</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .question-block {
+      max-width: 700px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .correct { color: green; }
+    .incorrect { color: red; }
+    #footer-container {
+      margin-top: auto;
+      padding: 20px;
+      background-color: #f8f9fa;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 
-  <link rel="stylesheet" href="../css/discover.css"></head>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
 <body>
-    <div id="nav-container"></div>
-    <div class="message">即将上线，敬请期待</div>
-    <div id="footer-container"></div>
+  <div id="exercise-container"></div>
+  <div id="footer-container">© 2025 线性代数练习平台</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+  <script>
+    const apiKey = '6ce4c9b2-9d92-495c-a5f2-3a7ebff4098a'; // 替换成您的实际Key
+    const model = 'doubao-1-5-pro-32k-250115';
 
+    async function loadNextExercise() {
+      const prompt = `
+请生成一道线性代数单选题，使用 markdown 格式，要求：
+1. 题目用普通文本加LaTeX数学公式书写。
+2. 选项用无序列表（- 选项文本）形式列出。
+3. 答案请在末尾用 【正确答案：数字】 标明正确选项的序号（从0开始）。
+4. 题目末尾请给出详细解析，解析用“解析:”开头。
+示例：
+题目内容
+
+- 选项A
+- 选项B
+- 选项C
+
+【正确答案：2】
+
+解析: 这里是解析内容，包含数学公式等。
+`;
+
+      try {
+        const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: "system", content: "你是一个线性代数题目生成器，请严格使用markdown的语法返回。" },
+              { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+            max_tokens: 600
+          })
+        });
+
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (!content) {
+          console.error("API 返回无 content 字段：", data);
+          return;
+        }
+        renderMarkdownExercise(content);
+      } catch (error) {
+        console.error("请求失败：", error);
+      }
+    }
+
+    function renderMarkdownExercise(mdText) {
+      const index = document.getElementsByClassName('question-block').length;
+      const block = document.createElement('div');
+      block.className = 'question-block';
+
+      // 解析正确答案数字
+      const answerMatch = mdText.match(/【正确答案：(\d+)】/);
+      const correctAnswerIndex = answerMatch ? parseInt(answerMatch[1], 10) : null;
+
+      // 去掉【正确答案：数字】标签，方便显示
+      const mdWithoutAnswer = mdText.replace(/【正确答案：\d+】/, '');
+
+      // 解析“解析:”内容
+      const explanationMatch = mdText.match(/解析:([\s\S]*)$/);
+      const explanationMd = explanationMatch ? explanationMatch[1].trim() : "无解析";
+
+      // 去掉解析部分，只留题干+选项
+      const mdQuestionOnly = mdWithoutAnswer.replace(/解析:[\s\S]*$/, '').trim();
+
+      // 渲染题干和选项
+      block.innerHTML = `<h5>题目 ${index + 1}：</h5>` + marked.parse(mdQuestionOnly);
+
+      // 解析选项文本
+      const optionLines = mdQuestionOnly.split('\n').filter(line => line.trim().startsWith('- '));
+
+      if (optionLines.length > 0) {
+        const optionsDiv = document.createElement('div');
+        optionLines.forEach((line, i) => {
+          const optText = line.replace(/^- /, '').trim();
+          const optId = `q${index}opt${i}`;
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'form-check';
+
+          const input = document.createElement('input');
+          input.className = 'form-check-input';
+          input.type = 'radio';
+          input.name = `q${index}`;
+          input.id = optId;
+          input.value = i;
+
+          const label = document.createElement('label');
+          label.className = 'form-check-label';
+          label.setAttribute('for', optId);
+          label.innerHTML = marked.parseInline(optText);
+
+          wrapper.appendChild(input);
+          wrapper.appendChild(label);
+          optionsDiv.appendChild(wrapper);
+        });
+        block.appendChild(optionsDiv);
+      }
+
+      // “检查答案”按钮
+      const checkBtn = document.createElement('button');
+      checkBtn.className = "btn btn-outline-success mt-3";
+      checkBtn.textContent = "检查答案";
+
+      // “查看解析”按钮（默认隐藏）
+      const viewExplanationBtn = document.createElement('button');
+      viewExplanationBtn.className = "btn btn-outline-info mt-3 ms-2";
+      viewExplanationBtn.textContent = "查看解析";
+      viewExplanationBtn.style.display = "none";
+
+      // 解析区域（默认隐藏）
+      const explanationDiv = document.createElement('div');
+      explanationDiv.className = 'mt-3';
+      explanationDiv.style.display = 'none';
+
+      // “生成下一题”按钮（默认隐藏）
+      const nextExerciseBtn = document.createElement('button');
+      nextExerciseBtn.className = "btn btn-primary mt-3 ms-2";
+      nextExerciseBtn.textContent = "生成下一题";
+      nextExerciseBtn.style.display = "none";
+
+      // “再次巩固”按钮（默认隐藏）
+      const retryBtn = document.createElement('button');
+      retryBtn.className = "btn btn-warning mt-3 ms-2";
+      retryBtn.textContent = "再次巩固";
+      retryBtn.style.display = "none";
+
+      // 绑定事件
+      checkBtn.onclick = () => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (!selected) {
+          alert("请选择一个选项！");
+          return;
+        }
+
+        const userChoice = parseInt(selected.value, 10);
+        const isCorrect = correctAnswerIndex !== null && userChoice === correctAnswerIndex;
+
+        // 显示结果文字
+        let resultDiv = block.querySelector('.result-message');
+        if (!resultDiv) {
+          resultDiv = document.createElement('div');
+          resultDiv.className = 'result-message mt-3';
+          block.appendChild(resultDiv);
+        }
+        resultDiv.className = isCorrect ? 'correct mt-3 result-message' : 'incorrect mt-3 result-message';
+        resultDiv.textContent = isCorrect ? "✅ 正确" : "❌ 错误";
+
+        // 显示“查看解析”按钮
+        viewExplanationBtn.style.display = 'inline-block';
+
+        // 显示“生成下一题”或“再次巩固”
+        if (isCorrect) {
+          nextExerciseBtn.style.display = 'inline-block';
+          retryBtn.style.display = 'none';
+        } else {
+          nextExerciseBtn.style.display = 'none';
+          retryBtn.style.display = 'inline-block';
+        }
+
+        // 禁用选项和检查按钮
+        const inputs = block.querySelectorAll('input[name="q' + index + '"]');
+        inputs.forEach(inp => inp.disabled = true);
+        checkBtn.disabled = true;
+
+        if (window.MathJax) MathJax.typesetPromise([block]);
+      };
+
+      viewExplanationBtn.onclick = () => {
+        if (explanationDiv.style.display === 'none') {
+          explanationDiv.style.display = 'block';
+          viewExplanationBtn.textContent = '隐藏解析';
+          explanationDiv.innerHTML = marked.parse(explanationMd);
+          if (window.MathJax) MathJax.typesetPromise([explanationDiv]);
+        } else {
+          explanationDiv.style.display = 'none';
+          viewExplanationBtn.textContent = '查看解析';
+        }
+      };
+
+      nextExerciseBtn.onclick = () => {
+        block.remove();
+        loadNextExercise();
+      };
+
+      retryBtn.onclick = () => {
+        // 恢复选项可选，清理提示和按钮状态
+        const inputs = block.querySelectorAll('input[name="q' + index + '"]');
+        inputs.forEach(inp => {
+          inp.disabled = false;
+          inp.checked = false;
+        });
+        const resultDiv = block.querySelector('.result-message');
+        if (resultDiv) resultDiv.remove();
+
+        viewExplanationBtn.style.display = 'none';
+        explanationDiv.style.display = 'none';
+        checkBtn.disabled = false;
+        nextExerciseBtn.style.display = 'none';
+        retryBtn.style.display = 'none';
+      };
+
+      block.appendChild(checkBtn);
+      block.appendChild(viewExplanationBtn);
+      block.appendChild(nextExerciseBtn);
+      block.appendChild(retryBtn);
+      block.appendChild(explanationDiv);
+
+      document.getElementById("exercise-container").appendChild(block);
+
+      if (window.MathJax) MathJax.typesetPromise([block]);
+    }
+
+    // 页面加载时自动加载第一题
+    loadNextExercise();
+  </script>
 </body>
 </html>
