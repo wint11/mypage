@@ -1,0 +1,10 @@
+[
+  {
+    "email": "1902246441@qq.com",
+    "passwordHash": "343fcb40497549085c98ae137c137116a5c2442eb8dc0bf0cac3a3419ce05b9f"
+  },
+  {
+    "email": "admin@example.com",
+    "passwordHash": "1d94cb64f8c3b312b32ea4fe5a3ed154c6e6f808c9a2c0833ffef0e67e0ab4a2"
+  }
+]
