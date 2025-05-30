@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>高等数学 - 习题练习</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    .question-block { margin-bottom: 2rem; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+  </style>
+</head>
+<body class="container py-4">
+  <h1 class="text-center mb-4">高等数学 · 习题练习</h1>
+  <div id="exercise-container"></div>
+
+  <button class="btn btn-success mt-4" onclick="checkAnswers()">提交答案</button>
+
+  <script>
+    let exercises = [];
+
+    async function loadExercises() {
+      const response = await fetch('../data/gaodengshuxue_exercises.json');
+      exercises = (await response.json()).exercises;
+      const container = document.getElementById('exercise-container');
+
+      exercises.forEach((q, index) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.innerHTML = `<h5>题目 ${index + 1}：${q.question}</h5>`;
+
+        if (q.type === 'single-choice') {
+          q.options.forEach((opt, i) => {
+            block.innerHTML += `
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="q${index}" value="${i}">
+                <label class="form-check-label">${opt}</label>
+              </div>`;
+          });
+        }
+
+        if (q.type === 'multiple-choice') {
+          q.options.forEach((opt, i) => {
+            block.innerHTML += `
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="q${index}" value="${i}">
+                <label class="form-check-label">${opt}</label>
+              </div>`;
+          });
+        }
+
+        if (q.type === 'fill-in-the-blank') {
+          block.innerHTML += `<input class="form-control mt-2" type="text" name="q${index}" />`;
+        }
+
+        container.appendChild(block);
+      });
+    }
+
+    function checkAnswers() {
+      exercises.forEach((q, i) => {
+        const block = document.getElementsByClassName('question-block')[i];
+        let isCorrect = false;
+
+        if (q.type === 'single-choice') {
+          const selected = document.querySelector(`input[name="q${i}"]:checked`);
+          isCorrect = selected && parseInt(selected.value) === q.answer;
+        }
+
+        if (q.type === 'multiple-choice') {
+          const selected = Array.from(document.querySelectorAll(`input[name="q${i}"]:checked`)).map(e => parseInt(e.value));
+          isCorrect = selected.sort().toString() === q.answers.sort().toString();
+        }
+
+        if (q.type === 'fill-in-the-blank') {
+          const input = document.querySelector(`input[name="q${i}"]`);
+          isCorrect = input && input.value.trim() === q.answer;
+        }
+
+        const result = document.createElement('div');
+        result.innerHTML = isCorrect ? "✅ 正确" : `❌ 错误。解释：${q.explanation}`;
+        result.className = isCorrect ? "correct mt-2" : "incorrect mt-2";
+        block.appendChild(result);
+      });
+    }
+
+    loadExercises();
+  </script>
+</body>
+</html>
