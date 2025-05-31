@@ -66,7 +66,46 @@
       flex: 1;
       padding: 20px;
       margin-left: 250px;
+      margin-right: 50px;
       overflow-y: auto;
+      transition: margin-right 0.3s ease;
+    }
+    .right-sidebar {
+      width: 300px;
+      height: 100vh;
+      position: fixed;
+      right: -300px;
+      top: 0;
+      background-color: #fff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      overflow-y: auto;
+      transition: right 0.3s ease;
+      z-index: 1000;
+    }
+    .right-sidebar.active {
+      right: 0;
+    }
+    .right-sidebar-content {
+      display: none;
+    }
+    .right-sidebar.active .right-sidebar-content {
+      display: block;
+    }
+    .toggle-btn {
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .right-sidebar.active ~ .content-area {
+      margin-right: 300px;
     }
     .question-block {
       max-width: 700px;
@@ -86,14 +125,14 @@
     }
   </style>
 
-  <script src="../js/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
       svg: { fontCache: 'global' }
     };
   </script>
-  <script src="../js/tex-svg.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
   <div class="main-container d-flex">
@@ -108,6 +147,19 @@
     <button class="btn btn-primary" id="next-btn" disabled>下一题</button>
   </div>
   </div>
+  <div id="right-sidebar" class="right-sidebar">
+    <button id="toggle-right-sidebar" class="toggle-btn">≡</button>
+    <div class="right-sidebar-content">
+      <h4 class="sidebar-title">当前知识点掌握程度</h4>
+      <div id="mastery-level"></div>
+    </div>
+  </div>
   <script src="js/xianxingdaishu.js"></script>
+  <script>
+    document.getElementById('toggle-right-sidebar').addEventListener('click', function() {
+      document.getElementById('right-sidebar').classList.toggle('active');
+      this.textContent = this.textContent === '≡' ? '×' : '≡';
+    });
+  </script>
 </body>
 </html>
