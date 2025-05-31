@@ -72,8 +72,8 @@
 ### 1️⃣ 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/course-learning-platform.git
-cd course-learning-platform
+git clone https://github.com/wint11/mypage.git
+cd mypage
 ```
 
 ### 2️⃣ 本地预览（推荐使用 VSCode Live Server）
@@ -86,7 +86,7 @@ cd course-learning-platform
 python -m http.server
 ```
 
-然后访问 `http://localhost:8000` 即可查看效果。
+然后访问 `http://localhost:8080` 即可查看效果。
 
 ---
 
@@ -94,18 +94,22 @@ python -m http.server
 
 ### 添加新课程
 
-1. 在 `courses/你的分类/` 目录中创建新课程页面，如 `离散数学.html`；
-2. 在 `index.html` 中添加课程卡片 HTML；
+1. 在 `courses/` 目录中创建新课程页面，如 `离散数学.html`；
+2. 在 `my-courses.html` 中添加课程卡片 HTML；
 3. 在 `js/course-config.js` 中添加跳转配置；
-4. 可选：创建对应的习题配置 JSON 文件，放入 `config/` 目录。
+4. 可选：创建对应的习题配置 JSON 文件，放入 `data/` 目录。
 
 ```js
 // course-config.js 示例
 const courseMap = {
-  "高等数学": "courses/math/高等数学.html",
-  "线性代数": "courses/math/线性代数.html",
-  ...
+  "course1": "../courses/gaodengshuxue.html",
+  "course2": "../courses/xianxingdaishu.html",
+  "course3": "../courses/gailvlun.html",
+  "course4": "../courses/lisuan.html",
+  "course5": "../courses/fubian.html",
+  "course6": "../courses/weifenfangcheng.html"
 };
+
 ```
 
 ---
