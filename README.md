@@ -16,27 +16,54 @@
 
 ```plaintext
 .
-├── index.html                  // 项目首页（课程总览）
-├── css/
-│   └── components.css          // 全局样式文件
-├── js/
-│   ├── components-loader-detail.js // 加载头部和底部组件
-│   ├── course-config.js       // 课程跳转路径配置
-├── firebase-config.js         // Firebase 配置（如启用）
-├── courses/
-│   ├── math/
-│   │   ├── 高等数学.html
-│   │   ├── 线性代数.html
-│   │   ├── ...
-│   └── ...
-├── config/
-│   ├── 高等数学.json
-│   ├── 线性代数.json
-│   ├── ...
-├── components/
-│   ├── header.html             // 通用导航栏
-│   ├── footer.html             // 通用页脚
-└── ...
+启元慧学/
+├─ assets/                      # 首页背景图资源
+│  ├─ index-background1.jpg
+│  ├─ index-background2.jpg
+│  └─ index-background3.jpg
+├─ components/                  # 公共组件（HTML 片段）
+│  ├─ footer.html               
+│  └─ nav.html                  
+├─ courses/                     # 课程页面与数据 JS 映射
+│  ├─ js/
+│  │  ├─ fubian.js              
+│  │  ├─ gailvlun.js            
+│  │  ├─ gaodengshuxue.js       
+│  │  ├─ lisuan.js              
+│  │  ├─ weifenfangcheng.js     
+│  │  └─ xianxingdaishu.js      
+│  ├─ fubian.html               
+│  ├─ gailvlun.html             
+│  ├─ gaodengshuxue.html        
+│  ├─ lisuan.html               
+│  ├─ weifenfangcheng.html      
+│  └─ xianxingdaishu.html       
+├─ css/                         # 样式文件
+│  ├─ components.css            # 自定义组件样式
+│  ├─ home.css                  # 首页样式
+│  └─ variables.css             # CSS 变量定义
+├─ data/                        # 课程配置 JSON 数据
+│  ├─ fubian.json               
+│  ├─ gailvlun.json             
+│  ├─ gaodengshuxue.json        
+│  ├─ lisuan.json               
+│  ├─ weifenfangcheng.json      
+│  └─ xianxingdaishu.json       
+├─ js/                          # JavaScript 脚本
+│  ├─ components-loader.js      # 加载公共组件（导航/页脚）
+│  ├─ components-loader-detail.js # 细节加载器
+│  ├─ course-config.js          # 课程跳转路径配置
+│  └─ tex-svg.js                # LaTeX 渲染支持
+├─ views/                       # 子页面视图（用户功能模块）
+│  ├─ discover.html             
+│  ├─ feedback.html             
+│  ├─ login.html                
+│  ├─ my-courses.html           
+│  ├─ profile.html              
+│  └─ settings.html             
+├─ firebase-config.js           # Firebase 初始化配置
+├─ index.html                   # 首页入口
+└─ README.md                    # 项目说明文档
 ````
 
 ---
