@@ -23,6 +23,7 @@
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
       padding: 20px;
       overflow-y: auto;
+      z-index: 15;
     }
     .sidebar-title {
       color: #333;
@@ -62,51 +63,30 @@
       color: #0d6efd !important;
       font-weight: 500 !important;
     }
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      height: 52px;
+      background-color: #fff;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 10;
+      border-left: none;
+    }
+
     .content-area {
       flex: 1;
       padding: 20px;
-      margin-left: 250px;
-      margin-right: 50px;
+      margin-left: 260px;
+      margin-right: 0;
+      margin-top: 60px;
       overflow-y: auto;
-      transition: margin-right 0.3s ease;
     }
-    .right-sidebar {
-      width: 300px;
-      height: 100vh;
-      position: fixed;
-      right: -300px;
-      top: 0;
-      background-color: #fff;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      overflow-y: auto;
-      transition: right 0.3s ease;
-      z-index: 1000;
-    }
-    .right-sidebar.active {
-      right: 0;
-    }
-    .right-sidebar-content {
-      display: none;
-    }
-    .right-sidebar.active .right-sidebar-content {
-      display: block;
-    }
-    .toggle-btn {
-      position: fixed;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 5px 10px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    .right-sidebar.active ~ .content-area {
-      margin-right: 300px;
-    }
+
     .question-block {
       max-width: 700px;
       margin: 50px auto;
@@ -141,25 +121,19 @@
       <div id="knowledge-points" class="knowledge-points"></div>
     </div>
     <div class="content-area">
+      <div class="top-bar">
+        <button class="btn btn-outline-secondary me-2" id="back-btn"><i class="bi bi-arrow-left-circle me-1"></i>返回课程页</button>
+        <button class="btn btn-outline-primary me-2" id="export-btn"><i class="bi bi-download me-1"></i>导出练习记录</button>
+        <button class="btn btn-outline-info" id="report-btn"><i class="bi bi-clipboard-data me-1"></i>查看练习报告</button>
+      </div>
       <div id="exercise-container"></div>
       <div id="navigation-buttons">
     <button class="btn btn-secondary me-2" id="prev-btn" disabled>上一题</button>
     <button class="btn btn-primary" id="next-btn" disabled>下一题</button>
   </div>
   </div>
-  <div id="right-sidebar" class="right-sidebar">
-    <button id="toggle-right-sidebar" class="toggle-btn">≡</button>
-    <div class="right-sidebar-content">
-      <h4 class="sidebar-title">当前知识点掌握程度</h4>
-      <div id="mastery-level"></div>
-    </div>
-  </div>
+
   <script src="js/xianxingdaishu.js"></script>
-  <script>
-    document.getElementById('toggle-right-sidebar').addEventListener('click', function() {
-      document.getElementById('right-sidebar').classList.toggle('active');
-      this.textContent = this.textContent === '≡' ? '×' : '≡';
-    });
-  </script>
+
 </body>
 </html>
