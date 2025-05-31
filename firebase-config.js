@@ -1,6 +1,6 @@
 // 替换为你的 Firebase 项目配置信息
 const firebaseConfig = {
-  apiKey: "AIzaSyDdH5kZZVtBy1gLi7H_nUVTWSD4wzKMnUs",
+  apiKey: window.myAppConfig.apiKey,
   authDomain: "login.firebaseapp.com"
 };
 
