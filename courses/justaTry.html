@@ -11,8 +11,62 @@
       font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       margin: 0; padding: 0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    }
+    .main-container {
+      min-height: calc(100vh - 60px);
+    }
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      background-color: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .sidebar-title {
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .knowledge-points {
+      padding: 10px 0;
+    }
+    .chapter-header {
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 8px 0;
+    }
+    .chapter-header:hover {
+      color: #0d6efd;
+    }
+    .toggle-icon {
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+    .sections {
+      border-left: 2px solid #eee;
+      margin-left: 10px;
+    }
+    .section {
+      padding: 6px 0 6px 15px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      color: #6c757d;
+    }
+    .section:hover {
+      color: #0d6efd !important;
+      font-weight: 500 !important;
+    }
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      margin-left: 250px;
+      overflow-y: auto;
     }
     .question-block {
       max-width: 700px;
@@ -24,14 +78,7 @@
     }
     .correct { color: green; }
     .incorrect { color: red; }
-    #footer-container {
-      margin-top: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
+
     #navigation-buttons {
       text-align: center;
       margin-top: 20px;
@@ -49,12 +96,19 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-  <div id="exercise-container"></div>
-  <div id="navigation-buttons">
+  <div class="main-container d-flex">
+    <div id="sidebar" class="sidebar">
+      <h4 class="sidebar-title">线性代数知识点</h4>
+      <div id="knowledge-points" class="knowledge-points"></div>
+    </div>
+    <div class="content-area">
+      <div id="exercise-container"></div>
+      <div id="navigation-buttons">
     <button class="btn btn-secondary me-2" id="prev-btn" disabled>上一题</button>
     <button class="btn btn-primary" id="next-btn" disabled>下一题</button>
   </div>
-  <div id="footer-container">© 2025 线性代数练习平台</div>
+  </div>
+
 
   <script>
     const apiKey = '6ce4c9b2-9d92-495c-a5f2-3a7ebff4098a';
@@ -359,6 +413,76 @@
     }
 
     async function init() {
+      if (exercises.length === 0) {
+        await preloadNextExercise();
+        if (bufferedExercise) {
+          exercises.push(bufferedExercise);
+          bufferedExercise = null;
+          localStorage.setItem('exercises', JSON.stringify(exercises));
+        }
+      }
+      renderExercise(currentIndex);
+      updateButtons();
+      preloadNextExercise();
+    }
+
+    async function loadKnowledgePoints() {
+      try {
+        const response = await fetch('../data/xianxingdaishu.json');
+        const data = await response.json();
+        const container = document.getElementById('knowledge-points');
+        
+        function renderChapters(chapters, parentElement) {
+          chapters.forEach(chapter => {
+            const chapterDiv = document.createElement('div');
+            chapterDiv.className = 'chapter mb-2';
+            
+            const chapterHeader = document.createElement('div');
+            chapterHeader.className = 'chapter-header d-flex align-items-center';
+            chapterHeader.innerHTML = marked.parseInline(chapter.name);
+            
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'toggle-icon ms-2';
+            toggleIcon.innerHTML = '▶';
+            chapterHeader.prepend(toggleIcon);
+            
+            const sectionsDiv = document.createElement('div');
+            sectionsDiv.className = 'sections ps-3';
+            sectionsDiv.style.display = 'none';
+            
+            if (chapter.sections && chapter.sections.length > 0) {
+              chapter.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section small text-muted mb-1';
+                sectionDiv.innerHTML = marked.parseInline(section.name);
+                sectionsDiv.appendChild(sectionDiv);
+              });
+            }
+            
+            chapterHeader.onclick = () => {
+              sectionsDiv.style.display = sectionsDiv.style.display === 'none' ? 'block' : 'none';
+              toggleIcon.innerHTML = sectionsDiv.style.display === 'none' ? '▶' : '▼';
+            };
+            
+            chapterDiv.appendChild(chapterHeader);
+            chapterDiv.appendChild(sectionsDiv);
+            parentElement.appendChild(chapterDiv);
+          });
+        }
+        
+        renderChapters(data.chapters, container);
+        
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetClear();
+          MathJax.typesetPromise();
+        }
+      } catch (e) {
+        console.error('加载知识点失败:', e);
+      }
+    }
+
+    async function init() {
+      await loadKnowledgePoints();
       if (exercises.length === 0) {
         await preloadNextExercise();
         if (bufferedExercise) {
