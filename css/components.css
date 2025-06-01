@@ -73,11 +73,12 @@
     }
 
 /* 页脚样式 */
-    footer {
-      background-color: white;
-      padding: 2rem 0;
-      text-align: center;
-      color: #666;
-      font-size: 0.9rem;
-      border-top: 1px solid #eaeaea;
-    }
+footer {
+  background-color: white;
+  padding: 2rem 0;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  border-top: 1px solid #eaeaea;
+  bottom: 0;
+}
