@@ -356,6 +356,46 @@ AB
     }
 }
 
+// 在文件顶部添加
+const loadingDiv = document.createElement('div');
+loadingDiv.id = 'loading-overlay';
+loadingDiv.style.position = 'fixed';
+loadingDiv.style.top = '0';
+loadingDiv.style.left = '0';
+loadingDiv.style.width = '100%';
+loadingDiv.style.height = '100%';
+loadingDiv.style.backgroundColor = 'rgba(255,255,255,0.8)';
+loadingDiv.style.display = 'flex';
+loadingDiv.style.justifyContent = 'center';
+loadingDiv.style.alignItems = 'center';
+loadingDiv.style.zIndex = '9999';
+loadingDiv.innerHTML = '<div style="font-size: 1.5rem; color: #333;">资源正在加载ing，请耐心等候几秒钟</div>';
+document.body.appendChild(loadingDiv);
+
+// 修改init函数
+async function init() {
+    try {
+        await loadKnowledgePoints();
+        if (exercises.length === 0) {
+            await preloadNextExercise();
+            if (bufferedExercise) {
+                exercises.push(bufferedExercise);
+                bufferedExercise = null;
+                localStorage.setItem('exercises', JSON.stringify(exercises));
+            }
+        }
+        renderExercise(currentIndex);
+        updateButtons();
+        preloadNextExercise();
+    } catch (e) {
+        console.error('初始化失败:', e);
+    } finally {
+        // 加载完成后隐藏提示
+        loadingDiv.style.display = 'none';
+    }
+}
+
+// 在loadKnowledgePoints函数中添加错误处理
 async function loadKnowledgePoints() {
     try {
         const response = await fetch('../structure/xianxingdaishu.json');
@@ -531,22 +571,8 @@ async function loadKnowledgePoints() {
         }
     } catch (e) {
         console.error('加载知识点失败:', e);
+        loadingDiv.innerHTML = '<div style="font-size: 1.5rem; color: red;">资源加载失败，请刷新重试</div>';
     }
-}
-
-async function init() {
-    await loadKnowledgePoints();
-    if (exercises.length === 0) {
-    await preloadNextExercise();
-    if (bufferedExercise) {
-        exercises.push(bufferedExercise);
-        bufferedExercise = null;
-        localStorage.setItem('exercises', JSON.stringify(exercises));
-    }
-    }
-    renderExercise(currentIndex);
-    updateButtons();
-    preloadNextExercise();
 }
 
 init();
