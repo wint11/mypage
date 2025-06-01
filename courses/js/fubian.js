@@ -44,7 +44,7 @@ nextBtn.onclick = () => {
 };
 
 document.getElementById('back-btn').addEventListener('click', function() {
-    window.location.href = '../views/my-courses.html';
+    window.location.href = '../../views/my-courses.html';
 });
 
 document.getElementById('export-btn').addEventListener('click', function() {
@@ -349,7 +349,7 @@ AB
 
 async function loadKnowledgePoints() {
     try {
-    const response = await fetch('../data/fubian.json');
+    const response = await fetch('../structure/fubian.json');
     const data = await response.json();
     const container = document.getElementById('knowledge-points');
 
