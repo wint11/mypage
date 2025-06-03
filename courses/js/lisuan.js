@@ -48,11 +48,15 @@ document.getElementById('back-btn').addEventListener('click', function() {
 });
 
 document.getElementById('export-btn').addEventListener('click', function() {
-    // 导出练习记录功能暂未实现
+    alert('正在加急开发ing。');
 });
 
 document.getElementById('report-btn').addEventListener('click', function() {
-    // 查看练习报告功能暂未实现
+    alert('正在加急开发ing。');
+});
+
+document.getElementById('simulate-btn').addEventListener('click', function() {
+    alert('正在加急开发ing。');
 });
 
 function updateButtons() {
