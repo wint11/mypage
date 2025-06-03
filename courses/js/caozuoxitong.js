@@ -13,37 +13,37 @@ const container = document.getElementById("exercise-container");
 // 按钮事件绑定
 prevBtn.onclick = () => {
     if (currentIndex > 0) {
-    currentIndex--;
-    answeredCorrect = currentIndex < exercises.length - 1;
-    renderExercise(currentIndex);
-    updateButtons();
+        currentIndex--;
+        answeredCorrect = currentIndex < exercises.length - 1;
+        renderExercise(currentIndex);
+        updateButtons();
     }
 };
 
 nextBtn.onclick = () => {
     if (!answeredCorrect) return;
     if (currentIndex < exercises.length - 1) {
-    currentIndex++;
-    answeredCorrect = false;
-    renderExercise(currentIndex);
-    updateButtons();
-    preloadNextExercise();
+        currentIndex++;
+        answeredCorrect = false;
+        renderExercise(currentIndex);
+        updateButtons();
+        preloadNextExercise();
     } else if (bufferedExercise) {
-    exercises.push(bufferedExercise);
-    localStorage.setItem('exercises', JSON.stringify(exercises));
-    bufferedExercise = null;
-    currentIndex++;
-    answeredCorrect = false;
-    renderExercise(currentIndex);
-    updateButtons();
-    preloadNextExercise();
+        exercises.push(bufferedExercise);
+        localStorage.setItem('exercises', JSON.stringify(exercises));
+        bufferedExercise = null;
+        currentIndex++;
+        answeredCorrect = false;
+        renderExercise(currentIndex);
+        updateButtons();
+        preloadNextExercise();
     } else {
-    alert('下一题正在生成中，请稍候。');
-    nextBtn.disabled = true;
+        alert('下一题正在生成中，请稍候。');
+        nextBtn.disabled = true;
     }
 };
 
-document.getElementById('back-btn').addEventListener('click', function() {
+document.getElementById('back-btn').addEventListener('click', function () {
     window.location.href = '../../views/my-courses.html';
 });
 
@@ -54,107 +54,107 @@ document.getElementById('export-btn').addEventListener('click', async () => {
     const exercises = JSON.parse(localStorage.getItem("exercises") || "[]");
 
     if (exercises.length === 0) {
-    alert("题目为空！");
-    return;
+        alert("题目为空！");
+        return;
     }
 
     const paragraphs = [];
 
     // 标题
     paragraphs.push(
-    new Paragraph({
-        children: [
-        new TextRun({
-            text: "操作系统题目集",
-            bold: true,
-            size: 36, // 字号18磅
-            font: "宋体",
-        }),
-        ],
-        spacing: { after: 300 },
-        alignment: "center",
-    })
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: "操作系统题目集",
+                    bold: true,
+                    size: 36, // 字号18磅
+                    font: "宋体",
+                }),
+            ],
+            spacing: { after: 300 },
+            alignment: "center",
+        })
     );
 
     // 遍历每个题目
     exercises.forEach((item, index) => {
-    const lines = item.split("\n");
-    const question = lines[0];
-    const options = lines.filter(line => line.trim().startsWith("-"));
-    const answerMatch = item.match(/【正确答案：(\d+)】/);
-    const correctIndex = answerMatch ? parseInt(answerMatch[1]) : null;
-    const explanationMatch = item.match(/解析[:：]([\s\S]*)$/);
-    const explanation = explanationMatch ? explanationMatch[1].trim() : "无";
+        const lines = item.split("\n");
+        const question = lines[0];
+        const options = lines.filter(line => line.trim().startsWith("-"));
+        const answerMatch = item.match(/【正确答案：(\d+)】/);
+        const correctIndex = answerMatch ? parseInt(answerMatch[1]) : null;
+        const explanationMatch = item.match(/解析[:：]([\s\S]*)$/);
+        const explanation = explanationMatch ? explanationMatch[1].trim() : "无";
 
-    // 题干
-    paragraphs.push(
-        new Paragraph({
-        children: [
-            new TextRun({
-            text: `${index + 1}. ${question}`,
-            size: 24,
-            font: "宋体",
-            }),
-        ],
-        spacing: { after: 100 },
-        })
-    );
-
-    // 选项
-    options.forEach(opt => {
+        // 题干
         paragraphs.push(
-        new Paragraph({
-            children: [
-            new TextRun({
-                text: opt.trim(),
-                size: 24,
-                font: "宋体",
-            }),
-            ],
-            spacing: { after: 100 },
-        })
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: `${index + 1}. ${question}`,
+                        size: 24,
+                        font: "宋体",
+                    }),
+                ],
+                spacing: { after: 100 },
+            })
         );
-    });
 
-    // 答案
-    const answerText = `正确答案：${correctIndex !== null ? String.fromCharCode(65 + correctIndex) : "未知"}`;
-    paragraphs.push(
-        new Paragraph({
-        children: [
-            new TextRun({
-            text: answerText,
-            italics: true,
-            size: 24,
-            font: "宋体",
-            }),
-        ],
-        spacing: { after: 100 },
-        })
-    );
+        // 选项
+        options.forEach(opt => {
+            paragraphs.push(
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: opt.trim(),
+                            size: 24,
+                            font: "宋体",
+                        }),
+                    ],
+                    spacing: { after: 100 },
+                })
+            );
+        });
 
-    // 解析
-    paragraphs.push(
-        new Paragraph({
-        children: [
-            new TextRun({
-            text: `解析：${explanation.split("\n")[0]}`,
-            size: 24,
-            font: "宋体",
-            }),
-        ],
-        spacing: { after: 300 },
-        })
-    );
+        // 答案
+        const answerText = `正确答案：${correctIndex !== null ? String.fromCharCode(65 + correctIndex) : "未知"}`;
+        paragraphs.push(
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: answerText,
+                        italics: true,
+                        size: 24,
+                        font: "宋体",
+                    }),
+                ],
+                spacing: { after: 100 },
+            })
+        );
+
+        // 解析
+        paragraphs.push(
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: `解析：${explanation.split("\n")[0]}`,
+                        size: 24,
+                        font: "宋体",
+                    }),
+                ],
+                spacing: { after: 300 },
+            })
+        );
     });
 
     // 创建 Word 文档对象
     const doc = new Document({
-    sections: [
-        {
-        properties: {},
-        children: paragraphs,
-        },
-    ],
+        sections: [
+            {
+                properties: {},
+                children: paragraphs,
+            },
+        ],
     });
 
     // 导出为 blob
@@ -169,25 +169,25 @@ document.getElementById('export-btn').addEventListener('click', async () => {
     document.body.removeChild(link);
 });
 
-document.getElementById('report-btn').addEventListener('click', function() {
+document.getElementById('report-btn').addEventListener('click', function () {
     alert('正在加急开发ing。');
 });
 
-document.getElementById('simulate-btn').addEventListener('click', function() {
+document.getElementById('simulate-btn').addEventListener('click', function () {
     alert('正在加急开发ing。');
 });
 
 function updateButtons() {
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = !answeredCorrect ||
-    (currentIndex === exercises.length - 1 && !bufferedExercise);
+        (currentIndex === exercises.length - 1 && !bufferedExercise);
 }
 
 function resetOptions(name) {
     const options = container.querySelectorAll(`input[name="${name}"]`);
     options.forEach(opt => {
-    opt.disabled = false;
-    opt.checked = false;
+        opt.disabled = false;
+        opt.checked = false;
     });
 }
 
@@ -198,12 +198,12 @@ function processLaTeX(content) {
     content = content.replace(/\$\$([\s\S]+?)\$\$/gs, (match, p1) => {
         return `<div class="math-display">${p1.trim()}</div>`;
     });
-    
+
     // 新增处理行内多个矩阵的情况
     content = content.replace(/\\begin\{vmatrix\}([\s\S]+?)\\end\{vmatrix\}/g, (match, p1) => {
         return `$\\begin{vmatrix}${p1}\\end{vmatrix}$`;
     });
-    
+
     return content;
 }
 
@@ -223,8 +223,8 @@ function renderExercise(index) {
 
     const isReviewingAnsweredQuestion = index < exercises.length - 1;
     if (isReviewingAnsweredQuestion) {
-    answeredCorrect = true;
-    updateButtons();
+        answeredCorrect = true;
+        updateButtons();
     }
 
     const optionLines = mdWithoutAnswer.split('\n').filter(line => line.trim().startsWith('- '));
@@ -234,33 +234,33 @@ function renderExercise(index) {
 
     const optionsDiv = document.createElement('div');
     optionLines.forEach((line, i) => {
-    const optText = line.replace(/^- /, '').trim();
-    const wrapper = document.createElement('div');
-    wrapper.className = 'form-check';
+        const optText = line.replace(/^- /, '').trim();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'form-check';
 
-    const input = document.createElement('input');
-    input.className = 'form-check-input';
-    input.type = 'radio';
-    input.name = `q${index}`;
-    input.id = `q${index}opt${i}`;
-    input.value = i;
+        const input = document.createElement('input');
+        input.className = 'form-check-input';
+        input.type = 'radio';
+        input.name = `q${index}`;
+        input.id = `q${index}opt${i}`;
+        input.value = i;
 
-    const label = document.createElement('label');
-    label.className = 'form-check-label';
-    label.setAttribute('for', `q${index}opt${i}`);
-    label.innerHTML = marked.parse(processLaTeX(optText));
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.setAttribute('for', `q${index}opt${i}`);
+        label.innerHTML = marked.parse(processLaTeX(optText));
 
-    wrapper.appendChild(input);
-    wrapper.appendChild(label);
-    optionsDiv.appendChild(wrapper);
+        wrapper.appendChild(input);
+        wrapper.appendChild(label);
+        optionsDiv.appendChild(wrapper);
 
-    if (isReviewingAnsweredQuestion && i === correctAnswerIndex) {
-        input.checked = true;
-        input.disabled = true;
-        label.classList.add('correct');
-    } else if (isReviewingAnsweredQuestion) {
-        input.disabled = true;
-    }
+        if (isReviewingAnsweredQuestion && i === correctAnswerIndex) {
+            input.checked = true;
+            input.disabled = true;
+            label.classList.add('correct');
+        } else if (isReviewingAnsweredQuestion) {
+            input.disabled = true;
+        }
     });
 
     block.appendChild(optionsDiv);
@@ -289,79 +289,79 @@ function renderExercise(index) {
     explanationDiv.style.display = 'none';
 
     if (isReviewingAnsweredQuestion) {
-    const resultDiv = document.createElement('div');
-    resultDiv.className = 'correct mt-3 result-message';
-    resultDiv.textContent = "✅ 正确";
-    block.appendChild(resultDiv);
-    explanationDiv.innerHTML = "<strong>解析：</strong>" + marked.parse(processLaTeX(explanationMd));
-    explanationDiv.style.display = 'block';
-    viewExplanationBtn.textContent = "收起解析";
-    viewExplanationBtn.style.display = 'inline-block';
-    checkBtn.disabled = true;
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'correct mt-3 result-message';
+        resultDiv.textContent = "✅ 正确";
+        block.appendChild(resultDiv);
+        explanationDiv.innerHTML = "<strong>解析：</strong>" + marked.parse(processLaTeX(explanationMd));
+        explanationDiv.style.display = 'block';
+        viewExplanationBtn.textContent = "收起解析";
+        viewExplanationBtn.style.display = 'inline-block';
+        checkBtn.disabled = true;
     }
 
     checkBtn.onclick = () => {
-    const selected = block.querySelector(`input[name="q${index}"]:checked`);
-    if (!selected) return alert("请选择一个选项！");
-    const userChoice = parseInt(selected.value, 10);
-    const isCorrect = userChoice === correctAnswerIndex;
+        const selected = block.querySelector(`input[name="q${index}"]:checked`);
+        if (!selected) return alert("请选择一个选项！");
+        const userChoice = parseInt(selected.value, 10);
+        const isCorrect = userChoice === correctAnswerIndex;
 
-    let resultDiv = block.querySelector('.result-message');
-    if (!resultDiv) {
-        resultDiv = document.createElement('div');
-        resultDiv.className = 'result-message mt-3';
-        block.appendChild(resultDiv);
-    }
+        let resultDiv = block.querySelector('.result-message');
+        if (!resultDiv) {
+            resultDiv = document.createElement('div');
+            resultDiv.className = 'result-message mt-3';
+            block.appendChild(resultDiv);
+        }
 
-    resultDiv.className = isCorrect ? 'correct mt-3 result-message' : 'incorrect mt-3 result-message';
-    resultDiv.textContent = isCorrect ? "✅ 正确" : "❌ 错误";
+        resultDiv.className = isCorrect ? 'correct mt-3 result-message' : 'incorrect mt-3 result-message';
+        resultDiv.textContent = isCorrect ? "✅ 正确" : "❌ 错误";
 
-    checkBtn.disabled = true;
-    block.querySelectorAll(`input[name="q${index}"]`).forEach(i => i.disabled = true);
-    answeredCorrect = isCorrect;
-    updateButtons();
+        checkBtn.disabled = true;
+        block.querySelectorAll(`input[name="q${index}"]`).forEach(i => i.disabled = true);
+        answeredCorrect = isCorrect;
+        updateButtons();
 
-    if (!isCorrect) {
-        redoBtn.style.display = 'inline-block';
-        resetBtn.style.display = 'inline-block';
-    }
+        if (!isCorrect) {
+            redoBtn.style.display = 'inline-block';
+            resetBtn.style.display = 'inline-block';
+        }
 
-    viewExplanationBtn.style.display = 'inline-block';
+        viewExplanationBtn.style.display = 'inline-block';
     };
 
     redoBtn.onclick = () => {
-    answeredCorrect = false;
-    updateButtons();
-    resetOptions(`q${index}`);
-    checkBtn.disabled = false;
-    block.querySelector('.result-message')?.remove();
-    redoBtn.style.display = 'none';
-    resetBtn.style.display = 'none';
-    viewExplanationBtn.style.display = 'none';
-    explanationDiv.style.display = 'none';
+        answeredCorrect = false;
+        updateButtons();
+        resetOptions(`q${index}`);
+        checkBtn.disabled = false;
+        block.querySelector('.result-message')?.remove();
+        redoBtn.style.display = 'none';
+        resetBtn.style.display = 'none';
+        viewExplanationBtn.style.display = 'none';
+        explanationDiv.style.display = 'none';
     };
 
     resetBtn.onclick = () => {
-    resetOptions(`q${index}`);
-    checkBtn.disabled = false;
-    redoBtn.style.display = 'none';
-    resetBtn.style.display = 'none';
-    viewExplanationBtn.style.display = 'none';
-    explanationDiv.style.display = 'none';
-    block.querySelector('.result-message')?.remove();
+        resetOptions(`q${index}`);
+        checkBtn.disabled = false;
+        redoBtn.style.display = 'none';
+        resetBtn.style.display = 'none';
+        viewExplanationBtn.style.display = 'none';
+        explanationDiv.style.display = 'none';
+        block.querySelector('.result-message')?.remove();
     };
 
     viewExplanationBtn.onclick = () => {
-    if (explanationDiv.style.display === 'none') {
-        explanationDiv.innerHTML = "<strong>解析：</strong>" + marked.parse(processLaTeX(explanationMd));
-        MathJax.typesetClear();
-        MathJax.typesetPromise();
-        explanationDiv.style.display = 'block';
-        viewExplanationBtn.textContent = "收起解析";
-    } else {
-        explanationDiv.style.display = 'none';
-        viewExplanationBtn.textContent = "查看解析";
-    }
+        if (explanationDiv.style.display === 'none') {
+            explanationDiv.innerHTML = "<strong>解析：</strong>" + marked.parse(processLaTeX(explanationMd));
+            MathJax.typesetClear();
+            MathJax.typesetPromise();
+            explanationDiv.style.display = 'block';
+            viewExplanationBtn.textContent = "收起解析";
+        } else {
+            explanationDiv.style.display = 'none';
+            viewExplanationBtn.textContent = "查看解析";
+        }
     };
 
     block.appendChild(checkBtn);
@@ -373,8 +373,8 @@ function renderExercise(index) {
 
     // 最终刷新 MathJax
     if (window.MathJax && MathJax.typesetPromise) {
-    MathJax.typesetClear();
-    MathJax.typesetPromise();
+        MathJax.typesetClear();
+        MathJax.typesetPromise();
     }
 }
 
@@ -416,30 +416,30 @@ async function preloadNextExercise() {
 `;
 
     try {
-    const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions',  {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-        model: model,
-        messages: [
-            { role: "system", content: "你是一个操作系统题目生成器，请严格使用markdown的语法返回。" },
-            { role: "user", content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 600
-        })
-    });
-    const data = await response.json();
-    bufferedExercise = data.choices?.[0]?.message?.content || null;
+        const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: model,
+                messages: [
+                    { role: "system", content: "你是一个操作系统题目生成器，请严格使用markdown的语法返回。" },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.7,
+                max_tokens: 600
+            })
+        });
+        const data = await response.json();
+        bufferedExercise = data.choices?.[0]?.message?.content || null;
     } catch (e) {
-    console.error('预加载失败：', e);
-    bufferedExercise = null;
+        console.error('预加载失败：', e);
+        bufferedExercise = null;
     } finally {
-    isPreloading = false;
-    updateButtons();
+        isPreloading = false;
+        updateButtons();
     }
 }
 
@@ -513,7 +513,7 @@ async function loadKnowledgePoints() {
             modal.style.width = '100%';
             modal.style.height = '100%';
             modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-            
+
             const modalContent = document.createElement('div');
             modalContent.className = 'modal-content';
             modalContent.style.backgroundColor = '#fff';
@@ -525,21 +525,21 @@ async function loadKnowledgePoints() {
             modalContent.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
             modalContent.style.transition = 'all 0.3s ease';
             modalContent.style.position = 'relative';
-            
+
             const modalHeader = document.createElement('div');
             modalHeader.className = 'modal-header';
             modalHeader.style.display = 'flex';
             modalHeader.style.justifyContent = 'space-between';
             modalHeader.style.alignItems = 'center';
             modalHeader.style.marginBottom = '15px';
-            
+
             const modalTitle = document.createElement('h4');  // 改为h4标题
             modalTitle.className = 'modal-title';
             modalTitle.id = 'knowledgeModalTitle';
             modalTitle.style.fontSize = '1.8rem';  // 增大字体
             modalTitle.style.fontWeight = 'bold';  // 加粗字体
             modalTitle.style.color = '#333';  // 深色字体
-            
+
             const closeBtn = document.createElement('button');
             closeBtn.className = 'btn-close';
             closeBtn.textContent = '×';
@@ -548,14 +548,14 @@ async function loadKnowledgePoints() {
             closeBtn.style.border = 'none';
             closeBtn.style.cursor = 'pointer';
             closeBtn.onclick = () => modal.style.display = 'none';
-            
+
             const modalBody = document.createElement('div');
             modalBody.className = 'modal-body';
             modalBody.id = 'knowledgeModalContent';
-            
+
             const modalFooter = document.createElement('div');
             modalFooter.className = 'modal-footer';
-            
+
             const closeFooterBtn = document.createElement('button');
             closeFooterBtn.className = 'btn btn-primary';
             closeFooterBtn.textContent = '我要优化';
@@ -566,16 +566,16 @@ async function loadKnowledgePoints() {
                 fileInput.type = 'file';
                 fileInput.accept = '.md';
                 fileInput.style.display = 'none';
-                
+
                 fileInput.onchange = (e) => {
                     const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = (event) => {
                             // 读取文件内容并更新模态框
-                            document.getElementById('knowledgeModalContent').innerHTML = 
+                            document.getElementById('knowledgeModalContent').innerHTML =
                                 marked.parse(processLaTeX(event.target.result));
-                            
+
                             // 重新渲染数学公式
                             if (window.MathJax && MathJax.typesetPromise) {
                                 MathJax.typesetClear();
@@ -585,7 +585,7 @@ async function loadKnowledgePoints() {
                         reader.readAsText(file);
                     }
                 };
-                
+
                 // 触发文件选择
                 document.body.appendChild(fileInput);
                 fileInput.click();
@@ -599,54 +599,54 @@ async function loadKnowledgePoints() {
             modalContent.appendChild(modalFooter);
             modal.appendChild(modalContent);
             document.body.appendChild(modal);
-            
+
             chapters.forEach(chapter => {
-            const chapterDiv = document.createElement('div');
-            chapterDiv.className = 'chapter mb-2';
-            const chapterHeader = document.createElement('div');
-            chapterHeader.className = 'chapter-header d-flex align-items-center';
-            chapterHeader.innerHTML = marked.parseInline(chapter.name);
-            const toggleIcon = document.createElement('span');
-            toggleIcon.className = 'toggle-icon ms-2';
-            toggleIcon.innerHTML = '▶';
-            chapterHeader.prepend(toggleIcon);
-            const sectionsDiv = document.createElement('div');
-            sectionsDiv.className = 'sections ps-3';
-            sectionsDiv.style.display = 'none';
-            
-            if (chapter.sections && chapter.sections.length > 0) {
-                chapter.sections.forEach(section => {
-                const sectionDiv = document.createElement('div');
-                sectionDiv.className = 'section small text-muted mb-1';
-                sectionDiv.innerHTML = marked.parseInline(section.name);
-                sectionDiv.style.cursor = 'pointer';
-                sectionDiv.onclick = async () => {
-                    const modal = document.getElementById('knowledgeModal');
-                    document.getElementById('knowledgeModalTitle').textContent = section.name;
-                    
-                    // 加载对应的markdown文件
-                    const mdContent = await loadMarkdownFile(section.path || section.name);
-                    // 修改这里：使用 processLaTeX 处理公式
-                    document.getElementById('knowledgeModalContent').innerHTML = 
-                        marked.parse(processLaTeX(mdContent));
-                    
-                    modal.style.display = 'block';
-                    
-                    if (window.MathJax && MathJax.typesetPromise) {
-                        MathJax.typesetClear();
-                        MathJax.typesetPromise();
-                    }
+                const chapterDiv = document.createElement('div');
+                chapterDiv.className = 'chapter mb-2';
+                const chapterHeader = document.createElement('div');
+                chapterHeader.className = 'chapter-header d-flex align-items-center';
+                chapterHeader.innerHTML = marked.parseInline(chapter.name);
+                const toggleIcon = document.createElement('span');
+                toggleIcon.className = 'toggle-icon ms-2';
+                toggleIcon.innerHTML = '▶';
+                chapterHeader.prepend(toggleIcon);
+                const sectionsDiv = document.createElement('div');
+                sectionsDiv.className = 'sections ps-3';
+                sectionsDiv.style.display = 'none';
+
+                if (chapter.sections && chapter.sections.length > 0) {
+                    chapter.sections.forEach(section => {
+                        const sectionDiv = document.createElement('div');
+                        sectionDiv.className = 'section small text-muted mb-1';
+                        sectionDiv.innerHTML = marked.parseInline(section.name);
+                        sectionDiv.style.cursor = 'pointer';
+                        sectionDiv.onclick = async () => {
+                            const modal = document.getElementById('knowledgeModal');
+                            document.getElementById('knowledgeModalTitle').textContent = section.name;
+
+                            // 加载对应的markdown文件
+                            const mdContent = await loadMarkdownFile(section.path || section.name);
+                            // 修改这里：使用 processLaTeX 处理公式
+                            document.getElementById('knowledgeModalContent').innerHTML =
+                                marked.parse(processLaTeX(mdContent));
+
+                            modal.style.display = 'block';
+
+                            if (window.MathJax && MathJax.typesetPromise) {
+                                MathJax.typesetClear();
+                                MathJax.typesetPromise();
+                            }
+                        };
+                        sectionsDiv.appendChild(sectionDiv);
+                    });
+                }
+                chapterHeader.onclick = () => {
+                    sectionsDiv.style.display = sectionsDiv.style.display === 'none' ? 'block' : 'none';
+                    toggleIcon.innerHTML = sectionsDiv.style.display === 'none' ? '▶' : '▼';
                 };
-                sectionsDiv.appendChild(sectionDiv);
-                });
-            }
-            chapterHeader.onclick = () => {
-                sectionsDiv.style.display = sectionsDiv.style.display === 'none' ? 'block' : 'none';
-                toggleIcon.innerHTML = sectionsDiv.style.display === 'none' ? '▶' : '▼';
-            };
-            chapterDiv.appendChild(chapterHeader);
-            chapterDiv.appendChild(sectionsDiv);
-            parentElement.appendChild(chapterDiv);
+                chapterDiv.appendChild(chapterHeader);
+                chapterDiv.appendChild(sectionsDiv);
+                parentElement.appendChild(chapterDiv);
             });
         }
 

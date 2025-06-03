@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>我的课程</title>
   <link rel="stylesheet" href="../css/bootstrap.min.css">
   <link rel="stylesheet" href="../css/all.min.css">
@@ -12,28 +13,33 @@
       transition: all 0.3s ease;
       margin-bottom: 30px;
     }
+
     .course-card:hover {
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
+
     .difficulty {
       color: #ffc107;
     }
+
     .btn-enroll {
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
       border: none;
     }
+
     .card-img-top {
       height: 150px;
       object-fit: cover;
     }
   </style>
 </head>
+
 <body>
   <div id="nav-container"></div>
 
   <div class="container py-5" style="padding-top: 80px;">
     <h1 class="text-center mb-5"></h1>
-    
+
     <div class="row">
       <!-- 高等数学 -->
       <div class="col-md-6 col-lg-4">
@@ -43,10 +49,12 @@
             <h5 class="card-title">高等数学</h5>
             <p class="card-text">微积分基础课程，涵盖极限、导数、积分等核心概念。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
               <span class="ms-2">48课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course1')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course1')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -59,10 +67,12 @@
             <h5 class="card-title">线性代数</h5>
             <p class="card-text">矩阵、行列式、向量空间等线性代数基础理论与应用。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></span>
               <span class="ms-2">36课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course2')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course2')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -75,10 +85,12 @@
             <h5 class="card-title">概率论与数理统计</h5>
             <p class="card-text">随机事件、概率分布、统计推断等概率统计基础知识。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
               <span class="ms-2">42课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course3')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course3')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -91,10 +103,12 @@
             <h5 class="card-title">离散数学</h5>
             <p class="card-text">集合论、图论、逻辑等计算机科学基础数学理论。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span>
               <span class="ms-2">32课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course4')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course4')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -107,10 +121,12 @@
             <h5 class="card-title">复变函数</h5>
             <p class="card-text">复数、解析函数、留数定理等复变函数理论与应用。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
               <span class="ms-2">30课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course5')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course5')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -123,10 +139,12 @@
             <h5 class="card-title">微分方程</h5>
             <p class="card-text">常微分方程、偏微分方程的基本解法与应用。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
               <span class="ms-2">40课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course6')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course6')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -139,10 +157,12 @@
             <h5 class="card-title">操作系统</h5>
             <p class="card-text">操作系统理论与应用。</p>
             <div class="mb-3">
-              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
+              <span class="difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                  class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
               <span class="ms-2">30课时</span>
             </div>
-            <a href="javascript:void(0);" onclick="startLearning('course7')" class="btn btn-primary btn-enroll w-100">开始学习</a>
+            <a href="javascript:void(0);" onclick="startLearning('course7')"
+              class="btn btn-primary btn-enroll w-100">开始学习</a>
           </div>
         </div>
       </div>
@@ -152,8 +172,8 @@
   <div id="footer-container"></div>
 
   <script src="../js/bootstrap.bundle.min.js"></script>
-  <script src="../js/firebase-app-compat.js"></script> 
-  <script src="../js/firebase-auth-compat.js"></script> 
+  <script src="../js/firebase-app-compat.js"></script>
+  <script src="../js/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="../js/components-loader-views.js"></script>
   <script src="../js/course-config.js"></script>
@@ -168,4 +188,5 @@
     }
   </script>
 </body>
+
 </html>

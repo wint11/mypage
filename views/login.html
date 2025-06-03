@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8" />
   <title>登录 - MindCore Cloud</title>
   <!-- 引入 Bootstrap CSS -->
   <link href="../css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    body, html {
+    body,
+    html {
       height: 100%;
       margin: 0;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
+
     .container-flex {
       display: flex;
       height: 100vh;
@@ -20,11 +23,12 @@
       gap: 2rem;
       padding: 2rem;
     }
+
     .side-panel {
       width: 250px;
       background-color: white;
       border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -32,11 +36,13 @@
       gap: 2rem;
       user-select: none;
     }
+
     .side-panel img.logo {
       max-width: 180px;
       height: auto;
       user-select: none;
     }
+
     .btn-return {
       width: 100%;
       border-radius: 8px;
@@ -48,68 +54,84 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     .btn-return:hover {
       background-color: #3a589e;
     }
+
     .login-card {
       flex: 1;
       max-width: 450px;
       padding: 2.5rem;
       border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       background-color: white;
       transition: transform 0.3s ease;
     }
+
     .login-card:hover {
       transform: translateY(-5px);
     }
+
     h2.text-primary {
       color: #4b6cb7;
     }
+
     h2.text-success {
       color: #2ecc71;
     }
+
     .form-control {
       border-radius: 8px;
       padding: 0.8rem 1rem;
       border: 1px solid #e0e0e0;
       transition: border-color 0.3s ease;
     }
+
     .form-control:focus {
       border-color: #4b6cb7;
-      box-shadow: 0 0 0 0.2rem rgba(75,108,183,0.25);
+      box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
     }
-    .btn-primary, .btn-success {
+
+    .btn-primary,
+    .btn-success {
       border-radius: 8px;
       padding: 0.8rem;
       font-weight: 500;
       width: 100%;
     }
+
     .btn-primary {
       background-color: #4b6cb7;
       border-color: #4b6cb7;
       transition: background-color 0.3s ease;
     }
+
     .btn-primary:hover {
       background-color: #3a589e;
       border-color: #3a589e;
     }
+
     .btn-success {
       background-color: #2ecc71;
       border-color: #2ecc71;
       transition: background-color 0.3s ease;
     }
+
     .btn-success:hover {
       background-color: #27ae60;
       border-color: #27ae60;
     }
+
     p.text-primary {
       cursor: pointer;
       font-weight: 600;
     }
+
     p.text-primary:hover {
       text-decoration: underline;
     }
+
     #status {
       margin-top: 1rem;
       color: #e74c3c;
@@ -117,9 +139,10 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container-flex">
-   <div class="login-card text-center">
+    <div class="login-card text-center">
       <div id="formContainer">
         <div id="loginSection">
           <h2 class="mb-4 text-primary">欢迎回来</h2>
@@ -162,13 +185,10 @@
   </div>
 
   <!-- 引入 Bootstrap 图标库 -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
-  <script src="../js/firebase-app-compat.js"></script> 
-  <script src="../js/firebase-auth-compat.js"></script> 
+  <script src="../js/firebase-app-compat.js"></script>
+  <script src="../js/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="js/login.js"></script>
   <script src="js/idinit.js"></script>
@@ -193,4 +213,5 @@
     });
   </script>
 </body>
+
 </html>
