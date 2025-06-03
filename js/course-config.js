@@ -5,5 +5,6 @@ const courseMap = {
   "course3": "../courses/html/gailvlun.html",
   "course4": "../courses/html/lisuan.html",
   "course5": "../courses/html/fubian.html",
-  "course6": "../courses/html/weifenfangcheng.html"
+  "course6": "../courses/html/weifenfangcheng.html",
+  "course7": "../courses/html/caozuoxitong.html",
 };
