@@ -1,5 +1,5 @@
-const apiKey = '6ce4c9b2-9d92-495c-a5f2-3a7ebff4098a';
-const model = 'doubao-1-5-pro-32k-250115';
+const apiKey = '32c33497-91ee-48bb-ae39-f59eac806506';
+const model = 'doubao-1-5-pro-256k-250115';
 let exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
 let currentIndex = exercises.length > 0 ? exercises.length - 1 : 0;
 let bufferedExercise = null;
