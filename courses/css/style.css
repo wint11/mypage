@@ -70,6 +70,10 @@ body {
     border-left: none;
 }
 
+.top-bar .btn {
+    margin-right: 0.5rem;
+}
+
 .content-area {
     flex: 1;
     padding: 20px;
