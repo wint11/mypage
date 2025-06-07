@@ -51,6 +51,9 @@ export async function exportToDocx(courseId = 'caozuoxitong') {
         const correctIndex = answerMatch ? parseInt(answerMatch[1]) : null;
         const explanationMatch = item.match(/解析[:：]([\s\S]*)$/);
         const explanation = explanationMatch ? explanationMatch[1].trim() : "无";
+        
+        // 获取用户选择
+        const userChoice = exerciseManager.getUserChoice(index);
 
         // 题干
         paragraphs.push(
@@ -92,6 +95,23 @@ export async function exportToDocx(courseId = 'caozuoxitong') {
                         italics: true,
                         size: 24,
                         font: "宋体",
+                    }),
+                ],
+                spacing: { after: 100 },
+            })
+        );
+
+        // 我的选择
+        const myChoiceText = `我的选择：${userChoice !== null && userChoice !== undefined ? String.fromCharCode(65 + userChoice) : "未作答"}`;
+        paragraphs.push(
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: myChoiceText,
+                        italics: true,
+                        size: 24,
+                        font: "宋体",
+                        color: userChoice === correctIndex ? "008000" : "FF0000", // 绿色表示正确，红色表示错误
                     }),
                 ],
                 spacing: { after: 100 },

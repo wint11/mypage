@@ -123,6 +123,9 @@ export function renderExercise(index, exerciseManager, courseId) {
         const userChoice = parseInt(selected.value, 10);
         const isCorrect = userChoice === correctAnswerIndex;
 
+        // 记录用户第一次选择
+        exerciseManager.recordUserChoice(index, userChoice);
+
         let resultDiv = block.querySelector('.result-message');
         if (!resultDiv) {
             resultDiv = document.createElement('div');

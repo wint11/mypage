@@ -8,6 +8,7 @@ import { preloadNextExercise } from './ExerciseGenerator.js';
 import { exportToDocx } from './DocxExporter.js';
 import { loadKnowledgePoints } from './KnowledgePointLoader.js';
 import { getCourseConfig } from './CourseConfig.js';
+import { generateLearningReport } from './ReportGenerator.js';
 
 // 获取课程ID（从URL参数或其他方式）
 function getCourseId() {
@@ -78,8 +79,7 @@ export function initCourse(courseId) {
         onExport: () => exportToDocx(actualCourseId),
         onBack: () => window.location.href = '../../views/my-courses.html',
         onReport: () => {
-            // TODO: 实现练习报告功能
-            alert('练习报告功能开发中...');
+            generateLearningReport(actualCourseId);
         },
         onSimulate: () => {
             // TODO: 实现模拟测试功能

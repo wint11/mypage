@@ -5,7 +5,9 @@ export class ExerciseManager {
     constructor(courseId) {
         this.courseId = courseId;
         this.storageKey = `exercises_${courseId}`;
+        this.userChoicesKey = `userChoices_${courseId}`;
         this.exercises = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+        this.userChoices = JSON.parse(localStorage.getItem(this.userChoicesKey) || '[]');
         this.currentIndex = this.exercises.length > 0 ? this.exercises.length - 1 : 0;
         this.bufferedExercise = null;
         this.answeredCorrect = false;
@@ -14,11 +16,29 @@ export class ExerciseManager {
 
     addExercise(exercise) {
         this.exercises.push(exercise);
+        this.userChoices.push(null); // 为新题目添加空的用户选择记录
         this.saveExercises();
+        this.saveUserChoices();
     }
 
     saveExercises() {
         localStorage.setItem(this.storageKey, JSON.stringify(this.exercises));
+    }
+
+    saveUserChoices() {
+        localStorage.setItem(this.userChoicesKey, JSON.stringify(this.userChoices));
+    }
+
+    recordUserChoice(exerciseIndex, userChoice) {
+        // 只记录第一次选择
+        if (this.userChoices[exerciseIndex] === null || this.userChoices[exerciseIndex] === undefined) {
+            this.userChoices[exerciseIndex] = userChoice;
+            this.saveUserChoices();
+        }
+    }
+
+    getUserChoice(exerciseIndex) {
+        return this.userChoices[exerciseIndex];
     }
 
     clearBufferedExercise() {
@@ -34,6 +54,7 @@ export class ExerciseManager {
 
     resetState() {
         this.exercises = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+        this.userChoices = JSON.parse(localStorage.getItem(this.userChoicesKey) || '[]');
         this.currentIndex = this.exercises.length > 0 ? this.exercises.length - 1 : 0;
         this.bufferedExercise = null;
         this.answeredCorrect = false;
