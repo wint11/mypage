@@ -1,89 +1,189 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>建议反馈</title>
-  <link href="../../css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .feedback-link {
-      position: absolute;
-      top: 40vh;
-      /* 相当于页面高度的 2/5（0.4） */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 700px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-
-    .feedback-link p {
-      font-size: 1.1rem;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .feedback-link a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: 500;
-    }
-
-    .feedback-link a:hover {
-      text-decoration: underline;
-    }
-
-    .feedback-link i {
-      font-size: 2rem;
-      color: #17a2b8;
-      margin-bottom: 10px;
-    }
-
-    #footer-container {
-      margin-top: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师智能备课助手 - 模块化版本</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/teacher-assistant.css" rel="stylesheet">
 </head>
-
 <body>
-  <!-- <div id="nav-container"></div> -->
+    <div class="container-fluid h-100">
+        <!-- 页面标题 -->
+        <div class="row bg-primary text-white py-3 mb-0">
+            <div class="col-12">
+                <h1 class="h3 mb-0 text-center">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    教师智能备课助手
+                </h1>
+            </div>
+        </div>
 
-  <div class="feedback-link">
-    <i class="bi bi-chat-dots-fill"></i>
-    <p>开发组已经在努力开发了，头发要掉光了。。。</p>
-    <a href="https://gitee.com/wint11/ai4edu/issues" target="_blank">
-      👉 前往 Gitee Issues 反馈页面
-    </a>
-  </div>
+        <div class="row h-100">
+            <!-- 左侧功能面板 -->
+            <div class="col-md-3 bg-light border-end p-3">
+                <!-- 备课工具 -->
+                <div class="mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tools me-2"></i>
+                        备课工具
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary tool-btn" data-tool="lesson-plan">
+                            <i class="fas fa-file-alt me-2"></i>
+                            智能教案生成
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="exercise">
+                            <i class="fas fa-question-circle me-2"></i>
+                            题目生成器
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="ppt">
+                            <i class="fas fa-presentation me-2"></i>
+                            教学PPT生成
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="video">
+                            <i class="fas fa-video me-2"></i>
+                            教学视频生成
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="student-analysis">
+                            <i class="fas fa-chart-line me-2"></i>
+                            学情分析
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="content-analysis">
+                            <i class="fas fa-search me-2"></i>
+                            内容分析工具
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="assessment">
+                            <i class="fas fa-clipboard-check me-2"></i>
+                            评估方案
+                        </button>
+                        <button class="btn btn-outline-primary tool-btn" data-tool="knowledge-graph">
+                            <i class="fas fa-project-diagram me-2"></i>
+                            知识图谱
+                        </button>
+                    </div>
+                </div>
 
-  <!-- <div id="footer-container"></div> -->
+                <!-- 快速设置 -->
+                <div class="mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-cog me-2"></i>
+                        快速设置
+                    </h5>
+                    <div class="mb-3">
+                        <label for="subject-select" class="form-label">学科</label>
+                        <select class="form-select" id="subject-select">
+                            <option value="chinese">语文</option>
+                            <option value="math">数学</option>
+                            <option value="english">英语</option>
+                            <option value="physics">物理</option>
+                            <option value="chemistry">化学</option>
+                            <option value="biology">生物</option>
+                            <option value="history">历史</option>
+                            <option value="geography">地理</option>
+                            <option value="politics">政治</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="grade-select" class="form-label">年级</label>
+                        <select class="form-select" id="grade-select">
+                            <option value="elementary">小学</option>
+                            <option value="middle">初中</option>
+                            <option value="high">高中</option>
+                            <option value="university">大学</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="difficulty-select" class="form-label">难度</label>
+                        <select class="form-select" id="difficulty-select">
+                            <option value="easy">简单</option>
+                            <option value="medium">中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-  <script src="../../js/bootstrap.bundle.min.js"></script>
-  <!-- <script src="../../js/firebase-app-compat.js"></script> 
-  <script src="../../js/firebase-auth-compat.js"></script> 
-  <script src="../../firebase-config.js"></script>
-  <script src="../../js/components-loader-explore.js"></script> -->
+            <!-- 右侧工作区域 -->
+            <div class="col-md-9 p-4">
+                <!-- 工具容器 -->
+                <div id="tool-container">
+                    <!-- 默认欢迎页面 -->
+                    <div id="welcome-tool" class="tool-content">
+                        <div class="text-center py-5">
+                            <i class="fas fa-chalkboard-teacher fa-5x text-primary mb-4"></i>
+                            <h2 class="mb-3">欢迎使用教师智能备课助手</h2>
+                            <p class="lead text-muted mb-4">选择左侧的工具开始您的智能备课之旅</p>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-file-alt fa-2x text-primary mb-3"></i>
+                                            <h5>智能教案</h5>
+                                            <p class="text-muted">AI辅助生成个性化教案</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-question-circle fa-2x text-success mb-3"></i>
+                                            <h5>题目生成</h5>
+                                            <p class="text-muted">快速生成各类练习题目</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-chart-line fa-2x text-info mb-3"></i>
+                                            <h5>学情分析</h5>
+                                            <p class="text-muted">深入了解学生学习情况</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 动态加载的工具内容将在这里显示 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载状态模态框 -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <p class="mb-0">正在处理中，请稍候...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript库 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- 引入模块 -->
+    <script src="../js/modules/BaseModule.js"></script>
+    <script src="../js/modules/ModuleManager.js"></script>
+    <script src="../js/modules/LessonPlanModule.js"></script>
+    <script src="../js/modules/ExerciseModule.js"></script>
+    <script src="../js/modules/PPTModule.js"></script>
+    <script src="../js/modules/VideoModule.js"></script>
+    <script src="../js/modules/StudentAnalysisModule.js"></script>
+    <script src="../js/modules/ContentAnalysisModule.js"></script>
+    <script src="../js/modules/AssessmentModule.js"></script>
+    <script src="../js/modules/KnowledgeGraphModule.js"></script>
+    
+    <!-- 主应用脚本 -->
+    <script src="../js/teacher-assistant.js"></script>
 </body>
-
 </html>
