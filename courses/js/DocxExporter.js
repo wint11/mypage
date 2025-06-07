@@ -1,14 +1,20 @@
 // DocxExporter.js
 // Word文档导出模块
 
-import { exercises } from './ExerciseManager.js';
 import { getCourseConfig } from './CourseConfig.js';
 
 export async function exportToDocx(courseId = 'caozuoxitong') {
     const { Document, Packer, Paragraph, TextRun } = window.docx;
 
-    // 读取 localStorage 里的题目
-    const exercises = getExercises();
+    // 获取当前课程的练习管理器实例
+    const exerciseManager = window.courseExerciseManagers?.[courseId];
+    if (!exerciseManager) {
+        alert('未找到课程练习数据！');
+        return;
+    }
+    
+    // 获取练习数据
+    const exercises = exerciseManager.exercises;
 
     if (exercises.length === 0) {
         alert("题目为空！");
@@ -123,7 +129,7 @@ export async function exportToDocx(courseId = 'caozuoxitong') {
     // 下载
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "操作系统题目集.docx";
+    link.download = `${title}练习记录.docx`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

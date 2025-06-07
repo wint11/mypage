@@ -7,43 +7,36 @@ const courseConfig = {
         title: '高等数学 - 无限习题链',
         sidebarTitle: '高等数学知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'xianxingdaishu': {
         title: '线性代数 - 无限习题链',
         sidebarTitle: '线性代数知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'gailvlun': {
         title: '概率论 - 无限习题链',
         sidebarTitle: '概率论知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'lisuan': {
         title: '离散数学 - 无限习题链',
         sidebarTitle: '离散数学知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'fubian': {
         title: '复变函数 - 无限习题链',
         sidebarTitle: '复变函数知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'weifenfangcheng': {
         title: '微分方程 - 无限习题链',
         sidebarTitle: '微分方程知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     },
     'caozuoxitong': {
         title: '操作系统 - 无限习题链',
         sidebarTitle: '操作系统知识点',
         scriptPath: '../js/course-template.js',
-        isModule: true
     }
 };
 
