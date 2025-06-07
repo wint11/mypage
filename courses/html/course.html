@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>线性代数 - 无限习题链</title>
+  <title id="page-title">课程练习 - 无限习题链</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../../css/bootstrap.min.css" />
   <link rel="stylesheet" href="../css/style.css">
@@ -21,7 +21,7 @@
 <body>
   <div class="main-container d-flex">
     <div id="sidebar" class="sidebar">
-      <h4 class="sidebar-title">复变函数知识点</h4>
+      <h4 class="sidebar-title" id="sidebar-title">知识点</h4>
       <div id="knowledge-points" class="knowledge-points"></div>
     </div>
     <div class="content-area">
@@ -38,8 +38,10 @@
         <button class="btn btn-primary" id="next-btn" disabled>下一题</button>
       </div>
     </div>
-    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
-    <script src="../js/fubian.js"></script>
+  </div>
+  
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  <script type="module" src="../js/course-loader.js"></script>
 
 </body>
 
