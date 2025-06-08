@@ -3,7 +3,7 @@
 
 import { exercises, currentIndex, bufferedExercise, isPreloading, setBufferedExercise, setIsPreloading, addExercise, incrementCurrentIndex } from './ExerciseManager.js';
 import { updateButtons } from './UI.js';
-import { getCourseConfig } from './CourseConfig.js';
+import { getCourseConfig, getCourseConfigSync, loadCoursesJsonData } from './CourseConfig.js';
 
 // API配置 - 需要配置有效的API密钥
 const apiKey = '32c33497-91ee-48bb-ae39-f59eac806506'; // 请替换为有效的API密钥
@@ -39,11 +39,26 @@ export async function preloadNextExercise(courseId = 'caozuoxitong') {
         setIsPreloading(true);
     }
 
-    const courseConfig = getCourseConfig(courseId);
+    // 确保课程数据已加载
+    await loadCoursesJsonData();
+    
+    const courseConfig = await getCourseConfig(courseId);
     if (!courseConfig) {
         console.error('未找到课程配置:', courseId);
-        setIsPreloading(false);
-        return;
+        // 尝试使用同步版本作为后备
+        const fallbackConfig = getCourseConfigSync(courseId);
+        if (!fallbackConfig) {
+            console.error('同步配置也未找到:', courseId);
+            if (exerciseManager) {
+                exerciseManager.setIsPreloading(false);
+            } else {
+                setIsPreloading(false);
+            }
+            return;
+        }
+        console.warn('使用后备配置:', courseId);
+        // 使用后备配置继续
+        courseConfig = fallbackConfig;
     }
 
     // 检查API密钥是否配置

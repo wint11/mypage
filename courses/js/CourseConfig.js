@@ -1,5 +1,49 @@
 // CourseConfig.js
 // 所有课程的配置信息，包括prompt、标题等
+// 基于 views/data/courses.json 的课程数据结构
+
+// 课程数据缓存
+let coursesJsonData = null;
+
+// 从courses.json加载课程数据
+export async function loadCoursesJsonData() {
+    if (coursesJsonData) return coursesJsonData;
+    
+    try {
+        const response = await fetch('../../views/data/courses.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        coursesJsonData = await response.json();
+        console.log('CourseConfig: 课程JSON数据加载成功');
+        return coursesJsonData;
+    } catch (error) {
+        console.error('CourseConfig: 加载courses.json失败:', error);
+        return null;
+    }
+}
+
+// 根据课程ID获取课程信息
+export function getCourseInfoById(courseId) {
+    if (!coursesJsonData) return null;
+    return coursesJsonData.courses.find(course => course.id === courseId);
+}
+
+// 根据文件夹名获取课程信息
+export function getCourseInfoByFolder(folderName) {
+    const courseIdMapping = {
+        'gaodengshuxue': 'course1',
+        'xianxingdaishu': 'course2',
+        'gailvlun': 'course3',
+        'lisuan': 'course4',
+        'fubian': 'course5',
+        'weifenfangcheng': 'course6',
+        'caozuoxitong': 'course7'
+    };
+    
+    const courseId = courseIdMapping[folderName];
+    return courseId ? getCourseInfoById(courseId) : null;
+}
 
 export const courseConfigs = {
     gaodengshuxue: {
@@ -346,12 +390,82 @@ AB = \\begin{bmatrix}5 & 6 \\\\\\\\ 7 & 8\\end{bmatrix}
     }
 };
 
-// 获取课程配置
-export function getCourseConfig(courseId) {
+// 获取课程配置（增强版，结合courses.json数据）
+export async function getCourseConfig(courseId) {
+    // 确保courses.json数据已加载
+    await loadCoursesJsonData();
+    
+    const baseConfig = courseConfigs[courseId];
+    if (!baseConfig) return null;
+    
+    // 获取courses.json中的课程信息
+    const courseInfo = getCourseInfoByFolder(courseId);
+    
+    // 合并配置
+    if (courseInfo) {
+        return {
+            ...baseConfig,
+            // 从courses.json添加的信息
+            courseId: courseInfo.id,
+            originalTitle: courseInfo.title,
+            description: courseInfo.description,
+            category: courseInfo.category,
+            difficulty: courseInfo.difficulty,
+            hours: courseInfo.hours,
+            status: courseInfo.status,
+            tags: courseInfo.tags,
+            instructor: courseInfo.instructor,
+            created_at: courseInfo.created_at,
+            updated_at: courseInfo.updated_at
+        };
+    }
+    
+    return baseConfig;
+}
+
+// 获取课程配置（同步版本，用于向后兼容）
+export function getCourseConfigSync(courseId) {
     return courseConfigs[courseId] || null;
 }
 
 // 获取所有课程列表
 export function getAllCourses() {
     return Object.keys(courseConfigs);
+}
+
+// 获取课程分类信息
+export function getCourseCategories() {
+    if (!coursesJsonData) return [];
+    return coursesJsonData.categories || [];
+}
+
+// 获取难度等级信息
+export function getDifficultyLevels() {
+    if (!coursesJsonData) return [];
+    return coursesJsonData.difficulty_levels || [];
+}
+
+// 根据分类获取课程
+export function getCoursesByCategory(category) {
+    if (!coursesJsonData) return [];
+    return coursesJsonData.courses.filter(course => course.category === category);
+}
+
+// 根据难度获取课程
+export function getCoursesByDifficulty(difficulty) {
+    if (!coursesJsonData) return [];
+    return coursesJsonData.courses.filter(course => course.difficulty === difficulty);
+}
+
+// 搜索课程
+export function searchCourses(query) {
+    if (!coursesJsonData || !query) return [];
+    
+    const lowerQuery = query.toLowerCase();
+    return coursesJsonData.courses.filter(course => 
+        course.title.toLowerCase().includes(lowerQuery) ||
+        course.description.toLowerCase().includes(lowerQuery) ||
+        course.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+        course.instructor.toLowerCase().includes(lowerQuery)
+    );
 }
