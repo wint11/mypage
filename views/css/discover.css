@@ -1,41 +1,161 @@
 /* discover.css */
-/* 移除body的flex布局，改为默认布局 */
+/* 现代化背景设计 */
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--bg-light);
-  font-family: "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: "Microsoft YaHei", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* 添加卡片容器样式 */
+/* 添加动态背景粒子效果 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+  z-index: -1;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(1deg); }
+  66% { transform: translateY(10px) rotate(-1deg); }
+}
+
+/* 卡片容器样式 */
 .card-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 120px);
-  /* 减去导航和页脚高度 */
-  padding: 20px;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 1;
 }
 
 /* 卡片网格布局 */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  max-width: 800px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  max-width: 900px;
   width: 100%;
+  animation: fadeInUp 0.8s ease-out;
 }
 
-/* 保留原有的卡片样式 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 现代化卡片样式 */
 .discover-card {
   cursor: pointer;
-  transition: transform 0.3s;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  position: relative;
 }
 
+/* 卡片悬停效果 */
 .discover-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* 卡片内容样式 */
+.discover-card .card-body {
+  padding: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.discover-card .card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.discover-card .card-text {
+  color: #5a6c7d;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* 卡片装饰元素 */
+.discover-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.discover-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 10px;
+  }
+  
+  .card-container {
+    padding: 20px 10px;
+  }
+  
+  .discover-card .card-body {
+    padding: 20px;
+  }
+  
+  .discover-card .card-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .discover-card .card-body {
+    padding: 15px;
+  }
+  
+  .discover-card .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .discover-card .card-text {
+    font-size: 0.9rem;
+  }
 }

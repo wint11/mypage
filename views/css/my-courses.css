@@ -1,22 +1,684 @@
-.course-card {
+/* 主要颜色变量 */
+:root {
+  --primary-color: #74c0fc;
+  --primary-light: #a5d8ff;
+  --primary-dark: #339af0;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #dee2e6;
+  --shadow-color: rgba(116, 192, 252, 0.15);
+}
+
+/* 页面整体样式 */
+body {
+  background: linear-gradient(135deg, #a5d8ff 0%, #74c0fc 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 动态背景粒子效果 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(165, 216, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(116, 192, 252, 0.2) 0%, transparent 50%);
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-30px) rotate(0.5deg); }
+  66% { transform: translateY(20px) rotate(-0.5deg); }
+}
+
+.container-fluid {
+  position: relative;
+  z-index: 1;
+}
+
+/* 主内容区域调整 */
+.main-container {
+  margin-left: 320px;
+  padding-right: 40px;
+  transition: margin-left 0.3s ease;
+}
+
+/* 课程列表容器 */
+.col-lg-9.col-md-8 {
+  width: 100%;
+  max-width: none;
+  flex: none;
+}
+
+.col-lg-3.col-md-4 {
+  display: none;
+}
+
+/* 页面标题样式 */
+h1 {
+  color: white;
+  text-align: center;
+  margin: 2rem 0;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  font-size: 2.5rem;
+}
+
+/* 强制显示侧边栏容器 - 覆盖所有Bootstrap隐藏类 */
+.col-lg-3.col-md-4,
+.col-lg-3,
+.col-md-4,
+.col-3,
+.col-4 {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex: 0 0 auto !important;
+}
+
+/* 在大屏幕上保持固定布局 */
+@media (min-width: 993px) {
+  .col-lg-3.col-md-4 {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+  }
+}
+
+/* 侧边栏样式 */
+.sidebar-filter {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15), 0 5px 20px rgba(255, 255, 255, 0.1) inset;
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  width: 280px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  z-index: 1000;
   transition: all 0.3s ease;
-  margin-bottom: 30px;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.sidebar-filter::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-filter::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.sidebar-filter::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.sidebar-filter::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.filter-title {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-title i {
+  color: var(--primary-light);
+}
+
+.filter-group {
+  margin-bottom: 2rem;
+}
+
+.filter-label {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: block;
+  font-size: 1rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.filter-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.filter-option input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+}
+
+.checkmark {
+  margin-left: 0.5rem;
+}
+
+.form-select, .form-range {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.form-select:focus, .form-range:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.form-select option {
+  background: rgba(0, 123, 255, 0.9);
+  color: white;
+}
+
+.filter-buttons {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-apply-filter {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  border: none;
+  color: white;
+  border-radius: 15px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 15px rgba(116, 192, 252, 0.3);
+}
+
+.btn-apply-filter:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(116, 192, 252, 0.4);
+}
+
+.btn-reset-filter {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 15px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-reset-filter:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  color: white;
+}
+
+/* 课程卡片样式 */
+.course-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 25px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .course-card:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border-color: rgba(77, 171, 247, 0.3);
 }
 
+/* 卡片内容区域 */
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.card-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+/* 课程元信息 */
+.course-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 难度星级样式 */
 .difficulty {
-  color: #ffc107;
+  color: #ffd700;
+  font-size: 1rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
 }
 
+.difficulty:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+}
+
+.difficulty i {
+  margin-right: 2px;
+  transition: transform 0.2s ease;
+}
+
+.difficulty:hover i {
+  transform: rotate(72deg);
+}
+
+/* 课时信息样式 */
+.course-hours {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+/* 按钮样式 */
 .btn-enroll {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  margin-top: auto;
 }
 
-.card-img-top {
-  height: 150px;
-  object-fit: cover;
+.btn-enroll::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
 }
+
+.btn-enroll:hover::before {
+  left: 100%;
+}
+
+.btn-enroll:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(116, 192, 252, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-enroll:active {
+  transform: translateY(0);
+}
+
+/* 课程图片区域 */
+.course-image {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
+.course-icon {
+  width: 80px;
+  height: 80px;
+  transition: all 0.3s ease;
+}
+
+.course-card:hover .course-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 卡片装饰线条 */
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-dark), var(--primary-color));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover::before {
+  transform: scaleX(1);
+}
+
+.course-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.course-card:hover::after {
+  width: 80%;
+}
+
+/* 网格动画效果 */
+.col-xl-4:nth-child(3n+1) .course-card {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.col-xl-4:nth-child(3n+2) .course-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.col-xl-4:nth-child(3n+3) .course-card {
+  animation: slideInRight 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式设计 */
+/* 超大屏幕优化 */
+@media (min-width: 1400px) {
+  .main-container {
+    margin-left: 340px;
+    max-width: calc(100vw - 380px);
+  }
+  
+  .sidebar-filter {
+    width: 300px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .main-container {
+    margin-left: 320px;
+  }
+  
+  .sidebar-filter {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.38);
+  }
+}
+
+@media (max-width: 1199px) {
+  .main-container {
+    margin-left: 300px;
+  }
+  
+  .sidebar-filter {
+    width: 260px;
+  }
+}
+
+@media (max-width: 992px) {
+  .main-container {
+    margin-left: 0;
+    padding-left: 20px;
+  }
+  
+  .sidebar-filter {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    left: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+  }
+  
+  .col-lg-3.col-md-4 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  
+  .col-lg-9.col-md-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .course-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin: 1rem 0;
+  }
+  
+  .card-content {
+    padding: 1rem;
+  }
+  
+  .btn-enroll {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .sidebar-filter {
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+  }
+  
+  .main-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .col-lg-3.col-md-4 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin-bottom: 2rem;
+  }
+  
+  .col-lg-9.col-md-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .course-card {
+    border-radius: 15px;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .card-text {
+    font-size: 0.9rem;
+  }
+  
+  .course-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .sidebar-filter {
+    padding: 1rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+  }
+  
+  .col-lg-3.col-md-4 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin-bottom: 1.5rem;
+  }
+  
+  .col-lg-9.col-md-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+}
+
+/* 加载动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 为不同的卡片添加延迟动画 */
+.col-xl-4:nth-child(1) .course-card { animation-delay: 0.1s; }
+.col-xl-4:nth-child(2) .course-card { animation-delay: 0.2s; }
+.col-xl-4:nth-child(3) .course-card { animation-delay: 0.3s; }
+.col-xl-4:nth-child(4) .course-card { animation-delay: 0.4s; }
+.col-xl-4:nth-child(5) .course-card { animation-delay: 0.5s; }
+.col-xl-4:nth-child(6) .course-card { animation-delay: 0.6s; }
+.col-xl-4:nth-child(7) .course-card { animation-delay: 0.7s; }

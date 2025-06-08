@@ -1,0 +1,187 @@
+{
+  "courses": [
+    {
+      "id": "course1",
+      "title": "高等数学",
+      "description": "微积分、极限、导数、积分等数学基础理论与应用。",
+      "category": "math",
+      "difficulty": 4,
+      "hours": 48,
+      "status": "active",
+      "tags": ["数学", "微积分", "基础课程"],
+      "instructor": "张教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course2",
+      "title": "线性代数",
+      "description": "矩阵、行列式、向量空间等线性代数基础理论与应用。",
+      "category": "math",
+      "difficulty": 3,
+      "hours": 36,
+      "status": "active",
+      "tags": ["数学", "矩阵", "向量"],
+      "instructor": "李教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course3",
+      "title": "概率论与数理统计",
+      "description": "随机事件、概率分布、统计推断等概率统计基础知识。",
+      "category": "math",
+      "difficulty": 4,
+      "hours": 42,
+      "status": "active",
+      "tags": ["数学", "概率", "统计"],
+      "instructor": "王教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course4",
+      "title": "离散数学",
+      "description": "集合论、图论、逻辑等计算机科学基础数学理论。",
+      "category": "math",
+      "difficulty": 3,
+      "hours": 32,
+      "status": "active",
+      "tags": ["数学", "逻辑", "图论"],
+      "instructor": "赵教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course5",
+      "title": "复变函数",
+      "description": "复数、解析函数、留数定理等复变函数理论与应用。",
+      "category": "math",
+      "difficulty": 4,
+      "hours": 30,
+      "status": "active",
+      "tags": ["数学", "复数", "解析函数"],
+      "instructor": "陈教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course6",
+      "title": "微分方程",
+      "description": "常微分方程、偏微分方程的基本解法与应用。",
+      "category": "math",
+      "difficulty": 5,
+      "hours": 40,
+      "status": "active",
+      "tags": ["数学", "微分方程", "高级课程"],
+      "instructor": "刘教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course7",
+      "title": "操作系统",
+      "description": "操作系统理论与应用。",
+      "category": "computer",
+      "difficulty": 4,
+      "hours": 30,
+      "status": "active",
+      "tags": ["计算机", "系统", "理论"],
+      "instructor": "周教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course8",
+      "title": "数据结构与算法",
+      "description": "基本数据结构、排序算法、搜索算法等计算机基础知识。",
+      "category": "computer",
+      "difficulty": 4,
+      "hours": 45,
+      "status": "active",
+      "tags": ["计算机", "算法", "数据结构"],
+      "instructor": "吴教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course9",
+      "title": "计算机网络",
+      "description": "网络协议、TCP/IP、网络安全等计算机网络基础知识。",
+      "category": "computer",
+      "difficulty": 3,
+      "hours": 38,
+      "status": "active",
+      "tags": ["计算机", "网络", "协议"],
+      "instructor": "郑教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course10",
+      "title": "数据库系统",
+      "description": "关系数据库、SQL语言、数据库设计等数据库基础知识。",
+      "category": "computer",
+      "difficulty": 3,
+      "hours": 35,
+      "status": "active",
+      "tags": ["计算机", "数据库", "SQL"],
+      "instructor": "孙教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
+    }
+  ],
+  "categories": [
+    {
+      "id": "math",
+      "name": "数学类",
+      "description": "数学基础课程",
+      "color": "#667eea"
+    },
+    {
+      "id": "computer",
+      "name": "计算机类",
+      "description": "计算机科学课程",
+      "color": "#764ba2"
+    },
+    {
+      "id": "physics",
+      "name": "物理类",
+      "description": "物理基础课程",
+      "color": "#f093fb"
+    },
+    {
+      "id": "english",
+      "name": "英语类",
+      "description": "英语语言课程",
+      "color": "#f5576c"
+    }
+  ],
+  "difficulty_levels": [
+    {
+      "level": 1,
+      "name": "入门",
+      "description": "适合初学者"
+    },
+    {
+      "level": 2,
+      "name": "初级",
+      "description": "有一定基础"
+    },
+    {
+      "level": 3,
+      "name": "中级",
+      "description": "需要扎实基础"
+    },
+    {
+      "level": 4,
+      "name": "高级",
+      "description": "具备较强能力"
+    },
+    {
+      "level": 5,
+      "name": "专家",
+      "description": "专业水平要求"
+    }
+  ]
+}
