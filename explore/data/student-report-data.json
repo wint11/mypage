@@ -1,0 +1,139 @@
+{
+  "studentInfo": {
+    "name": "张同学",
+    "studentId": "2023001",
+    "class": "计算机科学与技术2023级1班",
+    "reportDate": "2024-01-15"
+  },
+  "overview": {
+    "totalMastery": 85,
+    "completedExercises": 127,
+    "studyDays": 23,
+    "averageScore": 4.2
+  },
+  "knowledgePoints": [
+    {
+      "name": "线性代数基础",
+      "mastery": 92,
+      "status": "已掌握",
+      "badgeClass": "bg-success"
+    },
+    {
+      "name": "微积分应用",
+      "mastery": 76,
+      "status": "学习中",
+      "badgeClass": "bg-warning"
+    },
+    {
+      "name": "概率论基础",
+      "mastery": 88,
+      "status": "良好",
+      "badgeClass": "bg-info"
+    },
+    {
+      "name": "数理统计",
+      "mastery": 45,
+      "status": "待加强",
+      "badgeClass": "bg-danger"
+    },
+    {
+      "name": "复变函数",
+      "mastery": 0,
+      "status": "未开始",
+      "badgeClass": "bg-secondary"
+    }
+  ],
+  "progressTrend": {
+    "labels": ["第1周", "第2周", "第3周", "第4周", "第5周", "第6周"],
+    "data": [45, 52, 61, 68, 75, 85]
+  },
+  "recommendations": [
+    {
+      "icon": "fas fa-lightbulb",
+      "title": "重点提升建议",
+      "content": "建议加强数理统计部分的学习，可以通过更多练习题来巩固概念理解。推荐先复习概率论基础，再进入统计推断部分。"
+    },
+    {
+      "icon": "fas fa-clock",
+      "title": "学习时间安排",
+      "content": "根据您的学习习惯分析，建议每天晚上7-9点进行数学学习，这个时间段您的学习效率最高。"
+    },
+    {
+      "icon": "fas fa-book",
+      "title": "推荐学习资源",
+      "content": "为您推荐《概率论与数理统计》第四章习题集，以及相关的在线视频课程来加强薄弱环节。"
+    }
+  ],
+  "achievements": [
+    {
+      "icon": "fas fa-medal",
+      "iconClass": "text-warning",
+      "title": "坚持学习者",
+      "description": "连续学习15天",
+      "achieved": true
+    },
+    {
+      "icon": "fas fa-star",
+      "iconClass": "text-primary",
+      "title": "知识探索者",
+      "description": "完成100道练习题",
+      "achieved": true
+    },
+    {
+      "icon": "fas fa-graduation-cap",
+      "iconClass": "text-success",
+      "title": "进步之星",
+      "description": "本月进步20%",
+      "achieved": true
+    },
+    {
+      "icon": "fas fa-fire",
+      "iconClass": "text-danger",
+      "title": "学习达人",
+      "description": "单日学习3小时",
+      "achieved": false
+    },
+    {
+      "icon": "fas fa-trophy",
+      "iconClass": "text-warning",
+      "title": "完美主义者",
+      "description": "连续10次满分",
+      "achieved": false
+    },
+    {
+      "icon": "fas fa-rocket",
+      "iconClass": "text-info",
+      "title": "速度之王",
+      "description": "5分钟内完成测试",
+      "achieved": true
+    },
+    {
+      "icon": "fas fa-brain",
+      "iconClass": "text-purple",
+      "title": "思维大师",
+      "description": "掌握所有知识点",
+      "achieved": false
+    },
+    {
+      "icon": "fas fa-clock",
+      "iconClass": "text-secondary",
+      "title": "时间管理者",
+      "description": "按时完成所有任务",
+      "achieved": true
+    },
+    {
+      "icon": "fas fa-heart",
+      "iconClass": "text-danger",
+      "title": "学习热爱者",
+      "description": "累计学习100小时",
+      "achieved": false
+    },
+    {
+      "icon": "fas fa-gem",
+      "iconClass": "text-info",
+      "title": "珍贵收藏家",
+      "description": "收藏50个知识点",
+      "achieved": false
+    }
+  ]
+}

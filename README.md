@@ -4,11 +4,14 @@
 
 ## 🌟 项目特点
 
-- 🎨 响应式课程卡片设计，适配各类设备；
-- 📁 每门课程支持独立页面和练习配置文件；
-- 🧠 可扩展的习题系统，便于多学科接入；
-- 🛠 模块化结构，便于维护和部署；
-- 🔐 支持 Firebase 用户认证（可选）；
+- 🎨 **响应式设计**: 课程卡片和界面适配各类设备
+- 📚 **模块化架构**: 课程、探索、用户功能完全模块化
+- 🧠 **智能学习**: AI驱动的练习题生成和学习分析
+- 📊 **数据可视化**: 学习进度和成就系统可视化展示
+- 🎓 **教师工具**: 智能备课助手和课程管理功能
+- 🔐 **用户系统**: 基于Firebase的完整用户认证和管理
+- 🛠 **易于扩展**: 支持快速添加新课程和功能模块
+- 📱 **PWA支持**: 渐进式Web应用，支持离线使用
 
 ---
 
@@ -23,43 +26,40 @@
 ├─ components/                  # 公共组件（HTML 片段）
 │  ├─ footer.html               
 │  └─ nav.html                  
-├─ courses/                     # 课程页面与数据 JS 映射
-│  ├─ js/
-│  │  ├─ fubian.js              
-│  │  ├─ gailvlun.js            
-│  │  ├─ gaodengshuxue.js       
-│  │  ├─ lisuan.js              
-│  │  ├─ weifenfangcheng.js     
-│  │  └─ xianxingdaishu.js      
-│  ├─ fubian.html               
-│  ├─ gailvlun.html             
-│  ├─ gaodengshuxue.html        
-│  ├─ lisuan.html               
-│  ├─ weifenfangcheng.html      
-│  └─ xianxingdaishu.html       
-├─ css/                         # 样式文件
+├─ courses/                     # 课程模块（已模块化重构）
+│  ├─ css/                      # 课程样式
+│  ├─ data/                     # 课程数据文件
+│  ├─ html/                     # 统一HTML模板
+│  ├─ js/                       # 模块化JavaScript
+│  ├─ structure/                # 课程结构配置
+│  └─ README.md                 # 课程模块说明
+├─ css/                         # 全局样式文件
 │  ├─ components.css            # 自定义组件样式
 │  ├─ home.css                  # 首页样式
 │  └─ variables.css             # CSS 变量定义
-├─ data/                        # 课程配置 JSON 数据
-│  ├─ fubian.json               
-│  ├─ gailvlun.json             
-│  ├─ gaodengshuxue.json        
-│  ├─ lisuan.json               
-│  ├─ weifenfangcheng.json      
-│  └─ xianxingdaishu.json       
-├─ js/                          # JavaScript 脚本
+├─ explore/                     # 探索功能模块
+│  ├─ css/                      # 模块化样式文件
+│  ├─ data/                     # 示例数据
+│  ├─ html/                     # 功能页面
+│  ├─ js/                       # 功能脚本
+│  └─ README.md                 # 探索模块说明       
+├─ js/                          # 全局JavaScript脚本
 │  ├─ components-loader.js      # 加载公共组件（导航/页脚）
-│  ├─ components-loader-detail.js # 细节加载器
+│  ├─ components-loader-explore.js # 探索模块组件加载器
+│  ├─ components-loader-views.js # 视图模块组件加载器
 │  ├─ course-config.js          # 课程跳转路径配置
 │  └─ tex-svg.js                # LaTeX 渲染支持
-├─ views/                       # 子页面视图（用户功能模块）
-│  ├─ discover.html             
-│  ├─ feedback.html             
-│  ├─ login.html                
-│  ├─ my-courses.html           
-│  ├─ profile.html              
-│  └─ settings.html             
+├─ views/                       # 用户功能模块
+│  ├─ css/                      # 视图样式
+│  ├─ js/                       # 视图脚本
+│  ├─ explore.html              # 探索功能入口
+│  ├─ feedback.html             # 用户反馈
+│  ├─ login.html                # 用户登录
+│  ├─ my-courses.html           # 我的课程
+│  ├─ profile.html              # 个人资料
+│  ├─ settings.html             # 系统设置
+│  └─ README.md                 # 用户模块说明
+├─ webfonts/                    # 字体文件
 ├─ firebase-config.js           # Firebase 初始化配置
 ├─ index.html                   # 首页入口
 └─ README.md                    # 项目说明文档
@@ -126,19 +126,50 @@ const courseMap = {
 
 ## ✨ 技术栈
 
-* HTML + CSS + JavaScript
-* Bootstrap 5
-* FontAwesome 图标库
-* Firebase（可选）
+### 前端技术
+* **HTML5** - 语义化标记和现代Web标准
+* **CSS3** - 模块化样式和响应式设计
+* **JavaScript ES6+** - 模块化编程和现代语法
+* **Bootstrap 5** - 响应式UI框架
+* **Font Awesome 6** - 图标库
+
+### 数据可视化
+* **Chart.js** - 图表和数据可视化
+* **MathJax** - 数学公式渲染
+
+### 后端服务
+* **Firebase** - 用户认证和数据存储
+* **AI API** - 智能内容生成（可配置）
+
+### 开发工具
+* **模块化设计** - CSS和JS完全模块化
+* **响应式布局** - 移动端优先设计
+* **PWA技术** - 渐进式Web应用
 
 ---
 
-## 📌 TODO（进阶计划）
+## 📋 TODO
 
-* [ ] 增加课程搜索功能
-* [ ] 添加学习进度记录功能
-* [ ] 引入 Vue 重构项目结构
-* [ ] 接入 Markdown 渲染支持课程内容展示
+### 功能增强
+- [ ] 添加更多学科课程内容
+- [ ] 完善AI智能推荐系统
+- [ ] 增强学习分析报告功能
+- [ ] 添加协作学习功能
+- [ ] 集成语音识别和TTS
+
+### 技术优化
+- [ ] 实现Service Worker缓存策略
+- [ ] 优化首屏加载性能
+- [ ] 添加单元测试覆盖
+- [ ] 实现CI/CD自动化部署
+- [ ] 增强安全性和数据保护
+
+### 用户体验
+- [ ] 完善无障碍访问支持
+- [ ] 添加多语言国际化
+- [ ] 优化移动端交互体验
+- [ ] 增加个性化主题设置
+- [ ] 实现离线学习模式
 
 ---
 

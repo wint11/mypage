@@ -1,0 +1,24 @@
+/* 教师智能备课助手 - 模块化样式入口文件 */
+
+/* 导入所有模块 */
+
+/* 基础样式模块 - 全局样式、导航栏、基础卡片 */
+@import url('./modules/teacher-assistant-base.css');
+
+/* 表单和按钮组件模块 - 表单控件、按钮样式 */
+@import url('./modules/teacher-assistant-forms.css');
+
+/* 功能面板模块 - 工具面板、功能列表、内容显示区域 */
+@import url('./modules/teacher-assistant-panels.css');
+
+/* 动画效果模块 - 动画定义、加载状态、滚动条 */
+@import url('./modules/teacher-assistant-animations.css');
+
+/* 消息提示模块 - 工具提示、成功/错误消息 */
+@import url('./modules/teacher-assistant-alerts.css');
+
+/* 响应式设计模块 - 平板和手机适配 */
+@import url('./modules/teacher-assistant-responsive.css');
+
+/* 打印样式模块 - 打印优化 */
+@import url('./modules/teacher-assistant-print.css');

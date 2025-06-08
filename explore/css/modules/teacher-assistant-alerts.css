@@ -1,0 +1,27 @@
+/* 教师智能备课助手 - 消息提示模块 */
+
+/* 工具提示样式 */
+.tooltip {
+  font-size: 0.875rem;
+}
+
+/* 成功/错误消息样式 */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-info {
+  background-color: #cce7ff;
+  color: #004085;
+}

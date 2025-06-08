@@ -4,86 +4,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>建议反馈</title>
+  <title>学习分析报告</title>
   <link href="../../css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .feedback-link {
-      position: absolute;
-      top: 40vh;
-      /* 相当于页面高度的 2/5（0.4） */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 700px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-
-    .feedback-link p {
-      font-size: 1.1rem;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .feedback-link a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: 500;
-    }
-
-    .feedback-link a:hover {
-      text-decoration: underline;
-    }
-
-    .feedback-link i {
-      font-size: 2rem;
-      color: #17a2b8;
-      margin-bottom: 10px;
-    }
-
-    #footer-container {
-      margin-top: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-  </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../css/student-report-modular.css">
 </head>
 
 <body>
-  <!-- <div id="nav-container"></div> -->
-
-  <div class="feedback-link">
-    <i class="bi bi-chat-dots-fill"></i>
-    <p>开发组已经在努力开发了，头发要掉光了。。。</p>
-    <a href="https://gitee.com/wint11/ai4edu/issues" target="_blank">
-      👉 前往 Gitee Issues 反馈页面
-    </a>
+  <div class="report-header">
+    <div class="container">
+      <h1 class="mb-3">
+        <i class="fas fa-chart-line me-3"></i>
+        个人学习分析报告
+      </h1>
+      <p class="lead mb-0">基于AI智能分析的个性化学习洞察</p>
+    </div>
   </div>
 
-  <!-- <div id="footer-container"></div> -->
+  <div class="container">
+    <!-- 学习概览 -->
+     <div class="row" id="overview-section">
+       <div class="col-md-3 mb-4">
+         <div class="report-card text-center">
+           <div class="progress-circle" style="background: linear-gradient(135deg, #667eea, #764ba2);" id="total-mastery">
+             --
+           </div>
+           <h5>总体掌握度</h5>
+           <p class="text-muted">综合知识点掌握情况</p>
+         </div>
+       </div>
+       <div class="col-md-3 mb-4">
+         <div class="report-card text-center">
+           <div class="stat-number" id="completed-exercises">--</div>
+           <h5>已完成练习</h5>
+           <p class="text-muted">本月累计练习题数</p>
+         </div>
+       </div>
+       <div class="col-md-3 mb-4">
+         <div class="report-card text-center">
+           <div class="stat-number" id="study-days">--</div>
+           <h5>学习天数</h5>
+           <p class="text-muted">本月活跃学习天数</p>
+         </div>
+       </div>
+       <div class="col-md-3 mb-4">
+         <div class="report-card text-center">
+           <div class="stat-number" id="average-score">--</div>
+           <h5>平均分数</h5>
+           <p class="text-muted">近期测试平均得分</p>
+         </div>
+       </div>
+     </div>
+
+    <!-- 知识点掌握情况 -->
+    <div class="row">
+      <div class="col-md-6 mb-4">
+         <div class="report-card">
+           <h4 class="mb-4">
+             <i class="fas fa-brain me-2 text-primary"></i>
+             知识点掌握情况
+           </h4>
+           <div id="knowledge-points-container">
+             <!-- 知识点将通过JavaScript动态加载 -->
+           </div>
+         </div>
+       </div>
+      <div class="col-md-6 mb-4">
+        <div class="report-card">
+          <h4 class="mb-4">
+            <i class="fas fa-chart-bar me-2 text-success"></i>
+            学习进度趋势
+          </h4>
+          <div class="chart-container">
+            <canvas id="progressChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 学习建议 -->
+     <div class="row">
+       <div class="col-12 mb-4">
+         <div class="report-card">
+           <h4 class="mb-4">
+             <i class="fas fa-lightbulb me-2 text-warning"></i>
+             AI智能学习建议
+           </h4>
+           <div id="recommendations-container">
+             <!-- 学习建议将通过JavaScript动态加载 -->
+           </div>
+         </div>
+       </div>
+     </div>
+
+    <!-- 学习成就 -->
+     <div class="row">
+       <div class="col-12 mb-4">
+         <div class="report-card">
+           <h4 class="mb-4">
+             <i class="fas fa-trophy me-2 text-warning"></i>
+             学习成就
+           </h4>
+           <div id="achievements-container">
+             <!-- 学习成就将通过JavaScript动态加载 -->
+           </div>
+         </div>
+       </div>
+     </div>
+  </div>
 
   <script src="../../js/bootstrap.bundle.min.js"></script>
-  <!-- <script src="../../js/firebase-app-compat.js"></script> 
-  <script src="../../js/firebase-auth-compat.js"></script> 
-  <script src="../../firebase-config.js"></script>
-  <script src="../../js/components-loader-explore.js"></script> -->
+  <!-- 引入模块化JavaScript文件 -->
+  <script src="../js/modules/student-report/DataLoader.js"></script>
+  <script src="../js/modules/student-report/ReportRenderer.js"></script>
+  <script src="../js/student-report.js"></script>
 </body>
 
 </html>

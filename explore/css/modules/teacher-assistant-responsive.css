@@ -1,0 +1,37 @@
+/* 教师智能备课助手 - 响应式设计模块 */
+
+/* 平板设备响应式设计 */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0 15px;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .lesson-plan-content, .exercise-content {
+    padding: 1rem;
+  }
+}
+
+/* 手机设备响应式设计 */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1rem;
+  }
+  
+  .card-header h4, .card-header h5 {
+    font-size: 1.1rem;
+  }
+  
+  .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}

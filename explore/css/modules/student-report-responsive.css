@@ -1,0 +1,146 @@
+/* 学习分析报告 - 响应式设计模块 */
+
+/* 平板设备响应式设计 */
+@media (max-width: 768px) {
+  .report-header {
+    padding: 2rem 0;
+  }
+  
+  .report-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .report-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .row:first-of-type .report-card {
+    min-height: 220px;
+  }
+  
+  .row:nth-of-type(2) .report-card {
+    min-height: 300px;
+  }
+  
+  .progress-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 1.1rem;
+  }
+  
+  .stat-number {
+    font-size: 2.2rem;
+  }
+  
+  .knowledge-item {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .knowledge-item .badge {
+    align-self: flex-end;
+  }
+  
+  .chart-container {
+    height: 250px;
+    padding: 0.5rem;
+  }
+  
+  .recommendation-item {
+    padding: 1rem;
+  }
+  
+  .achievement-item {
+    flex: 0 0 220px;
+    padding: 1rem;
+  }
+  
+  .achievement-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .achievement-icon i {
+    font-size: 1.5rem;
+  }
+  
+  .achievement-title {
+    font-size: 0.9rem;
+  }
+  
+  .achievement-desc {
+    font-size: 0.8rem;
+  }
+  
+  .achievements-scroll-track {
+    animation-duration: 25s;
+  }
+}
+
+/* 手机设备响应式设计 */
+@media (max-width: 576px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .report-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .row:first-of-type .report-card {
+    min-height: 180px;
+  }
+  
+  .row:nth-of-type(2) .report-card {
+    min-height: 250px;
+  }
+  
+  .progress-circle {
+    width: 80px;
+    height: 80px;
+    font-size: 1rem;
+  }
+  
+  .stat-number {
+    font-size: 1.8rem;
+  }
+  
+  .knowledge-item {
+    padding: 0.8rem;
+  }
+  
+  .chart-container {
+    height: 200px;
+  }
+  
+  .achievement-item {
+    flex: 0 0 180px;
+    padding: 0.8rem;
+  }
+  
+  .achievement-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .achievement-icon i {
+    font-size: 1.2rem;
+  }
+  
+  .achievement-title {
+    font-size: 0.85rem;
+  }
+  
+  .achievement-desc {
+    font-size: 0.75rem;
+  }
+  
+  .achievements-scroll-track {
+    animation-duration: 20s;
+    gap: 1rem;
+  }
+}

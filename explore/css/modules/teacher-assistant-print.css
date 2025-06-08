@@ -1,0 +1,18 @@
+/* 教师智能备课助手 - 打印样式模块 */
+
+/* 打印样式 */
+@media print {
+  .navbar, .card-header .btn, footer {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6 !important;
+  }
+  
+  .lesson-plan-content, .exercise-content {
+    background-color: white !important;
+    border: none !important;
+  }
+}

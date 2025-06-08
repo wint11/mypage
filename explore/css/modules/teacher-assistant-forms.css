@@ -1,0 +1,90 @@
+/* 教师智能备课助手 - 表单和按钮组件模块 */
+
+/* 表单样式 */
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+/* 复选框样式 */
+.form-check {
+  margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+  border-radius: 4px;
+}
+
+.form-check-input:checked {
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+.form-check-label {
+  font-weight: 400;
+  color: #495057;
+}
+
+/* 按钮样式 */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.btn-outline-primary {
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.btn-outline-primary:hover {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  transform: translateY(-1px);
+}
+
+.btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  border-color: #28a745;
+  transform: translateY(-1px);
+}

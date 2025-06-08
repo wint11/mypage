@@ -1,0 +1,21 @@
+/* 学习分析报告 - 模块化样式入口文件 */
+
+/* 导入所有模块 */
+@import url('./modules/student-report-base.css');
+@import url('./modules/student-report-components.css');
+@import url('./modules/student-report-achievements.css');
+@import url('./modules/student-report-animations.css');
+@import url('./modules/student-report-responsive.css');
+@import url('./modules/student-report-tooltips.css');
+@import url('./modules/student-report-accessibility.css');
+
+/* 
+模块说明：
+- student-report-base.css: 基础样式、变量定义、布局
+- student-report-components.css: 组件样式（进度圆圈、徽章、图表等）
+- student-report-achievements.css: 滚动成就系统
+- student-report-animations.css: 动画效果和加载状态
+- student-report-responsive.css: 响应式设计
+- student-report-tooltips.css: 工具提示和交互增强
+- student-report-accessibility.css: 无障碍支持和打印样式
+*/

@@ -1,0 +1,113 @@
+/* 教师智能备课助手 - 功能面板模块 */
+
+/* 工具面板样式 */
+.tool-panel {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 左侧功能列表样式 */
+.list-group-item {
+  border: none;
+  padding: 1rem 1.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #e3f2fd;
+  transform: translateX(5px);
+}
+
+.list-group-item.active {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  color: white;
+  font-weight: 500;
+}
+
+.list-group-item.active:hover {
+  background-color: #1565c0;
+  transform: translateX(0);
+}
+
+.list-group-item i {
+  width: 20px;
+  text-align: center;
+}
+
+/* 内容显示区域样式 */
+.lesson-plan-content, .exercise-content {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-height: 200px;
+  border: 1px solid #e9ecef;
+}
+
+.lesson-plan-content h1, .lesson-plan-content h2, .lesson-plan-content h3 {
+  color: #1976d2;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.lesson-plan-content h1:first-child, .lesson-plan-content h2:first-child {
+  margin-top: 0;
+}
+
+.lesson-plan-content ul, .lesson-plan-content ol {
+  padding-left: 1.5rem;
+}
+
+.lesson-plan-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* 练习题内容样式 */
+.exercise-content .exercise-item {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.exercise-content .exercise-item:last-child {
+  margin-bottom: 0;
+}
+
+.exercise-content .exercise-number {
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.exercise-content .exercise-question {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.exercise-content .exercise-options {
+  margin-bottom: 1rem;
+}
+
+.exercise-content .exercise-options .option {
+  margin-bottom: 0.3rem;
+  padding: 0.3rem 0;
+}
+
+.exercise-content .exercise-answer {
+  background-color: #e8f5e8;
+  border-left: 4px solid #28a745;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.exercise-content .exercise-solution {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 0.8rem;
+  border-radius: 0 4px 4px 0;
+}

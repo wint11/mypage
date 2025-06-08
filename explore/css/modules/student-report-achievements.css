@@ -1,0 +1,121 @@
+/* 学习分析报告 - 滚动成就系统模块 */
+
+/* 滚动成就容器 */
+.achievements-scroll-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, transparent 10%, transparent 90%, rgba(255,255,255,0.8) 100%);
+  border-radius: var(--border-radius);
+  padding: 1rem 0;
+}
+
+.achievements-scroll-track {
+  display: flex;
+  animation: scrollAchievements 30s linear infinite;
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+/* 成就卡片样式 */
+.achievement-item {
+  flex: 0 0 280px;
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.achievement-item.achieved {
+  border-color: rgba(40, 167, 69, 0.3);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(255, 255, 255, 0.95));
+}
+
+.achievement-item.not-achieved {
+  border-color: rgba(108, 117, 125, 0.3);
+  background: linear-gradient(135deg, rgba(108, 117, 125, 0.05), rgba(255, 255, 255, 0.95));
+  opacity: 0.7;
+}
+
+/* 成就图标样式 */
+.achievement-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: var(--transition);
+}
+
+.achieved .achievement-icon {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.not-achieved .achievement-icon {
+  background: linear-gradient(135deg, #6c757d, #adb5bd);
+  color: white;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+.achievement-icon i {
+  font-size: 1.8rem;
+}
+
+/* 成就信息样式 */
+.achievement-info {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.achievement-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.achievement-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.achievement-status {
+  margin-top: auto;
+}
+
+/* 成就卡片交互效果 */
+.achievement-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.achievement-item:hover .achievement-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 滚动动画 */
+@keyframes scrollAchievements {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* 暂停滚动 */
+.achievements-scroll-container:hover .achievements-scroll-track {
+  animation-play-state: paused;
+}
