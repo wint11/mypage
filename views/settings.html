@@ -4,86 +4,282 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>建议反馈</title>
+  <title>系统设置 - 启元慧学</title>
   <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .feedback-link {
-      position: absolute;
-      top: 40vh;
-      /* 相当于页面高度的 2/5（0.4） */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 700px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-
-    .feedback-link p {
-      font-size: 1.1rem;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .feedback-link a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: 500;
-    }
-
-    .feedback-link a:hover {
-      text-decoration: underline;
-    }
-
-    .feedback-link i {
-      font-size: 2rem;
-      color: #17a2b8;
-      margin-bottom: 10px;
-    }
-
-    #footer-container {
-      margin-top: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-  </style>
+  <link rel="stylesheet" href="css/settings.css">
 </head>
 
 <body>
   <div id="nav-container"></div>
 
-  <div class="feedback-link">
-    <i class="bi bi-chat-dots-fill"></i>
-    <p>开发组已经在努力开发了，头发要掉光了。。。</p>
-    <a href="https://gitee.com/wint11/ai4edu/issues" target="_blank">
-      👉 前往 Gitee Issues 反馈页面
-    </a>
+  <div class="settings-container">
+    <!-- 页面标题 -->
+    <div class="settings-card">
+      <div class="settings-header">
+        <h1><i class="bi bi-gear-fill"></i> 系统设置</h1>
+        <p>个性化您的学习体验</p>
+      </div>
+    </div>
+
+    <!-- 界面设置 -->
+    <div class="settings-card">
+      <div class="settings-section">
+        <div class="section-title">
+          <i class="bi bi-palette-fill"></i>
+          界面设置
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">主题模式</div>
+            <p class="setting-description">选择您喜欢的界面主题</p>
+          </div>
+          <div class="setting-control">
+            <select class="form-select" id="themeSelect">
+              <option value="light">浅色主题</option>
+              <option value="dark">深色主题</option>
+              <option value="auto">跟随系统</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">字体大小</div>
+            <p class="setting-description">调整界面文字大小</p>
+          </div>
+          <div class="setting-control">
+            <select class="form-select" id="fontSizeSelect">
+              <option value="small">小号字体</option>
+              <option value="medium" selected>标准字体</option>
+              <option value="large">大号字体</option>
+              <option value="extra-large">超大字体</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">动画效果</div>
+            <p class="setting-description">启用界面动画和过渡效果</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="animationSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">紧凑模式</div>
+            <p class="setting-description">减少界面元素间距，显示更多内容</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="compactSwitch">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 声音设置 -->
+    <div class="settings-card">
+      <div class="settings-section">
+        <div class="section-title">
+          <i class="bi bi-volume-up-fill"></i>
+          声音设置
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">主音量</div>
+            <p class="setting-description">调整系统整体音量</p>
+          </div>
+          <div class="setting-control d-flex align-items-center">
+            <input type="range" class="form-range" id="masterVolume" min="0" max="100" value="80">
+            <span class="volume-display" id="masterVolumeDisplay">80%</span>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">提示音效</div>
+            <p class="setting-description">启用操作反馈音效</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="soundEffectsSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">语音播报</div>
+            <p class="setting-description">启用题目和答案的语音播报</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="voiceSwitch">
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">语音速度</div>
+            <p class="setting-description">调整语音播报速度</p>
+          </div>
+          <div class="setting-control d-flex align-items-center">
+            <input type="range" class="form-range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1">
+            <span class="volume-display" id="voiceSpeedDisplay">1.0x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 学习设置 -->
+    <div class="settings-card">
+      <div class="settings-section">
+        <div class="section-title">
+          <i class="bi bi-book-fill"></i>
+          学习设置
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">自动保存进度</div>
+            <p class="setting-description">自动保存学习进度和答题记录</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="autoSaveSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">学习提醒</div>
+            <p class="setting-description">定时提醒您进行学习</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="reminderSwitch">
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">难度自适应</div>
+            <p class="setting-description">根据答题情况自动调整题目难度</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="adaptiveSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">错题重做</div>
+            <p class="setting-description">自动收集错题供后续复习</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="wrongQuestionsSwitch" checked>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 隐私设置 -->
+    <div class="settings-card">
+      <div class="settings-section">
+        <div class="section-title">
+          <i class="bi bi-shield-fill-check"></i>
+          隐私设置
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">数据分析</div>
+            <p class="setting-description">允许收集匿名使用数据以改进服务</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="analyticsSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">学习记录同步</div>
+            <p class="setting-description">在多设备间同步学习进度</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="syncSwitch" checked>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">离线模式</div>
+            <p class="setting-description">启用离线学习功能</p>
+          </div>
+          <div class="setting-control">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="offlineSwitch">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="settings-card">
+      <div class="action-buttons">
+        <button type="button" class="btn btn-reset" onclick="resetSettings()">
+          <i class="bi bi-arrow-clockwise"></i> 恢复默认
+        </button>
+        <button type="button" class="btn btn-save" onclick="saveSettings()">
+          <i class="bi bi-check-lg"></i> 保存设置
+        </button>
+      </div>
+    </div>
   </div>
 
   <div id="footer-container"></div>
+
+  <!-- Toast 通知 -->
+  <div class="toast-container">
+    <div id="settingsToast" class="toast" role="alert">
+      <div class="toast-header">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        <strong class="me-auto">设置</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body">
+        设置已保存成功！
+      </div>
+    </div>
+  </div>
 
   <script src="../js/bootstrap.bundle.min.js"></script>
   <script src="../js/firebase-app-compat.js"></script>
   <script src="../js/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="../js/components-loader-views.js"></script>
+  <script src="js/settings.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,54 @@
+body {
+  background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-link {
+  position: absolute;
+  top: 40vh;
+  /* 相当于页面高度的 2/5（0.4） */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 700px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.feedback-link p {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.feedback-link a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.feedback-link a:hover {
+  text-decoration: underline;
+}
+
+.feedback-link i {
+  font-size: 2rem;
+  color: #17a2b8;
+  margin-bottom: 10px;
+}
+
+#footer-container {
+  margin-top: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+}

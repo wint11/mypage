@@ -4,77 +4,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>建议反馈</title>
+  <title>个人资料 - 启元慧学</title>
   <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .feedback-link {
-      position: absolute;
-      top: 40vh;
-      /* 相当于页面高度的 2/5（0.4） */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 700px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-
-    .feedback-link p {
-      font-size: 1.1rem;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .feedback-link a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: 500;
-    }
-
-    .feedback-link a:hover {
-      text-decoration: underline;
-    }
-
-    .feedback-link i {
-      font-size: 2rem;
-      color: #17a2b8;
-      margin-bottom: 10px;
-    }
-
-    #footer-container {
-      margin-top: auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-  </style>
+  <link rel="stylesheet" href="css/profile.css">
 </head>
 
 <body>
   <div id="nav-container"></div>
 
-  <div class="feedback-link">
-    <i class="bi bi-chat-dots-fill"></i>
-    <p>即将上线，敬请期待~</p>
-    <a href="https://gitee.com/wint11/ai4edu/issues" target="_blank">
-      👉 前往 Gitee Issues 反馈页面
-    </a>
+  <div class="profile-container">
+    <!-- 用户信息卡片 -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-container">
+          <div class="avatar" id="userAvatar">启</div>
+          <button class="avatar-edit" onclick="editAvatar()">
+            <i class="bi bi-camera-fill"></i>
+          </button>
+        </div>
+        <h1 class="user-name" id="userName">启元学者</h1>
+        <p class="user-title" id="userTitle">数学爱好者 · 活跃学习者</p>
+        
+        <div class="user-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="totalCourses">12</span>
+            <span class="stat-label">已学课程</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="totalExercises">1,247</span>
+            <span class="stat-label">完成练习</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="studyDays">89</span>
+            <span class="stat-label">学习天数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="studyHours">156</span>
+            <span class="stat-label">学习时长</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- 基本信息 -->
+      <div class="col-lg-6">
+        <div class="profile-card">
+          <div class="section-title">
+            <i class="bi bi-person-fill"></i>
+            基本信息
+          </div>
+          <div class="section-content">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">用户名</span>
+                <div class="d-flex align-items-center">
+                  <span class="info-value me-2" id="displayUsername">qiyuan_learner</span>
+                  <button class="edit-btn" onclick="editField('username')">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-item">
+                <span class="info-label">邮箱</span>
+                <div class="d-flex align-items-center">
+                  <span class="info-value me-2" id="displayEmail">user@example.com</span>
+                  <button class="edit-btn" onclick="editField('email')">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-item">
+                <span class="info-label">注册时间</span>
+                <span class="info-value" id="registerDate">2024年1月15日</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">最后登录</span>
+                <span class="info-value" id="lastLogin">2024年3月20日 14:30</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">学习等级</span>
+                <span class="info-value" id="userLevel">Lv.8 学者</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">经验值</span>
+                <span class="info-value" id="userExp">2,450 / 3,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学习进度 -->
+        <div class="profile-card">
+          <div class="section-title">
+            <i class="bi bi-graph-up"></i>
+            学习进度
+          </div>
+          <div class="section-content">
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">高等数学</span>
+                <span class="progress-value">85%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 85%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">线性代数</span>
+                <span class="progress-value">72%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar bg-info" style="width: 72%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">概率论</span>
+                <span class="progress-value">45%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar bg-warning" style="width: 45%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">微分方程</span>
+                <span class="progress-value">28%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar bg-danger" style="width: 28%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成就系统 -->
+      <div class="col-lg-6">
+        <div class="profile-card">
+          <div class="section-title">
+            <i class="bi bi-trophy-fill"></i>
+            成就徽章
+          </div>
+          <div class="section-content">
+            <div class="achievement-grid">
+              <div class="achievement-item earned" title="完成首次学习">
+                <i class="bi bi-star-fill achievement-icon"></i>
+                <div class="achievement-title">初学者</div>
+                <div class="achievement-desc">完成首次学习</div>
+              </div>
+              <div class="achievement-item earned" title="连续学习7天">
+                <i class="bi bi-calendar-check-fill achievement-icon"></i>
+                <div class="achievement-title">坚持者</div>
+                <div class="achievement-desc">连续学习7天</div>
+              </div>
+              <div class="achievement-item earned" title="完成100道练习题">
+                <i class="bi bi-lightning-fill achievement-icon"></i>
+                <div class="achievement-title">练习达人</div>
+                <div class="achievement-desc">完成100道题</div>
+              </div>
+              <div class="achievement-item earned" title="获得90%以上正确率">
+                <i class="bi bi-bullseye achievement-icon"></i>
+                <div class="achievement-title">精准射手</div>
+                <div class="achievement-desc">正确率90%+</div>
+              </div>
+              <div class="achievement-item" title="连续学习30天">
+                <i class="bi bi-fire achievement-icon"></i>
+                <div class="achievement-title">学习狂人</div>
+                <div class="achievement-desc">连续学习30天</div>
+              </div>
+              <div class="achievement-item" title="完成所有基础课程">
+                <i class="bi bi-mortarboard-fill achievement-icon"></i>
+                <div class="achievement-title">学者</div>
+                <div class="achievement-desc">完成基础课程</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最近活动 -->
+        <div class="profile-card">
+          <div class="section-title">
+            <i class="bi bi-clock-history"></i>
+            最近活动
+          </div>
+          <div class="section-content">
+            <div class="recent-activity">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="bi bi-book"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">完成了《高等数学》第8章练习</div>
+                  <div class="activity-time">2小时前</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="bi bi-trophy"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">获得成就：精准射手</div>
+                  <div class="activity-time">1天前</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="bi bi-lightning"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">完成了50道线性代数练习题</div>
+                  <div class="activity-time">2天前</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="bi bi-star"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">开始学习《概率论与数理统计》</div>
+                  <div class="activity-time">3天前</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">完成了微分方程基础测试</div>
+                  <div class="activity-time">5天前</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="profile-card">
+      <div class="action-buttons">
+        <button type="button" class="btn btn-edit-profile" onclick="editProfile()">
+          <i class="bi bi-pencil-square"></i> 编辑资料
+        </button>
+      </div>
+    </div>
   </div>
 
   <div id="footer-container"></div>
@@ -84,6 +261,155 @@
   <script src="../js/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="../js/components-loader-views.js"></script>
+
+  <script>
+    // 个人资料管理
+    class ProfileManager {
+      constructor() {
+        this.userProfile = this.loadProfile();
+        this.initializeProfile();
+        this.loadUserStats();
+      }
+
+      // 加载用户资料
+      loadProfile() {
+        const defaultProfile = {
+          username: 'qiyuan_learner',
+          email: 'user@example.com',
+          displayName: '启元学者',
+          title: '数学爱好者 · 活跃学习者',
+          avatar: '启',
+          registerDate: '2024年1月15日',
+          lastLogin: new Date().toLocaleString('zh-CN'),
+          level: 8,
+          exp: 2450,
+          maxExp: 3000
+        };
+
+        const saved = localStorage.getItem('userProfile');
+        return saved ? { ...defaultProfile, ...JSON.parse(saved) } : defaultProfile;
+      }
+
+      // 保存用户资料
+      saveProfile() {
+        localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+      }
+
+      // 初始化资料显示
+      initializeProfile() {
+        document.getElementById('userAvatar').textContent = this.userProfile.avatar;
+        document.getElementById('userName').textContent = this.userProfile.displayName;
+        document.getElementById('userTitle').textContent = this.userProfile.title;
+        document.getElementById('displayUsername').textContent = this.userProfile.username;
+        document.getElementById('displayEmail').textContent = this.userProfile.email;
+        document.getElementById('registerDate').textContent = this.userProfile.registerDate;
+        document.getElementById('lastLogin').textContent = this.userProfile.lastLogin;
+        document.getElementById('userLevel').textContent = `Lv.${this.userProfile.level} 学者`;
+        document.getElementById('userExp').textContent = `${this.userProfile.exp} / ${this.userProfile.maxExp}`;
+      }
+
+      // 加载用户统计数据
+      loadUserStats() {
+        // 模拟从服务器加载统计数据
+        const stats = {
+          totalCourses: 12,
+          totalExercises: 1247,
+          studyDays: 89,
+          studyHours: 156
+        };
+
+        document.getElementById('totalCourses').textContent = stats.totalCourses;
+        document.getElementById('totalExercises').textContent = stats.totalExercises.toLocaleString();
+        document.getElementById('studyDays').textContent = stats.studyDays;
+        document.getElementById('studyHours').textContent = stats.studyHours;
+      }
+
+      // 编辑字段
+      editField(fieldName) {
+        const currentValue = this.userProfile[fieldName];
+        const newValue = prompt(`请输入新的${this.getFieldLabel(fieldName)}:`, currentValue);
+        
+        if (newValue && newValue !== currentValue) {
+          this.userProfile[fieldName] = newValue;
+          this.saveProfile();
+          this.initializeProfile();
+          this.showMessage('资料更新成功！');
+        }
+      }
+
+      // 获取字段标签
+      getFieldLabel(fieldName) {
+        const labels = {
+          username: '用户名',
+          email: '邮箱地址',
+          displayName: '显示名称',
+          title: '个人简介'
+        };
+        return labels[fieldName] || fieldName;
+      }
+
+      // 编辑头像
+      editAvatar() {
+        const newAvatar = prompt('请输入新的头像字符（1个字符）:', this.userProfile.avatar);
+        if (newAvatar && newAvatar.length === 1) {
+          this.userProfile.avatar = newAvatar;
+          this.saveProfile();
+          this.initializeProfile();
+          this.showMessage('头像更新成功！');
+        }
+      }
+
+      // 编辑完整资料
+      editProfile() {
+        // 这里可以打开一个模态框进行完整的资料编辑
+        alert('完整的资料编辑功能正在开发中...');
+      }
+
+      // 显示消息
+      showMessage(message) {
+        // 创建临时提示
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        alert.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+        alert.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alert);
+        
+        // 3秒后自动移除
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.parentNode.removeChild(alert);
+          }
+        }, 3000);
+      }
+    }
+
+    // 全局函数
+    let profileManager;
+
+    function editField(fieldName) {
+      profileManager.editField(fieldName);
+    }
+
+    function editAvatar() {
+      profileManager.editAvatar();
+    }
+
+    function editProfile() {
+      profileManager.editProfile();
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      profileManager = new ProfileManager();
+      
+      // 更新最后登录时间
+      profileManager.userProfile.lastLogin = new Date().toLocaleString('zh-CN');
+      profileManager.saveProfile();
+    });
+  </script>
 </body>
 
 </html>

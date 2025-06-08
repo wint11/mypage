@@ -1,0 +1,334 @@
+body {
+  background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #28a745, #20c997);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  font-weight: bold;
+}
+
+.avatar-edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar-edit:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.user-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.user-title {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.user-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  padding: 1.5rem 2rem 0;
+}
+
+.section-title i {
+  margin-right: 0.5rem;
+  color: #007bff;
+  font-size: 1.3rem;
+}
+
+.section-content {
+  padding: 0 2rem 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.info-value {
+  color: #666;
+  font-weight: 400;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+.progress-item {
+  margin-bottom: 1.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.progress-value {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 4px;
+  background: #e9ecef;
+}
+
+.progress-bar {
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.achievement-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.achievement-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-item.earned {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #333;
+}
+
+.achievement-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.achievement-item.earned .achievement-icon {
+  color: #ff6b35;
+}
+
+.achievement-item:not(.earned) .achievement-icon {
+  color: #ccc;
+}
+
+.achievement-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.achievement-desc {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.recent-activity {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.activity-time {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.btn-edit-profile {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border: none;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-edit-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  color: white;
+}
+
+.action-buttons {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+
+  .user-stats {
+    gap: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .section-content {
+    padding: 0 1rem 1.5rem;
+  }
+}
