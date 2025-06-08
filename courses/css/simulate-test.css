@@ -1,0 +1,399 @@
+/* 模拟测试样式 */
+
+.simulate-test-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.test-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.test-progress {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+}
+
+.test-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#test-question-container {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+.question-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.question-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.question-header h5 {
+    color: #495057;
+    font-weight: 600;
+    margin: 0;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: #212529;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.simulate-test-container .form-check {
+    margin-bottom: 0.75rem;
+    padding: 15px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.simulate-test-container .form-check:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,123,255,0.1);
+}
+
+.form-check.option-row {
+    position: relative;
+}
+
+.form-check.option-row:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,123,255,0.1);
+}
+
+.form-check:has(.form-check-input:checked) {
+    background-color: #e7f3ff;
+    border-color: #007bff;
+}
+
+.form-check-input:checked + .form-check-label {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.test-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+/* 测试结果样式 */
+.test-result-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.result-header {
+    margin-bottom: 40px;
+}
+
+.score-display {
+    margin: 30px 0;
+}
+
+.score-circle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 8px solid currentColor;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.score-number {
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+.grade {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.result-summary {
+    margin: 40px 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.stat-card h5 {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #495057;
+    margin: 0;
+}
+
+.result-actions {
+    margin: 40px 0;
+}
+
+/* 答题详情样式 */
+.result-details {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.detail-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.detail-item.correct {
+    border-left: 4px solid #28a745;
+}
+
+.detail-item.incorrect {
+    border-left: 4px solid #dc3545;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.question-number {
+    font-weight: 600;
+    color: #495057;
+}
+
+.result-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.detail-item.correct .result-icon {
+    color: #28a745;
+}
+
+.detail-item.incorrect .result-icon {
+    color: #dc3545;
+}
+
+.detail-content {
+    padding: 20px;
+}
+
+.detail-content p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.explanation {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+    margin-top: 15px;
+}
+
+/* 测试设置样式 */
+.test-setup-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.setup-header {
+    margin-bottom: 40px;
+}
+
+.setup-form {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-select, .form-check-input {
+    border-radius: 8px;
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .test-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .test-progress {
+        justify-content: center;
+    }
+    
+    .test-actions {
+        justify-content: center;
+    }
+    
+    #test-question-container {
+        padding: 20px;
+    }
+    
+    .score-circle {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .score-number {
+        font-size: 2.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .setup-form {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .simulate-test-container {
+        padding: 10px;
+    }
+    
+    .test-navigation {
+        flex-direction: column;
+    }
+    
+    .result-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .result-actions .btn {
+        width: 100%;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question-wrapper {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.test-result-container {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.test-setup-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 时间警告样式 */
+.text-danger {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}

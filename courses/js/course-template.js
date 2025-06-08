@@ -2,7 +2,7 @@
 // 通用课程脚本模板
 
 import { ExerciseManager } from './ExerciseManager.js';
-import { setupUI } from './UI.js';
+import { setupUI, setupSimulateButton } from './UI.js';
 import { renderExercise } from './ExerciseRenderer.js';
 import { preloadNextExercise } from './ExerciseGenerator.js';
 import { exportToDocx } from './DocxExporter.js';
@@ -82,8 +82,13 @@ export function initCourse(courseId) {
             generateLearningReport(actualCourseId);
         },
         onSimulate: () => {
-            // TODO: 实现模拟测试功能
-            alert('模拟测试功能开发中...');
+            // 导入并启动模拟测试
+            import('./SimulateTest.js').then(module => {
+                module.startSimulateTest(actualCourseId);
+            }).catch(error => {
+                console.error('加载模拟测试模块失败:', error);
+                alert('模拟测试功能暂时不可用，请稍后再试。');
+            });
         }
     });
     

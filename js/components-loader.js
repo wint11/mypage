@@ -1,16 +1,25 @@
-// 加载组件
-fetch('components/nav.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('nav-container').innerHTML = html;
-    initFirebaseAuth(); // 👈 确保 auth 初始化在 HTML 插入之后
-  });
+// 确保 DOM 加载完成后再执行
+document.addEventListener('DOMContentLoaded', function() {
+  // 加载导航栏和页脚
+  fetch('components/nav.html')
+    .then(res => res.text())
+    .then(html => {
+      const navContainer = document.getElementById('nav-container');
+      if (navContainer) {
+        navContainer.innerHTML = html;
+        initFirebaseAuth(); // 👈 确保 auth 初始化在 HTML 插入之后
+      }
+    });
 
-fetch('components/footer.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('footer-container').innerHTML = html;
-  });
+  const footerContainer = document.getElementById('footer-container');
+  if (footerContainer) {
+    fetch('components/footer.html')
+      .then(res => res.text())
+      .then(html => {
+        footerContainer.innerHTML = html;
+      });
+  }
+});
 
 
 

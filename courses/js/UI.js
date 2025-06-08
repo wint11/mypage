@@ -25,17 +25,11 @@ export function setupUI(callbacks) {
 
     const reportBtn = document.getElementById('report-btn');
     if (reportBtn) {
-        reportBtn.addEventListener('click', callbacks.onReport || function () {
-            alert('正在加急开发ing。');
-        });
+        reportBtn.addEventListener('click', callbacks.onReport);
     }
 
-    const simulateBtn = document.getElementById('simulate-btn');
-    if (simulateBtn) {
-        simulateBtn.addEventListener('click', callbacks.onSimulate || function () {
-            alert('正在加急开发ing。');
-        });
-    }
+    // 模拟测试按钮处理已移至独立模块
+    setupSimulateButton(callbacks.onSimulate);
 }
 
 export function updateButtons(exerciseManager) {
@@ -58,4 +52,27 @@ export function resetOptions(name) {
         opt.disabled = false;
         opt.checked = false;
     });
+}
+
+/**
+ * 设置模拟测试按钮
+ * @param {Function} onSimulate - 模拟测试回调函数
+ */
+export function setupSimulateButton(onSimulate) {
+    const simulateBtn = document.getElementById('simulate-btn');
+    if (simulateBtn) {
+        simulateBtn.addEventListener('click', onSimulate || function () {
+            alert('模拟测试功能暂时不可用。');
+        });
+        
+        // 添加按钮状态管理
+        simulateBtn.setAttribute('data-bs-toggle', 'tooltip');
+        simulateBtn.setAttribute('data-bs-placement', 'top');
+        simulateBtn.setAttribute('title', '开始模拟测试，检验学习成果');
+        
+        // 初始化 Bootstrap tooltip
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            new bootstrap.Tooltip(simulateBtn);
+        }
+    }
 }
