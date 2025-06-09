@@ -2,8 +2,11 @@
 // 所有课程的配置信息，包括prompt、标题等
 // 基于 views/data/courses.json 的课程数据结构
 
+import { getFolderToIdMapping } from './course-mapping-loader.js';
+
 // 课程数据缓存
 let coursesJsonData = null;
+let folderToIdMapping = null;
 
 // 从courses.json加载课程数据
 export async function loadCoursesJsonData() {
@@ -15,6 +18,7 @@ export async function loadCoursesJsonData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         coursesJsonData = await response.json();
+        console.log(coursesJsonData);
         console.log('CourseConfig: 课程JSON数据加载成功');
         return coursesJsonData;
     } catch (error) {
@@ -30,18 +34,13 @@ export function getCourseInfoById(courseId) {
 }
 
 // 根据文件夹名获取课程信息
-export function getCourseInfoByFolder(folderName) {
-    const courseIdMapping = {
-        'gaodengshuxue': 'course1',
-        'xianxingdaishu': 'course2',
-        'gailvlun': 'course3',
-        'lisuan': 'course4',
-        'fubian': 'course5',
-        'weifenfangcheng': 'course6',
-        'caozuoxitong': 'course7'
-    };
+export async function getCourseInfoByFolder(folderName) {
+    // 加载映射数据
+    if (!folderToIdMapping) {
+        folderToIdMapping = await getFolderToIdMapping();
+    }
     
-    const courseId = courseIdMapping[folderName];
+    const courseId = folderToIdMapping[folderName];
     return courseId ? getCourseInfoById(courseId) : null;
 }
 

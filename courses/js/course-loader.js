@@ -1,29 +1,22 @@
 // courses/js/course-loader.js
 // 动态课程加载器
+import { getIdToFolderMapping } from './course-mapping-loader.js';
 
 // 课程数据缓存
 let coursesData = null;
 let courseConfigMap = {};
-
-// 课程ID映射表（将courses.json中的ID映射到文件夹名）
-const courseIdMapping = {
-    "course1": "gaodengshuxue",
-    "course2": "xianxingdaishu", 
-    "course3": "gailvlun",
-    "course4": "lisuan",
-    "course5": "fubian",
-    "course6": "weifenfangcheng",
-    "course7": "caozuoxitong",
-    "course8": "shujujiegou",
-    "course9": "jisuanjiwangluo",
-    "course10": "shujuku"
-};
+let courseIdMapping = null; // 将从统一配置文件中加载
 
 // 加载课程数据
 async function loadCoursesData() {
     if (coursesData) return coursesData;
     
     try {
+        // 先加载课程映射数据
+        if (!courseIdMapping) {
+            courseIdMapping = await getIdToFolderMapping();
+        }
+        
         const response = await fetch('../../views/data/courses.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -200,7 +193,9 @@ async function initializePage() {
         script.type = 'module';
         script.textContent = `
             import { initCourse } from '../js/course-template.js';
-            initCourse('${courseId}');
+            initCourse('${courseId}').catch(error => {
+                console.error('初始化课程失败:', error);
+            });
         `;
         document.head.appendChild(script);
         console.log(`课程 ${courseId} 加载成功`, config);

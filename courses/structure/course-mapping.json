@@ -1,0 +1,92 @@
+{
+  "courses": {
+    "gaodengshuxue": {
+      "id": "course1",
+      "name": "高等数学",
+      "folder": "gaodengshuxue"
+    },
+    "xianxingdaishu": {
+      "id": "course2",
+      "name": "线性代数",
+      "folder": "xianxingdaishu"
+    },
+    "gailvlun": {
+      "id": "course3",
+      "name": "概率论",
+      "folder": "gailvlun"
+    },
+    "lisuan": {
+      "id": "course4",
+      "name": "离散数学",
+      "folder": "lisuan"
+    },
+    "fubian": {
+      "id": "course5",
+      "name": "复变函数",
+      "folder": "fubian"
+    },
+    "weifenfangcheng": {
+      "id": "course6",
+      "name": "微分方程",
+      "folder": "weifenfangcheng"
+    },
+    "caozuoxitong": {
+      "id": "course7",
+      "name": "操作系统",
+      "folder": "caozuoxitong"
+    },
+    "shujujiegou": {
+      "id": "course8",
+      "name": "数据结构与算法",
+      "folder": "shujujiegou"
+    },
+    "jisuanjiwangluo": {
+      "id": "course9",
+      "name": "计算机网络",
+      "folder": "jisuanjiwangluo"
+    },
+    "shujuku": {
+      "id": "course10",
+      "name": "数据库系统",
+      "folder": "shujuku"
+    }
+  },
+  "mappings": {
+    "folderToId": {
+      "gaodengshuxue": "course1",
+      "xianxingdaishu": "course2",
+      "gailvlun": "course3",
+      "lisuan": "course4",
+      "fubian": "course5",
+      "weifenfangcheng": "course6",
+      "caozuoxitong": "course7",
+      "shujujiegou": "course8",
+      "jisuanjiwangluo": "course9",
+      "shujuku": "course10"
+    },
+    "idToFolder": {
+      "course1": "gaodengshuxue",
+      "course2": "xianxingdaishu",
+      "course3": "gailvlun",
+      "course4": "lisuan",
+      "course5": "fubian",
+      "course6": "weifenfangcheng",
+      "course7": "caozuoxitong",
+      "course8": "shujujiegou",
+      "course9": "jisuanjiwangluo",
+      "course10": "shujuku"
+    },
+    "folderToName": {
+      "gaodengshuxue": "高等数学",
+      "xianxingdaishu": "线性代数",
+      "gailvlun": "概率论",
+      "lisuan": "离散数学",
+      "fubian": "复变函数",
+      "weifenfangcheng": "微分方程",
+      "caozuoxitong": "操作系统",
+      "shujujiegou": "数据结构与算法",
+      "jisuanjiwangluo": "计算机网络",
+      "shujuku": "数据库系统"
+    }
+  }
+}

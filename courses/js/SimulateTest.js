@@ -1,6 +1,7 @@
 // 模拟测试模块
 
 import { getCourseConfig } from './CourseConfig.js';
+import { getFolderToNameMapping } from './course-mapping-loader.js';
 import { renderExercise, processLaTeX } from './ExerciseRenderer.js';
 import { updateButtons } from './UI.js';
 
@@ -10,7 +11,7 @@ import { updateButtons } from './UI.js';
 export class SimulateTest {
     constructor(courseId) {
         this.courseId = courseId;
-        this.courseConfig = getCourseConfig(courseId);
+        this.courseConfig = null; // 将在init方法中异步加载
         this.questions = [];
         this.currentQuestionIndex = 0;
         this.answers = [];
@@ -27,6 +28,15 @@ export class SimulateTest {
      * @param {number} timeLimit - 时间限制（分钟）
      */
     async start(questionCount = 10, timeLimit = 60) {
+        // 异步加载课程配置
+        if (!this.courseConfig) {
+            this.courseConfig = await getCourseConfig(this.courseId);
+            if (!this.courseConfig) {
+                console.error('无法加载课程配置:', this.courseId);
+                return;
+            }
+        }
+        
         this.timeLimit = timeLimit;
         this.isActive = true;
         this.startTime = new Date();
@@ -167,14 +177,15 @@ export class SimulateTest {
      */
     saveQuestionsToLocalStorage() {
         try {
+            const courseSubject = this.courseConfig?.subject || this.courseId || 'unknown';
             const questionsData = {
                 questions: this.questions,
                 timestamp: new Date().toISOString(),
-                course: this.courseConfig.subject,
+                course: courseSubject,
                 questionCount: this.questions.length
             };
             
-            const storageKey = `simulate_test_${this.courseConfig.subject}_${Date.now()}`;
+            const storageKey = `simulate_test_${courseSubject}_${Date.now()}`;
             localStorage.setItem(storageKey, JSON.stringify(questionsData));
             localStorage.setItem('latest_simulate_test', storageKey);
             
@@ -287,17 +298,9 @@ export class SimulateTest {
             return null;
         }
         
-        const subjects = {
-            'gaodengshuxue': '高等数学',
-            'xianxingdaishu': '线性代数',
-            'gailvlun': '概率论',
-            'lisuan': '离散数学',
-            'fubian': '复变函数',
-            'weifenfangcheng': '微分方程',
-            'caozuoxitong': '操作系统'
-        };
-        
-        const subject = subjects[this.courseId] || '高等数学';
+        // 从统一配置中获取课程名称
+        const folderToNameMapping = await getFolderToNameMapping();
+        const subject = folderToNameMapping[this.courseId] || '高等数学';
         
         // 获取课程的具体知识点
         const knowledgePoints = await this.getKnowledgePointsForSubject(this.courseId);
@@ -439,12 +442,46 @@ export class SimulateTest {
             } catch (parseError) {
                 console.error('JSON解析失败，尝试修复常见问题:', parseError.message);
                 
-                // 尝试修复常见的JSON格式问题
-                let fixedContent = cleanContent
+                // 保护LaTeX内容的安全方法
+                let fixedContent = cleanContent;
+                const latexPlaceholders = [];
+                let placeholderIndex = 0;
+                
+                // 先保护所有LaTeX表达式（包括$...$和\(...\)格式）
+                fixedContent = fixedContent.replace(/\$([^$]+)\$/g, (match, content) => {
+                    const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
+                    latexPlaceholders[placeholderIndex] = match;
+                    placeholderIndex++;
+                    return placeholder;
+                });
+                
+                fixedContent = fixedContent.replace(/\\\(([^)]+)\\\)/g, (match, content) => {
+                    const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
+                    latexPlaceholders[placeholderIndex] = match;
+                    placeholderIndex++;
+                    return placeholder;
+                });
+                
+                // 保护独立的LaTeX命令
+                fixedContent = fixedContent.replace(/\\\\([a-zA-Z]+)/g, (match) => {
+                    const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
+                    latexPlaceholders[placeholderIndex] = match;
+                    placeholderIndex++;
+                    return placeholder;
+                });
+                
+                // 修复常见的JSON格式问题
+                fixedContent = fixedContent
                     .replace(/,\s*}/g, '}') // 移除对象尾随逗号
                     .replace(/,\s*]/g, ']') // 移除数组尾随逗号
-                    .replace(/\\(?!["\\/bfnrt])/g, '\\\\') // 修复无效的转义字符
+                    .replace(/\\(?!["\\\/bfnrt])/g, '\\\\') // 修复无效的转义字符
                     .replace(/"([^"]*?)\\"([^"]*?)"/g, '"$1\\\"$2"'); // 修复字符串内的引号转义
+                
+                // 恢复LaTeX内容
+                for (let i = placeholderIndex - 1; i >= 0; i--) {
+                    const placeholder = `__LATEX_PLACEHOLDER_${i}__`;
+                    fixedContent = fixedContent.replace(placeholder, latexPlaceholders[i]);
+                }
                 
                 console.log('修复后的JSON内容:', fixedContent.substring(0, 300) + '...');
                 questionData = JSON.parse(fixedContent);
@@ -791,7 +828,7 @@ export class SimulateTest {
             <div class="simulate-test-container">
                 <div class="test-header">
                     <div class="test-info">
-                        <h3>模拟测试 - ${this.courseConfig.subject}</h3>
+                        <h3>模拟测试 - ${this.courseConfig?.subject || this.courseId || '未知课程'}</h3>
                         <div class="test-progress">
                             <span id="question-progress">题目: 0/0</span>
                             <span id="time-remaining" class="ms-3">剩余时间: ${this.timeLimit}:00</span>

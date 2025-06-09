@@ -28,16 +28,16 @@ function getCourseId() {
 }
 
 // 初始化课程
-export function initCourse(courseId) {
+export async function initCourse(courseId) {
     const actualCourseId = courseId || getCourseId();
-    const courseConfig = getCourseConfig(actualCourseId);
+    const courseConfig = await getCourseConfig(actualCourseId);
     
     if (!courseConfig) {
         console.error('未找到课程配置:', actualCourseId);
         return;
     }
     
-    console.log('初始化课程:', actualCourseId, courseConfig.subject);
+    console.log('初始化课程:', actualCourseId, courseConfig.subject || courseConfig.title || actualCourseId);
     
     // 初始化练习管理器
     const exerciseManager = new ExerciseManager(actualCourseId);
@@ -117,9 +117,11 @@ export function initCourse(courseId) {
     }
 }
 
-// 自动初始化（当作为模块导入时）
-if (typeof window !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', () => {
-        initCourse();
+// 自动初始化（如果直接加载此脚本）
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initCourse();
     });
+} else {
+    initCourse();
 }

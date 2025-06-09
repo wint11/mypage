@@ -135,10 +135,13 @@ ${accuracy < 60 ?
 export async function generateLearningReport(courseId) {
     try {
         // 获取课程配置
-        const courseConfig = getCourseConfig(courseId);
+        const courseConfig = await getCourseConfig(courseId);
         if (!courseConfig) {
             throw new Error('未找到课程配置');
         }
+        
+        // 获取课程标题，优先使用subject，然后是title，最后使用courseId作为回退
+        const courseTitle = courseConfig.subject || courseConfig.title || courseId || '未知课程';
         
         // 获取练习管理器实例
         const exerciseManager = window.courseExerciseManagers?.[courseId];
@@ -162,17 +165,17 @@ export async function generateLearningReport(courseId) {
         // 检查API密钥是否配置
         if (AI_API_CONFIG.apiKey === 'YOUR_API_KEY_HERE' || !AI_API_CONFIG.apiKey) {
             console.warn('AI API密钥未配置，使用本地报告生成');
-            reportContent = generateLocalReport(courseConfig.title, exercises, userChoices);
+            reportContent = generateLocalReport(courseTitle, exercises, userChoices);
         } else {
             try {
                 // 生成AI分析prompt
-                const prompt = generateReportPrompt(courseConfig.title, exercises, userChoices);
+                const prompt = generateReportPrompt(courseTitle, exercises, userChoices);
                 
                 // 调用AI API
                 reportContent = await callAIAPI(prompt);
             } catch (apiError) {
                 console.warn('AI API调用失败，使用本地报告生成:', apiError);
-                reportContent = generateLocalReport(courseConfig.title, exercises, userChoices);
+                reportContent = generateLocalReport(courseTitle, exercises, userChoices);
             }
         }
         

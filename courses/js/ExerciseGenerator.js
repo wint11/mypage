@@ -18,7 +18,10 @@ const mockExercises = {
     'gailvlun': '抛掷一枚公平硬币3次，恰好出现2次正面的概率是多少？\n\n- A. 1/8\n- B. 1/4\n- C. 3/8\n- D. 1/2\n\n【正确答案：2】\n\n解析：\n这是一个二项分布问题。抛掷3次硬币，恰好2次正面的概率为 $C_3^2 \\times (\\frac{1}{2})^2 \\times (\\frac{1}{2})^1 = 3 \\times \\frac{1}{4} \\times \\frac{1}{2} = \\frac{3}{8}$。',
     'lisuan': '二进制数 1101 转换为十进制数是多少？\n\n- A. 11\n- B. 12\n- C. 13\n- D. 14\n\n【正确答案：2】\n\n解析：\n二进制转十进制：$1101_2 = 1 \\times 2^3 + 1 \\times 2^2 + 0 \\times 2^1 + 1 \\times 2^0 = 8 + 4 + 0 + 1 = 13$。',
     'weifenfangcheng': '微分方程 $\\frac{dy}{dx} = 2x$ 的通解是什么？\n\n- A. $y = x^2$\n- B. $y = x^2 + C$\n- C. $y = 2x + C$\n- D. $y = 2x^2 + C$\n\n【正确答案：1】\n\n解析：\n对 $\\frac{dy}{dx} = 2x$ 两边积分得：$y = \\int 2x dx = x^2 + C$，其中 $C$ 是积分常数。',
-    'fubian': '复数 $z = 3 + 4i$ 的模长是多少？\n\n- A. 3\n- B. 4\n- C. 5\n- D. 7\n\n【正确答案：2】\n\n解析：\n复数 $z = a + bi$ 的模长公式为 $|z| = \\sqrt{a^2 + b^2}$。对于 $z = 3 + 4i$，有 $|z| = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$。'
+    'fubian': '复数 $z = 3 + 4i$ 的模长是多少？\n\n- A. 3\n- B. 4\n- C. 5\n- D. 7\n\n【正确答案：2】\n\n解析：\n复数 $z = a + bi$ 的模长公式为 $|z| = \\sqrt{a^2 + b^2}$。对于 $z = 3 + 4i$，有 $|z| = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$。',
+    'shujujiegou': '以下哪种数据结构在查找元素时具有较好的性能？\n\n- A. 数组\n- B. 链表\n- C. 哈希表\n- D. 树\n\n【正确答案：2】\n\n解析：\n在查找元素时，哈希表的平均时间复杂度为 $O(1)$，是最好的性能。',
+    'jisuanjiwangluo': '以下哪种操作系统具有良好的并发性和稳定性？\n\n- A. Windows\n- B. Linux\n- C. macOS\n- D. Android\n\n【正确答案：2】\n\n解析：\nLinux 是一个稳定且强大的操作系统，具有良好的并发性和稳定性。',
+    'shujuku': '以下哪种数据库管理系统支持事务处理？\n\n- A. MySQL\n- B. PostgreSQL\n- C. MongoDB\n- D. SQLite\n\n【正确答案：2】\n\n解析：\nPostgreSQL 是一个功能强大的关系型数据库管理系统，支持事务处理。'
 };
 
 // 预加载下一题
