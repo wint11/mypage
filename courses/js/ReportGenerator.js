@@ -188,16 +188,64 @@ export async function generateLearningReport(courseId) {
     }
 }
 
+// 全局变量用于保存焦点元素
+let savedFocusElement = null;
+
+// 更新模态框内容的辅助函数
+function updateModalContent(modalElement, content, isLoading = false, isError = false) {
+    // 更新标题
+    const titleElement = modalElement.querySelector('.modal-title');
+    if (titleElement) {
+        titleElement.textContent = isLoading ? '生成报告中...' : isError ? '错误' : '学习报告';
+    }
+    
+    // 更新内容
+    const bodyElement = modalElement.querySelector('.modal-body');
+    if (bodyElement) {
+        if (isLoading) {
+            bodyElement.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        } else {
+            bodyElement.innerHTML = `<div class="report-content">${isError ? content : marked.parse(content)}</div>`;
+        }
+    }
+    
+    // 更新关闭按钮
+    const headerElement = modalElement.querySelector('.modal-header');
+    const footerElement = modalElement.querySelector('.modal-footer');
+    
+    if (isLoading) {
+        // 加载状态：移除关闭按钮
+        const closeButton = headerElement.querySelector('.btn-close');
+        if (closeButton) {
+            closeButton.remove();
+        }
+        if (footerElement) {
+            footerElement.remove();
+        }
+    } else {
+        // 非加载状态：确保有关闭按钮
+        if (!headerElement.querySelector('.btn-close')) {
+            headerElement.insertAdjacentHTML('beforeend', '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>');
+        }
+        if (!modalElement.querySelector('.modal-footer')) {
+            modalElement.querySelector('.modal-content').insertAdjacentHTML('beforeend', '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div>');
+        }
+    }
+}
+
 // 显示报告模态框
 function showReportModal(content, isLoading = false, isError = false) {
-    // 保存当前焦点元素
-    const previouslyFocusedElement = document.activeElement;
-    
-    // 移除已存在的模态框
+    // 检查是否已存在模态框
     const existingModal = document.getElementById('reportModal');
+    
     if (existingModal) {
-        existingModal.remove();
+        // 如果模态框已存在，只更新内容，不重新保存焦点
+        updateModalContent(existingModal, content, isLoading, isError);
+        return;
     }
+    
+    // 只在第一次创建模态框时保存焦点
+    savedFocusElement = document.activeElement;
     
     // 创建模态框HTML
     const modalHTML = `
@@ -230,17 +278,16 @@ function showReportModal(content, isLoading = false, isError = false) {
     
     // 获取模态框元素
     const modalElement = document.getElementById('reportModal');
-    const modal = new bootstrap.Modal(modalElement);
+    const modal = new bootstrap.Modal(modalElement, {
+        backdrop: 'static', // 禁用点击背景关闭
+        keyboard: false     // 禁用ESC键关闭
+    });
     
     // 模态框显示后的处理
     modalElement.addEventListener('shown.bs.modal', function () {
-        // 确保模态框获得焦点
-        if (!isLoading) {
-            const closeButton = this.querySelector('.btn-close');
-            if (closeButton) {
-                closeButton.focus();
-            }
-        }
+        // 不在这里设置焦点，避免焦点变化两次的问题
+        // Bootstrap模态框会自动处理焦点管理
+        // 保持previouslyFocusedElement指向模态框打开前的元素
     });
     
     // 模态框关闭时的处理
@@ -262,34 +309,41 @@ function showReportModal(content, isLoading = false, isError = false) {
          // 恢复之前的焦点
          setTimeout(() => {
              try {
-                 if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === 'function') {
-                     // 确保元素仍然存在于DOM中
-                     if (document.contains(previouslyFocusedElement)) {
-                         previouslyFocusedElement.focus();
-                     } else {
-                         // 如果原元素不存在，尝试找到报告按钮
-                         const reportBtn = document.getElementById('report-btn');
-                         if (reportBtn) {
-                             reportBtn.focus();
-                         } else {
-                             document.body.focus();
-                         }
+                 // 优先恢复到练习容器，让用户回到训练界面
+                 const exerciseContainer = document.getElementById('exercise-container');
+                 if (exerciseContainer && document.contains(exerciseContainer)) {
+                     // 设置tabindex使容器可以获得焦点
+                     if (!exerciseContainer.hasAttribute('tabindex')) {
+                         exerciseContainer.setAttribute('tabindex', '-1');
                      }
+                     exerciseContainer.focus();
+                     console.log('焦点已恢复到练习容器');
+                 } else if (savedFocusElement && typeof savedFocusElement.focus === 'function' && document.contains(savedFocusElement)) {
+                     // 如果练习容器不存在，尝试恢复到之前的焦点元素
+                     savedFocusElement.focus();
+                     console.log('焦点已恢复到之前的元素');
                  } else {
-                     // 默认将焦点设置到报告按钮
+                     // 最后的备选方案：尝试报告按钮
                      const reportBtn = document.getElementById('report-btn');
-                     if (reportBtn) {
+                     if (reportBtn && document.contains(reportBtn)) {
                          reportBtn.focus();
+                         console.log('焦点已恢复到报告按钮');
+                     } else {
+                         document.body.focus();
+                         console.log('焦点已设置到body');
                      }
                  }
              } catch (e) {
-                 console.warn('焦点恢复失败:', e);
-                 // 最后的备选方案
-                 const reportBtn = document.getElementById('report-btn');
-                 if (reportBtn) {
-                     reportBtn.focus();
-                 }
-             }
+                  console.warn('焦点恢复失败:', e);
+                  // 最后的备选方案
+                  const reportBtn = document.getElementById('report-btn');
+                  if (reportBtn) {
+                      reportBtn.focus();
+                  }
+              }
+              
+              // 清理保存的焦点元素
+              savedFocusElement = null;
          }, 150);
      });
     
