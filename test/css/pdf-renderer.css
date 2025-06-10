@@ -1,0 +1,375 @@
+/* PDF渲染器样式文件 */
+
+/* 基础样式 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* 控制面板样式 */
+.control-panel {
+    background-color: #e8f4f8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid #3498db;
+}
+
+.control-panel h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.control-panel p {
+    margin-bottom: 15px;
+    color: #666;
+}
+
+/* 输入框样式 */
+.json-input {
+    width: 100%;
+    height: 200px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* 按钮样式 */
+.button-group {
+    margin-top: 15px;
+}
+
+.render-button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.render-button:hover {
+    background-color: #2980b9;
+}
+
+.copy-button {
+    background-color: #27ae60 !important;
+}
+
+.copy-button:hover {
+    background-color: #229954 !important;
+}
+
+.pdf-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.pdf-button:hover {
+    background-color: #c0392b;
+}
+
+.pdf-button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* 输出区域样式 */
+.output-section {
+    margin-top: 30px;
+}
+
+.output-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3498db;
+}
+
+.rendered-content {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 100px;
+    margin-bottom: 20px;
+}
+
+/* 消息样式 */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin: 10px 0;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    margin: 10px 0;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ffeaa7;
+    margin: 10px 0;
+}
+
+/* Markdown渲染内容样式 */
+.rendered-content h1, .rendered-content h2, .rendered-content h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.rendered-content h1 {
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.rendered-content h2 {
+    border-bottom: 1px solid #bdc3c7;
+    padding-bottom: 5px;
+}
+
+.rendered-content p {
+    margin: 15px 0;
+    text-align: justify;
+    line-height: 1.6 !important;
+}
+
+.rendered-content code {
+    background-color: #f1f2f6;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+.rendered-content pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border-left: 4px solid #3498db;
+}
+
+.rendered-content blockquote {
+    border-left: 4px solid #3498db;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    font-style: italic;
+}
+
+.rendered-content ul, .rendered-content ol {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+.rendered-content li {
+    margin: 8px 0;
+}
+
+.rendered-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.rendered-content th, .rendered-content td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.rendered-content th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* 数学公式样式 */
+.rendered-content .MathJax {
+    font-size: 1.0em !important;
+    line-height: 1.5 !important;
+}
+
+.rendered-content .MathJax_Display {
+    margin: 1.5em 0 !important;
+    text-align: center !important;
+    overflow-x: auto !important;
+}
+
+.rendered-content mjx-container {
+    display: inline-block !important;
+    margin: 0.1em 0 !important;
+}
+
+.rendered-content mjx-container[display="true"] {
+    display: block !important;
+    margin: 1.5em auto !important;
+    text-align: center !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+}
+
+.rendered-content mjx-container[display="false"] {
+    display: inline !important;
+    margin: 0 0.1em !important;
+    vertical-align: baseline !important;
+}
+
+.rendered-content mjx-math {
+    display: inline;
+}
+
+.rendered-content mjx-msqrt {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+}
+
+.rendered-content mjx-surd {
+    vertical-align: top !important;
+}
+
+.rendered-content mjx-mfrac {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.rendered-content mjx-frac-line {
+    height: 1px !important;
+    border-bottom: 1px solid currentColor !important;
+    margin: 1px 0 !important;
+}
+
+.rendered-content mjx-mrow {
+    display: inline !important;
+}
+
+.rendered-content .math-container {
+    overflow-x: auto;
+    margin: 1em 0;
+    padding: 0.5em;
+    background-color: #fafafa;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+}
+
+/* 加粗文本样式 */
+.rendered-content strong {
+    font-weight: bold !important;
+    color: inherit !important;
+}
+
+.rendered-content b {
+    font-weight: bold !important;
+    color: inherit !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    .json-input {
+        height: 150px;
+        font-size: 12px;
+    }
+    
+    .render-button, .pdf-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin-right: 5px;
+    }
+}
+
+/* PDF专用样式 */
+.pdf-optimized {
+    font-family: 'Times New Roman', serif !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #000 !important;
+    background: white !important;
+    padding: 20px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.pdf-optimized h1, .pdf-optimized h2, .pdf-optimized h3 {
+    color: #000 !important;
+    page-break-after: avoid !important;
+}
+
+.pdf-optimized mjx-container {
+    font-size: 16px !important;
+}
+
+.pdf-optimized mjx-container[display="true"] {
+    margin: 1em 0 !important;
+    page-break-inside: avoid !important;
+}
+
+.pdf-optimized table {
+    page-break-inside: avoid !important;
+}
+
+.pdf-optimized pre {
+    page-break-inside: avoid !important;
+    background: #f8f8f8 !important;
+    border: 1px solid #ddd !important;
+}
+
+@media print {
+    .pdf-optimized {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}

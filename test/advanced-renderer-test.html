@@ -55,6 +55,25 @@
         .render-button:hover {
             background-color: #2980b9;
         }
+        .pdf-button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .pdf-button:hover {
+            background-color: #c0392b;
+        }
+        .pdf-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
         .output-section {
             margin-top: 30px;
         }
@@ -270,6 +289,8 @@
     </style>
     <!-- MathJax for LaTeX rendering -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -385,6 +406,7 @@ $$\begin{bmatrix}
   "timestamp": "2024-01-01"
 }'></textarea>
             <button class="render-button" onclick="renderContent()">🎨 渲染内容</button>
+            <button class="pdf-button" onclick="generatePDF()" id="pdfButton" disabled>📄 生成PDF下载</button>
         </div>
 
         <div class="output-section">
@@ -587,6 +609,8 @@ $$\begin{bmatrix}
                              MathJax.typesetPromise(renderTarget).then(() => {
                                  console.log('✅ MathJax 3.x 渲染完成');
                                  showSuccess(infoDiv, '✅ 渲染完成！包括Markdown解析和LaTeX公式渲染。');
+                                 // 启用PDF下载按钮
+                                 document.getElementById('pdfButton').disabled = false;
                              }).catch(err => {
                                  console.error('MathJax 3.x 渲染错误:', err);
                                  showWarning(infoDiv, '⚠️ Markdown渲染成功，但部分数学公式可能渲染失败。');
@@ -605,6 +629,8 @@ $$\begin{bmatrix}
                              MathJax.typeset(renderTarget);
                              console.log('✅ 使用MathJax typeset方法渲染完成');
                              showSuccess(infoDiv, '✅ 渲染完成！包括Markdown解析和LaTeX公式渲染。');
+                             // 启用PDF下载按钮
+                             document.getElementById('pdfButton').disabled = false;
                          }
                          else {
                              console.warn('⚠️ MathJax API不兼容');
@@ -803,6 +829,113 @@ $$\\begin{bmatrix}
             
             document.getElementById('jsonInput').value = JSON.stringify(exampleData, null, 2);
         });
+        
+        // PDF生成函数
+        function generatePDF() {
+            const pdfButton = document.getElementById('pdfButton');
+            const renderTarget = document.getElementById('output');
+            
+            if (!renderTarget || !renderTarget.innerHTML.trim()) {
+                alert('请先渲染内容再生成PDF');
+                return;
+            }
+            
+            // 禁用按钮并显示加载状态
+            pdfButton.disabled = true;
+            pdfButton.innerHTML = '⏳ 生成中...';
+            
+            // 创建PDF配置
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5], // 页边距 (英寸)
+                filename: `渲染结果_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2, // 提高清晰度
+                    useCORS: true,
+                    allowTaint: true,
+                    letterRendering: true,
+                    logging: false
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+            
+            // 克隆渲染内容以避免影响原始内容
+            const clonedContent = renderTarget.cloneNode(true);
+            
+            // 为PDF优化样式
+            const pdfStyles = document.createElement('style');
+            pdfStyles.textContent = `
+                .rendered-content {
+                    font-family: 'Times New Roman', serif !important;
+                    font-size: 14px !important;
+                    line-height: 1.6 !important;
+                    color: #000 !important;
+                    background: white !important;
+                    padding: 20px !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                .rendered-content h1, .rendered-content h2, .rendered-content h3 {
+                    color: #000 !important;
+                    page-break-after: avoid !important;
+                }
+                .rendered-content mjx-container {
+                    font-size: 16px !important;
+                }
+                .rendered-content mjx-container[display="true"] {
+                    margin: 1em 0 !important;
+                    page-break-inside: avoid !important;
+                }
+                .rendered-content table {
+                    page-break-inside: avoid !important;
+                }
+                .rendered-content pre {
+                    page-break-inside: avoid !important;
+                    background: #f8f8f8 !important;
+                    border: 1px solid #ddd !important;
+                }
+                @media print {
+                    .rendered-content {
+                        -webkit-print-color-adjust: exact !important;
+                        color-adjust: exact !important;
+                    }
+                }
+            `;
+            
+            // 创建临时容器
+            const tempContainer = document.createElement('div');
+            tempContainer.appendChild(pdfStyles);
+            tempContainer.appendChild(clonedContent);
+            
+            // 生成PDF
+            html2pdf().set(opt).from(tempContainer).save().then(() => {
+                console.log('✅ PDF生成完成');
+                // 恢复按钮状态
+                pdfButton.disabled = false;
+                pdfButton.innerHTML = '📄 生成PDF下载';
+                
+                // 显示成功消息
+                const infoDiv = document.getElementById('parseInfo');
+                showSuccess(infoDiv, '✅ PDF已生成并开始下载！');
+                
+            }).catch((error) => {
+                console.error('PDF生成失败:', error);
+                // 恢复按钮状态
+                pdfButton.disabled = false;
+                pdfButton.innerHTML = '📄 生成PDF下载';
+                
+                // 显示错误消息
+                const infoDiv = document.getElementById('parseInfo');
+                showError(infoDiv, 'PDF生成失败: ' + error.message);
+                alert('PDF生成失败，请检查控制台获取详细信息');
+            });
+        }
     </script>
 </body>
 </html>
