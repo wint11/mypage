@@ -117,11 +117,5 @@ export async function initCourse(courseId) {
     }
 }
 
-// 自动初始化（如果直接加载此脚本）
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', async () => {
-        await initCourse();
-    });
-} else {
-    initCourse();
-}
+// 注意：initCourse 现在由 course-loader.js 负责调用
+// 不再自动初始化，避免重复调用

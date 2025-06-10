@@ -13,7 +13,8 @@ const courseNameMap = {
   "course7": "caozuoxitong",
   "course8": "shujujiegou",
   "course9": "jisuanjiwangluo",
-  "course10": "shujuku"
+  "course10": "shujuku",
+  "course11": "jisuanjituxingxue"
 };
 
 // 动态生成课程映射

@@ -49,6 +49,11 @@
       "id": "course10",
       "name": "数据库系统",
       "folder": "shujuku"
+    },
+    "jisuanjituxingxue": {
+      "id": "course11",
+      "name": "计算机图形学",
+      "folder": "jisuanjituxingxue"
     }
   },
   "mappings": {
@@ -62,7 +67,8 @@
       "caozuoxitong": "course7",
       "shujujiegou": "course8",
       "jisuanjiwangluo": "course9",
-      "shujuku": "course10"
+      "shujuku": "course10",
+      "jisuanjituxingxue": "course11"
     },
     "idToFolder": {
       "course1": "gaodengshuxue",
@@ -74,7 +80,8 @@
       "course7": "caozuoxitong",
       "course8": "shujujiegou",
       "course9": "jisuanjiwangluo",
-      "course10": "shujuku"
+      "course10": "shujuku",
+      "course11": "jisuanjituxingxue"
     },
     "folderToName": {
       "gaodengshuxue": "高等数学",
@@ -86,7 +93,8 @@
       "caozuoxitong": "操作系统",
       "shujujiegou": "数据结构与算法",
       "jisuanjiwangluo": "计算机网络",
-      "shujuku": "数据库系统"
+      "shujuku": "数据库系统",
+      "jisuanjituxingxue": "计算机图形学"
     }
   }
 }

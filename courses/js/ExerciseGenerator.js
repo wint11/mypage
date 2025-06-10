@@ -3,7 +3,7 @@
 
 import { exercises, currentIndex, bufferedExercise, isPreloading, setBufferedExercise, setIsPreloading, addExercise, incrementCurrentIndex } from './ExerciseManager.js';
 import { updateButtons } from './UI.js';
-import { getCourseConfig, getCourseConfigSync, loadCoursesJsonData } from './CourseConfig.js';
+import { getCourseConfig, loadCoursesJsonData, loadCourseConfigs } from './CourseConfig.js';
 
 // API配置 - 需要配置有效的API密钥
 const apiKey = '32c33497-91ee-48bb-ae39-f59eac806506'; // 请替换为有效的API密钥
@@ -45,13 +45,19 @@ export async function preloadNextExercise(courseId = 'caozuoxitong') {
     // 确保课程数据已加载
     await loadCoursesJsonData();
     
-    const courseConfig = await getCourseConfig(courseId);
+    let courseConfig = await getCourseConfig(courseId);
     if (!courseConfig) {
         console.error('未找到课程配置:', courseId);
-        // 尝试使用同步版本作为后备
-        const fallbackConfig = getCourseConfigSync(courseId);
-        if (!fallbackConfig) {
-            console.error('同步配置也未找到:', courseId);
+        // 尝试直接从配置文件获取
+        try {
+            const configs = await loadCourseConfigs();
+            courseConfig = configs[courseId];
+        } catch (error) {
+            console.error('加载配置文件失败:', error);
+        }
+        
+        if (!courseConfig) {
+            console.error('所有配置获取方式都失败:', courseId);
             if (exerciseManager) {
                 exerciseManager.setIsPreloading(false);
             } else {
@@ -59,9 +65,7 @@ export async function preloadNextExercise(courseId = 'caozuoxitong') {
             }
             return;
         }
-        console.warn('使用后备配置:', courseId);
-        // 使用后备配置继续
-        courseConfig = fallbackConfig;
+        console.warn('使用基础配置:', courseId);
     }
 
     // 检查API密钥是否配置

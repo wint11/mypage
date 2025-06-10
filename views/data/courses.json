@@ -129,6 +129,19 @@
       "instructor": "孙教授",
       "created_at": "2024-01-15",
       "updated_at": "2024-01-15"
+    },
+    {
+      "id": "course11",
+      "title": "计算机图形学",
+      "description": "图形表示与渲染、图形变换、光栅化技术、光线追踪等计算机图形学基础理论与应用。",
+      "category": "computer",
+      "difficulty": 4,
+      "hours": 42,
+      "status": "active",
+      "tags": ["计算机", "图形学", "渲染", "3D"],
+      "instructor": "马教授",
+      "created_at": "2024-01-15",
+      "updated_at": "2024-01-15"
     }
   ],
   "categories": [

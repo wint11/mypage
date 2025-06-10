@@ -3,7 +3,7 @@
 
 import { getCourseConfig } from './CourseConfig.js';
 
-export async function exportToDocx(courseId = 'caozuoxitong') {
+export async function exportToDocx(courseId = '') {
     const { Document, Packer, Paragraph, TextRun } = window.docx;
 
     // 获取当前课程的练习管理器实例
@@ -23,7 +23,7 @@ export async function exportToDocx(courseId = 'caozuoxitong') {
 
     const paragraphs = [];
 
-    const courseConfig = getCourseConfig(courseId);
+    const courseConfig = await getCourseConfig(courseId);
     const title = courseConfig ? courseConfig.title : '题目集';
     
     // 标题

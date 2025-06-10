@@ -107,7 +107,7 @@ export class SimulateTest {
     async getKnowledgePointsForSubject(courseId) {
         try {
             // 从courses/structure目录读取课程结构文件
-            const response = await fetch(`../structure/${courseId}.json`);
+            const response = await fetch(`../structure/detail/${courseId}.json`);
             if (!response.ok) {
                 throw new Error(`无法加载课程结构文件: ${courseId}.json`);
             }
@@ -386,7 +386,7 @@ export class SimulateTest {
         try {
             // 创建带超时的fetch请求
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+            const timeoutId = setTimeout(() => controller.abort(), 90000); // 90秒超时
             
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -455,15 +455,24 @@ export class SimulateTest {
                     return placeholder;
                 });
                 
-                fixedContent = fixedContent.replace(/\\\(([^)]+)\\\)/g, (match, content) => {
+                // 修复：正确匹配\(...\)格式的LaTeX表达式，使用非贪婪匹配
+                fixedContent = fixedContent.replace(/\\\((.*?)\\\)/g, (match, content) => {
                     const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
                     latexPlaceholders[placeholderIndex] = match;
                     placeholderIndex++;
                     return placeholder;
                 });
                 
-                // 保护独立的LaTeX命令
-                fixedContent = fixedContent.replace(/\\\\([a-zA-Z]+)/g, (match) => {
+                // 保护LaTeX命令序列（如\sum_{n=1}^{\infty}）
+                fixedContent = fixedContent.replace(/\\[a-zA-Z]+(?:\{[^}]*\}|\[[^\]]*\]|_\{[^}]*\}|\^\{[^}]*\})*/g, (match) => {
+                    const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
+                    latexPlaceholders[placeholderIndex] = match;
+                    placeholderIndex++;
+                    return placeholder;
+                });
+                
+                // 保护简单的LaTeX命令
+                fixedContent = fixedContent.replace(/\\[a-zA-Z]+/g, (match) => {
                     const placeholder = `__LATEX_PLACEHOLDER_${placeholderIndex}__`;
                     latexPlaceholders[placeholderIndex] = match;
                     placeholderIndex++;
@@ -474,8 +483,19 @@ export class SimulateTest {
                 fixedContent = fixedContent
                     .replace(/,\s*}/g, '}') // 移除对象尾随逗号
                     .replace(/,\s*]/g, ']') // 移除数组尾随逗号
-                    .replace(/\\(?!["\\\/bfnrt])/g, '\\\\') // 修复无效的转义字符
                     .replace(/"([^"]*?)\\"([^"]*?)"/g, '"$1\\\"$2"'); // 修复字符串内的引号转义
+                
+                // 更安全的转义字符修复：只处理明显错误的转义
+                // 避免破坏已经被保护的LaTeX占位符
+                const lines = fixedContent.split('\n');
+                fixedContent = lines.map(line => {
+                    // 跳过包含LaTeX占位符的行
+                    if (line.includes('__LATEX_PLACEHOLDER_')) {
+                        return line;
+                    }
+                    // 只修复明显的错误转义（不在有效转义字符列表中的）
+                    return line.replace(/\\(?!["\\\/bfnrtu]|[0-9]|__LATEX_PLACEHOLDER_)/g, '\\\\');
+                }).join('\n');
                 
                 // 恢复LaTeX内容
                 for (let i = placeholderIndex - 1; i >= 0; i--) {
@@ -520,7 +540,7 @@ export class SimulateTest {
         } catch (error) {
             // 处理不同类型的错误
             if (error.name === 'AbortError') {
-                console.warn(`第${index}题AI生成超时30秒）`);
+                console.warn(`第${index}题AI生成超时`);
             } else {
                 console.warn('AI生成题目失败:', error);
                 console.warn('错误详情:', {
@@ -844,7 +864,7 @@ export class SimulateTest {
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">正在生成题目...</span>
                         </div>
-                        <p class="mt-2">正在生成测试题目，请稍候...</p>
+                        <p class="mt-2">正在生成测试题目，请等待约1分钟...</p>
                     </div>
                 </div>
                 <div class="test-navigation mt-4">

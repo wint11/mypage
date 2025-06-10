@@ -74,7 +74,7 @@ function handleAuthStateChange(user) {
 
   const protectedLinkSelectors = [
     'a[href="../views/my-courses.html"]',
-    'a[href="../views/discover.html"]',
+    'a[href="../views/explore.html"]',
     'a[href="../views/feedback.html"]'
   ];
 

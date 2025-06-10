@@ -1,10 +1,10 @@
 // KnowledgePointLoader.js
 import { processLaTeX } from './ExerciseRenderer.js';
 
-export async function loadKnowledgePoints(courseId = 'caozuoxitong') {
+export async function loadKnowledgePoints(courseId = '') {
     const loadingDiv = document.getElementById('loading-overlay');
     try {
-        const response = await fetch(`../structure/${courseId}.json`);
+        const response = await fetch(`../structure/detail/${courseId}.json`);
         const data = await response.json();
         const container = document.getElementById('knowledge-points');
 
