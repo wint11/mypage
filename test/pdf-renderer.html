@@ -4,18 +4,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF渲染器 - 模块化版本</title>
+    
+    <!-- DNS预解析和预连接优化 -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    
+    <!-- 预加载关键CSS -->
+    <link rel="preload" href="css/pdf-renderer.css" as="style">
     <link rel="stylesheet" href="css/pdf-renderer.css">
+    
+    <!-- 资源加载管理器 -->
+    <script>
+        window.ResourceLoader = {
+            loadedResources: new Set(),
+            failedResources: new Set(),
+            totalResources: 5, // MathJax配置 + MathJax + html2pdf + Marked + 应用初始化
+            loadedCount: 0,
+            
+            // CDN备用方案
+            cdnSources: {
+                mathjax: [
+                    '../js/tex-mml-chtml.js',
+                    'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js',
+                    'https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js'
+                ],
+                html2pdf: [
+                    '../js/html2pdf.bundle.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
+                    'https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js'
+                ],
+                marked: [
+                    '../js/marked.min.js',
+                    'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js',
+                    'https://unpkg.com/marked@4.3.0/marked.min.js'
+                ]
+            },
+            
+            updateProgress: function(message) {
+                const progressFill = document.getElementById('progressFill');
+                const loadingStatus = document.getElementById('loadingStatus');
+                const percentage = Math.round((this.loadedCount / this.totalResources) * 100);
+                
+                if (progressFill) progressFill.style.width = percentage + '%';
+                if (loadingStatus) loadingStatus.textContent = message;
+            },
+            
+            markLoaded: function(resourceName) {
+                this.loadedResources.add(resourceName);
+                this.loadedCount++;
+                this.updateProgress(`已加载 ${resourceName} (${this.loadedCount}/${this.totalResources})`);
+                
+                if (this.loadedCount >= this.totalResources) {
+                    this.hideLoading();
+                }
+            },
+            
+            loadScript: function(src, resourceName, fallbackIndex = 0) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    const sources = this.cdnSources[resourceName] || [src];
+                    const currentSrc = sources[fallbackIndex] || src;
+                    
+                    script.src = currentSrc;
+                    script.async = true;
+                    
+                    const timeout = setTimeout(() => {
+                        script.remove();
+                        if (fallbackIndex < sources.length - 1) {
+                            console.warn(`${resourceName} 加载超时，尝试备用源: ${sources[fallbackIndex + 1]}`);
+                            this.updateProgress(`${resourceName} 加载超时，尝试备用源...`);
+                            this.loadScript(src, resourceName, fallbackIndex + 1).then(resolve).catch(reject);
+                        } else {
+                            this.failedResources.add(resourceName);
+                            reject(new Error(`所有 ${resourceName} 源都加载失败`));
+                        }
+                    }, 10000); // 10秒超时
+                    
+                    script.onload = () => {
+                        clearTimeout(timeout);
+                        this.markLoaded(resourceName);
+                        resolve();
+                    };
+                    
+                    script.onerror = () => {
+                        clearTimeout(timeout);
+                        script.remove();
+                        if (fallbackIndex < sources.length - 1) {
+                            console.warn(`${resourceName} 加载失败，尝试备用源: ${sources[fallbackIndex + 1]}`);
+                            this.updateProgress(`${resourceName} 加载失败，尝试备用源...`);
+                            this.loadScript(src, resourceName, fallbackIndex + 1).then(resolve).catch(reject);
+                        } else {
+                            this.failedResources.add(resourceName);
+                            reject(new Error(`所有 ${resourceName} 源都加载失败`));
+                        }
+                    };
+                    
+                    document.head.appendChild(script);
+                });
+            },
+            
+            hideLoading: function() {
+                setTimeout(() => {
+                    const overlay = document.getElementById('loadingOverlay');
+                    const container = document.getElementById('mainContainer');
+                    
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        setTimeout(() => overlay.style.display = 'none', 500);
+                    }
+                    
+                    if (container) {
+                        container.style.display = 'block';
+                        setTimeout(() => container.style.opacity = '1', 100);
+                    }
+                }, 500);
+            }
+        };
+    </script>
+    
     <!-- MathJax配置必须在MathJax库加载之前 -->
-    <script src="js/mathjax-config.js"></script>
-    <!-- MathJax for LaTeX rendering -->
-    <script id="MathJax-script" src="..\js\tex-mml-chtml.js"></script>
-    <!-- html2pdf.js for PDF generation -->
-    <script src="..\js\html2pdf.bundle.min.js"></script>
-    <!-- Marked.js for Markdown parsing -->
-    <script src="..\js\marked.min.js"></script>
+    <script src="js/mathjax-config.js" onload="ResourceLoader.markLoaded('MathJax配置')" onerror="ResourceLoader.markLoaded('MathJax配置')"></script>
+    
+    <!-- 使用资源加载器加载库文件 -->
+    <script>
+        // 开始加载资源
+        ResourceLoader.updateProgress('开始加载资源...');
+        
+        // 加载MathJax
+        ResourceLoader.loadScript('../js/tex-mml-chtml.js', 'mathjax').catch(console.error);
+        
+        // 加载html2pdf
+        ResourceLoader.loadScript('../js/html2pdf.bundle.min.js', 'html2pdf').catch(console.error);
+        
+        // 加载Marked
+        ResourceLoader.loadScript('../js/marked.min.js', 'marked').catch(console.error);
+    </script>
 </head>
 <body>
-    <div class="container">
+    <!-- 加载状态覆盖层 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">正在加载PDF渲染器...</div>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="loadingStatus" class="loading-status">初始化中...</div>
+            </div>
+            <div class="loading-tips">
+                <p>💡 小贴士：首次加载可能需要一些时间</p>
+                <p>🔄 如果加载时间过长，系统会自动尝试备用资源</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="display: none;" id="mainContainer">
         <h1>📄 PDF渲染器工具</h1>
         
         <!-- 标准输入区域 -->
@@ -55,10 +203,10 @@
         </div>
     </div>
 
-    <!-- 引入模块化的JavaScript文件 -->
-    <script src="js/markdown-processor.js"></script>
-    <script src="js/pdf-generator.js"></script>
-    <script src="js/ui-controller.js"></script>
-    <script src="js/app-controller.js"></script>
+    <!-- 引入模块化的JavaScript文件，使用defer优化加载 -->
+    <script src="js/markdown-processor.js" defer></script>
+    <script src="js/pdf-generator.js" defer></script>
+    <script src="js/ui-controller.js" defer></script>
+    <script src="js/app-controller.js" defer></script>
 </body>
 </html>

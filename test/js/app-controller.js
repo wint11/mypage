@@ -46,8 +46,18 @@ class AppController {
             this.isInitialized = true;
             console.log('✅ PDF渲染器应用初始化完成');
             
+            // 通知资源加载器应用已完全初始化
+            if (window.ResourceLoader) {
+                window.ResourceLoader.markLoaded('应用初始化');
+            }
+            
         } catch (error) {
             console.error('❌ 应用初始化失败:', error);
+            
+            // 即使初始化失败也要隐藏加载状态
+            if (window.ResourceLoader) {
+                window.ResourceLoader.hideLoading();
+            }
             if (this.ui) {
                 this.ui.showError(document.body, '应用初始化失败: ' + error.message);
             }
