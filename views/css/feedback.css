@@ -1,54 +1,178 @@
+/* 反馈页面样式 */
 body {
-  background: linear-gradient(135deg, #e0f7fa, #fdfcfb);
-  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.feedback-link {
-  position: absolute;
-  top: 40vh;
-  /* 相当于页面高度的 2/5（0.4） */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 700px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  text-align: center;
+/* 主要内容区域 */
+.main-content {
+  flex: 1;
+  padding: 80px 20px 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-.feedback-link p {
-  font-size: 1.1rem;
+.survey-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 1000px;
+  width: 100%;
+  height: calc(100vh - 200px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.survey-title {
   color: #333;
   margin-bottom: 15px;
+  font-size: 2.2rem;
+  font-weight: 600;
 }
 
-.feedback-link a {
-  text-decoration: none;
-  color: #007bff;
-  font-weight: 500;
+.survey-description {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
-.feedback-link a:hover {
-  text-decoration: underline;
-}
-
-.feedback-link i {
-  font-size: 2rem;
-  color: #17a2b8;
-  margin-bottom: 10px;
-}
-
-#footer-container {
-  margin-top: auto;
+.survey-frame {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
   padding: 20px;
-  background-color: #f8f9fa;
-  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 1;
+  overflow: visible;
+}
+
+.survey-frame iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  border: none;
+  border-radius: 10px;
+}
+
+/* 固定底部栏 */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+  z-index: 1000;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-brand {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.footer-copyright {
+  color: #666;
   font-size: 0.9rem;
-  color: #777;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.footer-link:hover {
+  color: #764ba2;
+  background: rgba(118, 75, 162, 0.1);
+  transform: translateY(-1px);
+}
+
+.footer-link i {
+  font-size: 1.1rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 60px 15px 80px;
+  }
+  
+  .survey-wrapper {
+    padding: 30px 20px;
+    height: calc(100vh - 160px);
+  }
+  
+  .survey-title {
+    font-size: 1.8rem;
+  }
+  
+  .survey-description {
+    font-size: 1rem;
+  }
+  
+  .survey-frame {
+    padding: 15px;
+  }
+  
+  .survey-frame iframe {
+    min-height: 500px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .footer-left {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .footer-link {
+    font-size: 0.9rem;
+  }
 }
