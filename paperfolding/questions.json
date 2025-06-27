@@ -8,10 +8,25 @@
         "q1-t-s3.png"
       ],
       "options": {
-        "A": "q1-a-2.png",
-        "B": "q1-a-!.png",
-        "C": "q1-a-1.png",
-        "D": "q1-a-3.png"
+        "A": "q1-a-1.png",
+        "B": "q1-a-2.png",
+        "C": "q1-a-3.png",
+        "D": "q1-a-!.png"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 2,
+      "stemImages": [
+        "q2-t-s1.png",
+        "q2-t-s2.png",
+        "q2-t-s3.png"
+      ],
+      "options": {
+        "A": "q2-a-1.png",
+        "B": "q2-a-!.png",
+        "C": "q2-a-2.png",
+        "D": "q2-a-3.png"
       },
       "correctAnswer": "B"
     }
