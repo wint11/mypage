@@ -8,12 +8,12 @@
         "q1-t-s3.png"
       ],
       "options": {
-        "A": "q1-a-!.png",
-        "B": "q1-a-3.png",
-        "C": "q1-a-1.png",
-        "D": "q1-a-2.png"
+        "A": "q1-a-2.png",
+        "B": "q1-a-1.png",
+        "C": "q1-a-!.png",
+        "D": "q1-a-3.png"
       },
-      "correctAnswer": "A"
+      "correctAnswer": "C"
     },
     {
       "questionNumber": 2,
@@ -23,12 +23,12 @@
         "q2-t-s3.png"
       ],
       "options": {
-        "A": "q2-a-1.png",
-        "B": "q2-a-2.png",
-        "C": "q2-a-!.png",
-        "D": "q2-a-3.png"
+        "A": "q2-a-!.png",
+        "B": "q2-a-3.png",
+        "C": "q2-a-2.png",
+        "D": "q2-a-1.png"
       },
-      "correctAnswer": "C"
+      "correctAnswer": "A"
     },
     {
       "questionNumber": 3,
@@ -38,12 +38,12 @@
         "q3-t-s3.png"
       ],
       "options": {
-        "A": "q3-a-3.png",
+        "A": "q3-a-1.png",
         "B": "q3-a-2.png",
-        "C": "q3-a-1.png",
-        "D": "q3-a-!.png"
+        "C": "q3-a-!.png",
+        "D": "q3-a-3.png"
       },
-      "correctAnswer": "D"
+      "correctAnswer": "C"
     },
     {
       "questionNumber": 4,
@@ -60,6 +60,38 @@
         "D": "q4-a-!.png"
       },
       "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 5,
+      "stemImages": [
+        "q5-t-s1.png",
+        "q5-t-s2.png",
+        "q5-t-s3.png",
+        "q5-t-s4.png"
+      ],
+      "options": {
+        "A": "q5-a-2.png",
+        "B": "q5-a-!.png",
+        "C": "q5-a-1.png",
+        "D": "q5-a-3.png"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "questionNumber": 6,
+      "stemImages": [
+        "q6-t-s1.png",
+        "q6-t-s2.png",
+        "q6-t-s3.png",
+        "q6-t-s4.png"
+      ],
+      "options": {
+        "A": "q6-a-!.png",
+        "B": "q6-a-3.png",
+        "C": "q6-a-2.png",
+        "D": "q6-a-1.png"
+      },
+      "correctAnswer": "A"
     }
   ]
 }
