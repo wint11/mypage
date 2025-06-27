@@ -8,12 +8,12 @@
         "q1-t-s3.png"
       ],
       "options": {
-        "A": "q1-a-1.png",
-        "B": "q1-a-2.png",
-        "C": "q1-a-3.png",
-        "D": "q1-a-!.png"
+        "A": "q1-a-!.png",
+        "B": "q1-a-3.png",
+        "C": "q1-a-1.png",
+        "D": "q1-a-2.png"
       },
-      "correctAnswer": "D"
+      "correctAnswer": "A"
     },
     {
       "questionNumber": 2,
@@ -24,11 +24,42 @@
       ],
       "options": {
         "A": "q2-a-1.png",
-        "B": "q2-a-!.png",
-        "C": "q2-a-2.png",
+        "B": "q2-a-2.png",
+        "C": "q2-a-!.png",
         "D": "q2-a-3.png"
       },
-      "correctAnswer": "B"
+      "correctAnswer": "C"
+    },
+    {
+      "questionNumber": 3,
+      "stemImages": [
+        "q3-t-s1.png",
+        "q3-t-s2.png",
+        "q3-t-s3.png"
+      ],
+      "options": {
+        "A": "q3-a-3.png",
+        "B": "q3-a-2.png",
+        "C": "q3-a-1.png",
+        "D": "q3-a-!.png"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 4,
+      "stemImages": [
+        "q4-t-s1.png",
+        "q4-t-s2.png",
+        "q4-t-s3.png",
+        "q4-t-s4.png"
+      ],
+      "options": {
+        "A": "q4-a-1.png",
+        "B": "q4-a-2.png",
+        "C": "q4-a-3.png",
+        "D": "q4-a-!.png"
+      },
+      "correctAnswer": "D"
     }
   ]
 }
