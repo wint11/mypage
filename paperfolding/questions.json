@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "questionNumber": 1,
+      "stemImages": [
+        "q1-t-s1.png",
+        "q1-t-s2.png",
+        "q1-t-s3.png"
+      ],
+      "options": {
+        "A": "q1-a-2.png",
+        "B": "q1-a-!.png",
+        "C": "q1-a-1.png",
+        "D": "q1-a-3.png"
+      },
+      "correctAnswer": "B"
+    }
+  ]
+}

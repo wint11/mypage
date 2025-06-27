@@ -1,0 +1,356 @@
+/* 纸张折叠测试页面样式 */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 主要内容区域 */
+.main-content {
+  flex: 1;
+  padding: 60px 15px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 75px);
+}
+
+.test-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 题目头部 */
+.question-header {
+  text-align: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.test-title {
+  color: #333;
+  margin-bottom: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+
+
+/* 题目内容 */
+.question-content {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.question-stem {
+  margin-bottom: 25px;
+}
+
+.question-stem h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.stem-images {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.fold-arrow {
+  font-size: 24px;
+  color: #667eea;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.stem-images img {
+  max-width: 180px;
+  max-height: 180px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+/* 选项区域 */
+.question-options h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.options-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.option {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex: 1;
+  max-width: 200px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.option:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.option.selected {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.option.correct {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.option.incorrect {
+  border-color: #dc3545;
+  background: #fff8f8;
+}
+
+.option-label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #495057;
+  margin-top: 6px;
+  text-align: center;
+  padding: 4px 0;
+  background: rgba(255,255,255,0.9);
+  width: 100%;
+}
+
+.option img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  flex: 1;
+}
+
+/* 导航控制 */
+.navigation-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.center-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  margin-left: 20px;
+}
+
+.submit-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.submit-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.prev-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.next-btn {
+  background: #667eea;
+  color: white;
+}
+
+.next-btn:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+}
+
+.nav-btn:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.answer-feedback {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-height: 24px;
+}
+
+
+
+.answer-feedback.excellent {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  border-left: 4px solid #28a745;
+  white-space: pre-line;
+}
+
+.answer-feedback.good {
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 4px solid #ffc107;
+  white-space: pre-line;
+}
+
+.answer-feedback.needs-improvement {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  border-left: 4px solid #dc3545;
+  white-space: pre-line;
+}
+
+/* 进度信息 */
+.progress-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+  }
+  
+  .test-container {
+    padding: 15px;
+  }
+  
+  .test-title {
+    font-size: 1.3rem;
+  }
+  
+  .question-content {
+    padding: 15px;
+  }
+  
+  .stem-images img {
+    max-width: 120px;
+    max-height: 120px;
+  }
+  
+  .fold-arrow {
+    font-size: 18px;
+    min-width: 20px;
+  }
+  
+  .options-container {
+    gap: 8px;
+  }
+  
+  .option {
+    padding: 6px;
+    min-width: 80px;
+  }
+  
+  .option img {
+    height: 60px;
+  }
+  
+  .navigation-controls {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .submit-btn {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+  }
+}
