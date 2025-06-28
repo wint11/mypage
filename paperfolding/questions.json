@@ -8,12 +8,12 @@
         "q1-t-s3.png"
       ],
       "options": {
-        "A": "q1-a-3.png",
-        "B": "q1-a-2.png",
-        "C": "q1-a-!.png",
+        "A": "q1-a-!.png",
+        "B": "q1-a-3.png",
+        "C": "q1-a-2.png",
         "D": "q1-a-1.png"
       },
-      "correctAnswer": "C"
+      "correctAnswer": "A"
     },
     {
       "questionNumber": 2,
@@ -23,12 +23,12 @@
         "q2-t-s3.png"
       ],
       "options": {
-        "A": "q2-a-!.png",
+        "A": "q2-a-3.png",
         "B": "q2-a-2.png",
-        "C": "q2-a-3.png",
+        "C": "q2-a-!.png",
         "D": "q2-a-1.png"
       },
-      "correctAnswer": "A"
+      "correctAnswer": "C"
     },
     {
       "questionNumber": 3,
@@ -38,10 +38,10 @@
         "q3-t-s3.png"
       ],
       "options": {
-        "A": "q3-a-1.png",
-        "B": "q3-a-3.png",
+        "A": "q3-a-3.png",
+        "B": "q3-a-2.png",
         "C": "q3-a-!.png",
-        "D": "q3-a-2.png"
+        "D": "q3-a-1.png"
       },
       "correctAnswer": "C"
     },
@@ -54,12 +54,12 @@
         "q4-t-s4.png"
       ],
       "options": {
-        "A": "q4-a-2.png",
-        "B": "q4-a-1.png",
-        "C": "q4-a-!.png",
-        "D": "q4-a-3.png"
+        "A": "q4-a-3.png",
+        "B": "q4-a-!.png",
+        "C": "q4-a-2.png",
+        "D": "q4-a-1.png"
       },
-      "correctAnswer": "C"
+      "correctAnswer": "B"
     },
     {
       "questionNumber": 5,
@@ -70,12 +70,12 @@
         "q5-t-s4.png"
       ],
       "options": {
-        "A": "q5-a-1.png",
-        "B": "q5-a-2.png",
-        "C": "q5-a-!.png",
-        "D": "q5-a-3.png"
+        "A": "q5-a-!.png",
+        "B": "q5-a-3.png",
+        "C": "q5-a-2.png",
+        "D": "q5-a-1.png"
       },
-      "correctAnswer": "C"
+      "correctAnswer": "A"
     },
     {
       "questionNumber": 6,
@@ -86,12 +86,12 @@
         "q6-t-s4.png"
       ],
       "options": {
-        "A": "q6-a-1.png",
-        "B": "q6-a-2.png",
-        "C": "q6-a-3.png",
-        "D": "q6-a-!.png"
+        "A": "q6-a-!.png",
+        "B": "q6-a-3.png",
+        "C": "q6-a-2.png",
+        "D": "q6-a-1.png"
       },
-      "correctAnswer": "D"
+      "correctAnswer": "A"
     },
     {
       "questionNumber": 7,
@@ -103,12 +103,12 @@
         "q7-t-s5.png"
       ],
       "options": {
-        "A": "q7-a-1.png",
+        "A": "q7-a-3.png",
         "B": "q7-a-2.png",
-        "C": "q7-a-!.png",
-        "D": "q7-a-3.png"
+        "C": "q7-a-1.png",
+        "D": "q7-a-!.png"
       },
-      "correctAnswer": "C"
+      "correctAnswer": "D"
     },
     {
       "questionNumber": 8,
@@ -120,12 +120,12 @@
         "q8-t-s5.png"
       ],
       "options": {
-        "A": "q8-a-!.png",
-        "B": "q8-a-3.png",
-        "C": "q8-a-1.png",
-        "D": "q8-a-2.png"
+        "A": "q8-a-1.png",
+        "B": "q8-a-2.png",
+        "C": "q8-a-!.png",
+        "D": "q8-a-3.png"
       },
-      "correctAnswer": "A"
+      "correctAnswer": "C"
     },
     {
       "questionNumber": 9,
@@ -171,12 +171,12 @@
         "q11-t-s5.png"
       ],
       "options": {
-        "A": "q11-a-3.png",
-        "B": "q11-a-!.png",
-        "C": "q11-a-2.png",
-        "D": "q11-a-1.png"
+        "A": "q11-a-1.png",
+        "B": "q11-a-2.png",
+        "C": "q11-a-3.png",
+        "D": "q11-a-!.png"
       },
-      "correctAnswer": "B"
+      "correctAnswer": "D"
     },
     {
       "questionNumber": 12,
@@ -188,12 +188,12 @@
         "q12-t-s5.png"
       ],
       "options": {
-        "A": "q12-a-!.png",
-        "B": "q12-a-2.png",
+        "A": "q12-a-2.png",
+        "B": "q12-a-1.png",
         "C": "q12-a-3.png",
-        "D": "q12-a-1.png"
+        "D": "q12-a-!.png"
       },
-      "correctAnswer": "A"
+      "correctAnswer": "D"
     },
     {
       "questionNumber": 13,
@@ -205,12 +205,118 @@
         "q13-t-s5.png"
       ],
       "options": {
-        "A": "q13-a-!.png",
-        "B": "q13-a-1.png",
-        "C": "q13-a-2.png",
-        "D": "q13-a-3.png"
+        "A": "q13-a-1.png",
+        "B": "q13-a-2.png",
+        "C": "q13-a-3.png",
+        "D": "q13-a-!.png"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 14,
+      "stemImages": [
+        "q14-t-s1.png",
+        "q14-t-s2.png",
+        "q14-t-s3.png"
+      ],
+      "options": {
+        "A": "q14-a-3.png",
+        "B": "q14-a-2.png",
+        "C": "q14-a-!.png",
+        "D": "q14-a-1.png"
+      },
+      "correctAnswer": "C"
+    },
+    {
+      "questionNumber": 15,
+      "stemImages": [
+        "q15-t-s1.png",
+        "q15-t-s2.png",
+        "q15-t-s3.png"
+      ],
+      "options": {
+        "A": "q15-a-2.png",
+        "B": "q15-a-1.png",
+        "C": "q15-a-3.png",
+        "D": "q15-a-!.png"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 16,
+      "stemImages": [
+        "q16-t-s1.png",
+        "q16-t-s2.png",
+        "q16-t-s3.png"
+      ],
+      "options": {
+        "A": "q16-a-!.png",
+        "B": "q16-a-3.png",
+        "C": "q16-a-2.png",
+        "D": "q16-a-1.png"
       },
       "correctAnswer": "A"
+    },
+    {
+      "questionNumber": 17,
+      "stemImages": [
+        "q17-t-s1.png",
+        "q17-t-s2.png",
+        "q17-t-s3.png"
+      ],
+      "options": {
+        "A": "q17-a-1.png",
+        "B": "q17-a-2.png",
+        "C": "q17-a-3.png",
+        "D": "q17-a-!.png"
+      },
+      "correctAnswer": "D"
+    },
+    {
+      "questionNumber": 18,
+      "stemImages": [
+        "q18-t-s1.png",
+        "q18-t-s2.png",
+        "q18-t-s3.png"
+      ],
+      "options": {
+        "A": "q18-a-3.png",
+        "B": "q18-a-!.png",
+        "C": "q18-a-2.png",
+        "D": "q18-a-1.png"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "questionNumber": 19,
+      "stemImages": [
+        "q19-t-s1.png",
+        "q19-t-s2.png",
+        "q19-t-s3.png"
+      ],
+      "options": {
+        "A": "q19-a-3.png",
+        "B": "q19-a-!.png",
+        "C": "q19-a-2.png",
+        "D": "q19-a-1.png"
+      },
+      "correctAnswer": "B"
+    },
+    {
+      "questionNumber": 20,
+      "stemImages": [
+        "q20-t-s1.png",
+        "q20-t-s2.png",
+        "q20-t-s3.png",
+        "q20-t-s4.png"
+      ],
+      "options": {
+        "A": "q20-a-3.png",
+        "B": "q20-a-1.png",
+        "C": "q20-a-2.png",
+        "D": "q20-a-!.png"
+      },
+      "correctAnswer": "D"
     }
   ]
 }
