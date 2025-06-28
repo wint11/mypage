@@ -2,15 +2,18 @@
 class PaperFoldingTest {
   constructor() {
     this.questions = [];
+    this.filteredQuestions = [];
     this.currentQuestionIndex = 0;
     this.userAnswers = [];
     this.testCompleted = false;
+    this.currentFilter = 'all';
     this.init();
   }
 
   async init() {
     try {
       await this.loadQuestions();
+      this.initializeFilter();
       this.setupEventListeners();
       this.displayQuestion();
       this.updateProgress();
@@ -62,6 +65,14 @@ class PaperFoldingTest {
     document.getElementById('submitBtn').addEventListener('click', () => {
       this.submitTest();
     });
+    
+    // 筛选按钮事件
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const filter = e.target.dataset.filter;
+        this.applyFilter(filter);
+      });
+    });
 
     // 选项点击事件
     document.querySelectorAll('.option').forEach(option => {
@@ -100,9 +111,12 @@ class PaperFoldingTest {
   }
 
   displayQuestion() {
-    if (this.questions.length === 0) return;
+    if (this.filteredQuestions.length === 0) {
+      this.showError('没有符合筛选条件的题目');
+      return;
+    }
     
-    const question = this.questions[this.currentQuestionIndex];
+    const question = this.filteredQuestions[this.currentQuestionIndex];
     
     // 显示题干图片
     this.displayStemImages(question.stemImages);
@@ -168,8 +182,12 @@ class PaperFoldingTest {
     const optionElement = document.querySelector(`[data-option="${selectedOption}"]`);
     optionElement.classList.add('selected');
     
-    // 保存用户答案
-    this.userAnswers[this.currentQuestionIndex] = selectedOption;
+    // 获取当前题目在原始数组中的索引
+    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
+    const originalIndex = this.questions.findIndex(q => q === currentQuestion);
+    
+    // 保存用户答案到原始数组对应位置
+    this.userAnswers[originalIndex] = selectedOption;
     
     // 保存到localStorage
     this.saveAnswersToStorage();
@@ -201,7 +219,11 @@ class PaperFoldingTest {
   }
 
   restoreUserSelection() {
-    const userAnswer = this.userAnswers[this.currentQuestionIndex];
+    // 获取当前题目在原始数组中的索引
+    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
+    const originalIndex = this.questions.findIndex(q => q === currentQuestion);
+    const userAnswer = this.userAnswers[originalIndex];
+    
     if (userAnswer) {
       // 只恢复视觉状态，不触发选择逻辑
       document.querySelectorAll('.option').forEach(option => {
@@ -241,7 +263,7 @@ class PaperFoldingTest {
     const nextBtn = document.getElementById('nextBtn');
     
     prevBtn.disabled = this.currentQuestionIndex === 0;
-    nextBtn.disabled = this.currentQuestionIndex === this.questions.length - 1;
+    nextBtn.disabled = this.currentQuestionIndex === this.filteredQuestions.length - 1;
   }
 
   updateProgress() {
@@ -249,7 +271,7 @@ class PaperFoldingTest {
     const progressFill = document.getElementById('progressFill');
     
     const current = this.currentQuestionIndex + 1;
-    const total = this.questions.length;
+    const total = this.filteredQuestions.length;
     const percentage = (current / total) * 100;
     
     progressText.textContent = `${current}/${total}`;
@@ -310,8 +332,9 @@ class PaperFoldingTest {
   }
   
   showCorrectAnswers() {
-    const question = this.questions[this.currentQuestionIndex];
-    const userAnswer = this.userAnswers[this.currentQuestionIndex];
+    const question = this.filteredQuestions[this.currentQuestionIndex];
+    const originalIndex = this.questions.findIndex(q => q === question);
+    const userAnswer = this.userAnswers[originalIndex];
     
     // 清除之前的状态
     document.querySelectorAll('.option').forEach(option => {
@@ -351,6 +374,62 @@ class PaperFoldingTest {
         ">重新加载</button>
       </div>
     `;
+  }
+
+  // 筛选功能
+  applyFilter(filterType) {
+    this.currentFilter = filterType;
+    
+    // 更新筛选按钮状态
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.filter === filterType) {
+        btn.classList.add('active');
+      }
+    });
+    
+    // 根据筛选条件过滤题目
+    if (filterType === 'all') {
+      this.filteredQuestions = [...this.questions];
+    } else {
+      const stepCount = parseInt(filterType);
+      this.filteredQuestions = this.questions.filter(question => 
+        question.stemImages.length === stepCount
+      );
+    }
+    
+    // 重置当前题目索引
+    this.currentQuestionIndex = 0;
+    
+    // 更新筛选信息
+    this.updateFilterInfo();
+    
+    // 重新显示题目
+    if (this.filteredQuestions.length > 0) {
+      this.displayQuestion();
+      this.updateProgress();
+    } else {
+      this.showError(`没有找到${filterType === 'all' ? '任何' : filterType + '步折叠的'}题目`);
+    }
+  }
+  
+  updateFilterInfo() {
+    const filterInfo = document.getElementById('filterInfo');
+    if (filterInfo) {
+      let infoText = '';
+      if (this.currentFilter === 'all') {
+        infoText = `显示全部 ${this.filteredQuestions.length} 道题目`;
+      } else {
+        infoText = `显示 ${this.currentFilter}步折叠 ${this.filteredQuestions.length} 道题目`;
+      }
+      filterInfo.textContent = infoText;
+    }
+  }
+  
+  initializeFilter() {
+    // 初始化时显示所有题目
+    this.filteredQuestions = [...this.questions];
+    this.updateFilterInfo();
   }
 
   // 获取测试结果
