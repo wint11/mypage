@@ -7,6 +7,8 @@ class PaperFoldingTest {
     this.userAnswers = [];
     this.testCompleted = false;
     this.currentFilter = 'all';
+    this.imageCache = new Map(); // 图片缓存
+    this.loadingProgress = { loaded: 0, total: 0 }; // 加载进度
     this.init();
   }
 
@@ -15,9 +17,14 @@ class PaperFoldingTest {
       await this.loadQuestions();
       this.initializeFilter();
       this.setupEventListeners();
+      
+      // 显示当前题目（使用占位符）
       this.displayQuestion();
       this.updateProgress();
       this.updateSubmitButton();
+      
+      // 开始预加载图片
+      this.startImagePreloading();
     } catch (error) {
       console.error('初始化失败:', error);
       this.showError('加载题目数据失败，请刷新页面重试。');
@@ -110,6 +117,105 @@ class PaperFoldingTest {
     });
   }
 
+  // 开始图片预加载
+  startImagePreloading() {
+    // 收集所有需要加载的图片路径
+    const allImagePaths = new Set();
+    
+    this.questions.forEach(question => {
+      // 添加题干图片
+      question.stemImages.forEach(imagePath => {
+        allImagePaths.add(imagePath);
+      });
+      
+      // 添加选项图片
+      Object.values(question.options).forEach(imagePath => {
+        allImagePaths.add(imagePath);
+      });
+    });
+    
+    this.loadingProgress.total = allImagePaths.size;
+    this.loadingProgress.loaded = 0;
+    
+    // 优先加载当前题目的图片
+    this.preloadCurrentQuestionImages().then(() => {
+      // 然后预加载其他图片
+      this.preloadRemainingImages(allImagePaths);
+    });
+  }
+  
+  // 预加载当前题目的图片
+  async preloadCurrentQuestionImages() {
+    if (this.filteredQuestions.length === 0) return;
+    
+    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
+    const currentImages = [
+      ...currentQuestion.stemImages,
+      ...Object.values(currentQuestion.options)
+    ];
+    
+    const promises = currentImages.map(imagePath => this.preloadImage(imagePath));
+    await Promise.all(promises);
+    
+    // 当前题目图片加载完成后，立即更新显示
+    this.displayQuestion();
+  }
+  
+  // 预加载剩余图片
+  async preloadRemainingImages(allImagePaths) {
+    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
+    const currentImages = new Set([
+      ...currentQuestion.stemImages,
+      ...Object.values(currentQuestion.options)
+    ]);
+    
+    // 过滤掉已经加载的当前题目图片
+    const remainingImages = Array.from(allImagePaths).filter(path => !currentImages.has(path));
+    
+    // 批量预加载，每次加载5张图片
+    const batchSize = 5;
+    for (let i = 0; i < remainingImages.length; i += batchSize) {
+      const batch = remainingImages.slice(i, i + batchSize);
+      const promises = batch.map(imagePath => this.preloadImage(imagePath));
+      await Promise.all(promises);
+      
+      // 可以在这里更新加载进度
+      this.updateLoadingProgress();
+    }
+  }
+  
+  // 预加载单个图片
+  preloadImage(imagePath) {
+    return new Promise((resolve) => {
+      if (this.imageCache.has(imagePath)) {
+        resolve(this.imageCache.get(imagePath));
+        return;
+      }
+      
+      const img = new Image();
+      img.onload = () => {
+        this.imageCache.set(imagePath, img.src);
+        this.loadingProgress.loaded++;
+        resolve(img.src);
+      };
+      img.onerror = () => {
+        // 使用默认占位符
+        const placeholderSrc = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
+        this.imageCache.set(imagePath, placeholderSrc);
+        this.loadingProgress.loaded++;
+        resolve(placeholderSrc);
+      };
+      img.src = `../paperfolding/images/${imagePath}`;
+    });
+  }
+  
+  // 更新加载进度
+  updateLoadingProgress() {
+    const percentage = Math.round((this.loadingProgress.loaded / this.loadingProgress.total) * 100);
+    // 可以在这里显示加载进度，比如在控制台或UI中
+    console.log(`图片加载进度: ${this.loadingProgress.loaded}/${this.loadingProgress.total} (${percentage}%)`);
+  }
+
   displayQuestion() {
     if (this.filteredQuestions.length === 0) {
       this.showError('没有符合筛选条件的题目');
@@ -143,11 +249,19 @@ class PaperFoldingTest {
     
     stemImages.forEach((imagePath, index) => {
       const img = document.createElement('img');
-      img.src = `../paperfolding/images/${imagePath}`;
       img.alt = `题干图片 ${index + 1}`;
-      img.onerror = () => {
+      
+      // 使用缓存的图片或占位符
+      if (this.imageCache.has(imagePath)) {
+        img.src = this.imageCache.get(imagePath);
+      } else {
+        // 如果缓存中没有，使用占位符并异步加载
         img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
-      };
+        this.preloadImage(imagePath).then(src => {
+          img.src = src;
+        });
+      }
+      
       container.appendChild(img);
       
       // 添加箭头（除了最后一张图片）
@@ -163,10 +277,18 @@ class PaperFoldingTest {
   displayOptions(options) {
     ['A', 'B', 'C', 'D'].forEach(option => {
       const img = document.getElementById(`option${option}`);
-      img.src = `../paperfolding/images/${options[option]}`;
-      img.onerror = () => {
+      const imagePath = options[option];
+      
+      // 使用缓存的图片或占位符
+      if (this.imageCache.has(imagePath)) {
+        img.src = this.imageCache.get(imagePath);
+      } else {
+        // 如果缓存中没有，使用占位符并异步加载
         img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
-      };
+        this.preloadImage(imagePath).then(src => {
+          img.src = src;
+        });
+      }
     });
   }
 
@@ -247,15 +369,51 @@ class PaperFoldingTest {
       this.currentQuestionIndex--;
       this.displayQuestion();
       this.updateProgress();
+      
+      // 预加载前一题的图片（如果存在且未缓存）
+      this.preloadAdjacentQuestions();
     }
   }
 
   nextQuestion() {
-    if (this.currentQuestionIndex < this.questions.length - 1) {
+    if (this.currentQuestionIndex < this.filteredQuestions.length - 1) {
       this.currentQuestionIndex++;
       this.displayQuestion();
       this.updateProgress();
+      
+      // 预加载下一题的图片（如果存在且未缓存）
+      this.preloadAdjacentQuestions();
     }
+  }
+  
+  // 预加载相邻题目的图片
+  preloadAdjacentQuestions() {
+    const adjacentIndexes = [];
+    
+    // 添加前一题索引
+    if (this.currentQuestionIndex > 0) {
+      adjacentIndexes.push(this.currentQuestionIndex - 1);
+    }
+    
+    // 添加后一题索引
+    if (this.currentQuestionIndex < this.filteredQuestions.length - 1) {
+      adjacentIndexes.push(this.currentQuestionIndex + 1);
+    }
+    
+    // 预加载相邻题目的图片
+    adjacentIndexes.forEach(index => {
+      const question = this.filteredQuestions[index];
+      const images = [
+        ...question.stemImages,
+        ...Object.values(question.options)
+      ];
+      
+      images.forEach(imagePath => {
+        if (!this.imageCache.has(imagePath)) {
+          this.preloadImage(imagePath);
+        }
+      });
+    });
   }
 
   updateNavigationButtons() {
@@ -408,6 +566,9 @@ class PaperFoldingTest {
     if (this.filteredQuestions.length > 0) {
       this.displayQuestion();
       this.updateProgress();
+      
+      // 预加载当前筛选后的第一题图片（如果还没有缓存）
+      this.preloadCurrentQuestionImages();
     } else {
       this.showError(`没有找到${filterType === 'all' ? '任何' : filterType + '步折叠的'}题目`);
     }
