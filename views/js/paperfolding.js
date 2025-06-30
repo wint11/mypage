@@ -1,12 +1,30 @@
 // 纸张折叠测试 JavaScript
 class PaperFoldingTest {
   constructor() {
-    this.questions = [];
+    // 问卷星配置 - 需要根据实际情况修改
+    this.wenjuanxingConfig = {
+      enabled: true, // 设置为true启用问卷星上传
+      formUrl: 'https://www.wjx.cn/handler/jqemed.ashx?activity=h3Bs6Ay', // 问卷星表单提交URL
+      activityId: 'h3Bs6Ay', // 问卷星活动ID
+      debugMode: true, // 是否显示iframe用于调试
+      fieldMapping: { // 字段映射，根据问卷星表单字段调整
+        totalQuestions: 'totalQuestions',
+        correctAnswers: 'correctAnswers', 
+        accuracy: 'accuracy',
+        timestamp: 'timestamp',
+        testType: 'testType',
+        testData: 'testData'
+      }
+    };
+    
+    this.allQuestions = [];
+    this.allQuestions = []; // 存储完整题目数据
     this.filteredQuestions = [];
     this.currentQuestionIndex = 0;
     this.userAnswers = [];
     this.testCompleted = false;
     this.currentFilter = 'all';
+    this.currentVersion = 'full'; // 当前版本：demo 或 full
     this.imageCache = new Map(); // 图片缓存
     this.cacheAccessOrder = []; // LRU缓存访问顺序
     this.maxCacheSize = 100; // 最大缓存图片数量
@@ -41,23 +59,37 @@ class PaperFoldingTest {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      this.questions = data.questions || [];
+      this.allQuestions = data.questions || [];
       
-      if (this.questions.length === 0) {
+      if (this.allQuestions.length === 0) {
         throw new Error('没有找到题目数据');
       }
       
-      // 初始化用户答案数组
-      this.userAnswers = new Array(this.questions.length).fill(null);
+      // 根据当前版本设置题目
+      this.setQuestionsForVersion();
       
-      // 从localStorage恢复答案
-      this.loadAnswersFromStorage();
-      
-      console.log(`成功加载 ${this.questions.length} 道题目`);
+      console.log(`成功加载 ${this.questions.length} 道题目 (${this.currentVersion}版)`);
     } catch (error) {
       console.error('加载题目失败:', error);
       throw error;
     }
+  }
+  
+  // 根据版本设置题目
+  setQuestionsForVersion() {
+    if (this.currentVersion === 'demo') {
+      // Demo版只取前3题
+      this.questions = this.allQuestions.slice(0, 3);
+    } else {
+      // 完整版使用全部题目
+      this.questions = [...this.allQuestions];
+    }
+    
+    // 重新初始化用户答案数组
+    this.userAnswers = new Array(this.questions.length).fill(null);
+    
+    // 从localStorage恢复答案
+    this.loadAnswersFromStorage();
   }
 
   setupEventListeners() {
@@ -76,12 +108,42 @@ class PaperFoldingTest {
       this.submitTest();
     });
     
+    // 版本切换按钮事件
+    document.querySelectorAll('.version-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const version = e.target.dataset.version;
+        this.switchVersion(version);
+      });
+    });
+    
     // 筛选按钮事件
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const filter = e.target.dataset.filter;
         this.applyFilter(filter);
       });
+    });
+
+    // 跳转按钮事件
+    document.getElementById('jumpBtn').addEventListener('click', () => {
+      this.jumpToQuestion();
+    });
+
+    // 跳转输入框回车事件
+    document.getElementById('jumpInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.jumpToQuestion();
+      }
+    });
+
+    // 下载按钮事件
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      this.downloadQuestionImage();
+    });
+
+    // 下载全部按钮事件
+    document.getElementById('downloadAllBtn').addEventListener('click', () => {
+      this.downloadAllQuestions();
     });
 
     // 选项点击事件
@@ -367,11 +429,13 @@ class PaperFoldingTest {
   }
 
   saveAnswersToStorage() {
-    localStorage.setItem('paperfolding_answers', JSON.stringify(this.userAnswers));
+    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    localStorage.setItem(storageKey, JSON.stringify(this.userAnswers));
   }
   
   loadAnswersFromStorage() {
-    const saved = localStorage.getItem('paperfolding_answers');
+    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const answers = JSON.parse(saved);
@@ -385,8 +449,317 @@ class PaperFoldingTest {
   }
   
   clearStoredAnswers() {
-    localStorage.removeItem('paperfolding_answers');
+    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    localStorage.removeItem(storageKey);
   }
+
+  // 上传数据到问卷星
+  uploadToWenjuanxing(results) {
+    try {
+      // 检查问卷星配置
+      if (!this.wenjuanxingConfig.enabled) {
+        this.showUploadStatus('问卷星上传功能未启用', '#FF9800', {
+          details: [
+            '要启用问卷星上传功能，请：',
+            '1. 在代码中设置 wenjuanxingConfig.enabled = true',
+            '2. 配置有效的问卷星活动ID',
+            '3. 设置正确的字段映射',
+            '数据已输出到控制台供参考'
+          ]
+        });
+        console.log('准备上传到问卷星的数据:', this.prepareSubmitData(results));
+        return;
+      }
+      
+      if (!this.wenjuanxingConfig.activityId) {
+        this.showUploadStatus('问卷星活动ID未配置', '#f44336', {
+          details: [
+            '请在代码中配置以下参数：',
+            '1. wenjuanxingConfig.activityId: 问卷星活动ID（如：h3Bs6Ay）',
+            '2. wenjuanxingConfig.debugMode: 是否显示iframe调试（可选）',
+            '详细配置说明请参考 wenjuanxing-config-guide.md 文件'
+          ]
+        });
+        return;
+      }
+      
+      // 显示上传状态
+      this.showUploadStatus('正在准备问卷星数据...', '#4CAF50');
+      
+      // 准备要提交的数据
+       const submitData = this.prepareSubmitData(results);
+       
+       // 打开问卷星并显示填写说明
+       this.createWenjuanxingIframe(submitData);
+       
+       // 显示完成状态
+       this.showUploadStatus('问卷星已打开，请手动填写数据', '#2196F3', {
+         details: [
+           '由于浏览器跨域限制，无法自动填写问卷星表单',
+           '已为您打开问卷星页面和填写说明',
+           '请根据提示手动填写相关数据',
+           '如需复制数据，请点击填写说明中的"复制数据"按钮'
+         ]
+       });
+       
+    } catch (error) {
+      console.error('问卷星上传过程出错:', error);
+      this.showUploadStatus('上传功能配置错误', '#f44336');
+    }
+  }
+  
+  // 显示上传状态的辅助方法
+  showUploadStatus(message, backgroundColor, options = {}) {
+    // 移除现有的状态提示
+    const existingStatus = document.getElementById('upload-status');
+    if (existingStatus) {
+      existingStatus.remove();
+    }
+    
+    const statusDiv = document.createElement('div');
+    statusDiv.id = 'upload-status';
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${backgroundColor};
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 300px;
+    `;
+    
+    if (options.details && options.details.length > 0) {
+      statusDiv.innerHTML = `
+        <div>${message}</div>
+        ${options.details.map(detail => `<div style="font-size: 12px; margin-top: 3px;">${detail}</div>`).join('')}
+      `;
+    } else {
+      statusDiv.textContent = message;
+    }
+    
+    document.body.appendChild(statusDiv);
+    
+    // 自动移除状态提示
+    const removeDelay = options.details ? 8000 : 3000;
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, removeDelay);
+  }
+  
+  // 准备提交数据的辅助方法
+  prepareSubmitData(results) {
+    return {
+      totalQuestions: results.totalQuestions,
+      correctAnswers: results.correctAnswers,
+      accuracy: results.accuracy,
+      timestamp: new Date().toISOString(),
+      testType: '折纸游戏测试',
+      version: this.currentVersion,
+      details: results.results.map(r => ({
+        question: r.questionNumber,
+        userAnswer: r.userAnswer || '未答',
+        correct: r.isCorrect
+      }))
+    };
+  }
+   
+   // 创建隐藏表单直接提交到问卷星
+    // 配置说明：
+    // 1. 需要替换下面的action URL为有效的问卷星表单提交地址
+    // 2. 需要根据实际问卷星表单字段调整fields对象
+    // 3. 需要处理跨域问题（问卷星需要允许跨域提交）
+    // 4. 建议添加提交成功/失败的回调验证
+    submitFormToWenjuanxing(data) {
+       try {
+         // 创建隐藏的iframe用于表单提交
+         const iframe = document.createElement('iframe');
+         iframe.name = 'wjx-submit-frame';
+         iframe.style.display = 'none';
+         iframe.style.width = '0';
+         iframe.style.height = '0';
+         iframe.style.border = 'none';
+         document.body.appendChild(iframe);
+         
+         // 创建隐藏的表单
+         const form = document.createElement('form');
+         form.method = 'POST';
+         form.action = this.wenjuanxingConfig.formUrl;
+         form.target = 'wjx-submit-frame'; // 提交到隐藏iframe
+         form.style.display = 'none';
+         
+         // 根据配置映射字段
+         const fields = {};
+         if (this.wenjuanxingConfig.activityId) {
+           fields['activity'] = this.wenjuanxingConfig.activityId;
+         }
+         
+         // 使用字段映射配置
+         Object.keys(this.wenjuanxingConfig.fieldMapping).forEach(key => {
+           const mappedField = this.wenjuanxingConfig.fieldMapping[key];
+           if (data[key] !== undefined) {
+             fields[mappedField] = key === 'testData' ? JSON.stringify(data) : data[key];
+           }
+         });
+        
+        // 为每个字段创建input元素
+        Object.keys(fields).forEach(key => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = fields[key];
+          form.appendChild(input);
+        });
+        
+        // 添加到页面并提交
+        document.body.appendChild(form);
+        
+        // 延迟提交，确保表单已添加到DOM
+        setTimeout(() => {
+          form.submit();
+          console.log('表单已提交到问卷星:', data);
+          
+          // 提交后清理
+          setTimeout(() => {
+            if (form.parentNode) {
+              form.parentNode.removeChild(form);
+            }
+            if (iframe.parentNode) {
+              iframe.parentNode.removeChild(iframe);
+            }
+          }, 3000);
+        }, 100);
+        
+      } catch (error) {
+        console.warn('表单提交失败:', error);
+      }
+    }
+   
+   // 创建问卷星iframe并尝试自动填写表单
+  createWenjuanxingIframe(data) {
+    console.log('创建问卷星iframe...');
+    
+    // 由于跨域限制，直接在新窗口打开问卷星并显示数据
+    this.openWenjuanxingWithData(data);
+  }
+  
+  // 在新窗口打开问卷星并显示填写数据
+  openWenjuanxingWithData(data) {
+    const activityId = this.wenjuanxingConfig.activityId;
+    const wjxUrl = `https://www.wjx.cn/vm/${activityId}.aspx`;
+    
+    // 立即显示填写提示和数据
+    this.showFillInstructions(data);
+    
+    // 延迟3秒后在新窗口打开问卷星，让用户有时间查看填写说明
+    setTimeout(() => {
+      const wjxWindow = window.open(wjxUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+      
+      if (wjxWindow) {
+        console.log('问卷星已在新窗口打开');
+      } else {
+        console.error('无法打开问卷星窗口，可能被浏览器阻止了弹窗');
+        this.showUploadStatus('问卷星窗口被阻止，请允许弹窗后重试', '#f44336');
+      }
+    }, 3000);
+    
+    // 如果启用调试模式，显示详细数据
+    if (this.wenjuanxingConfig.debugMode) {
+      console.log('问卷星填写数据:', data);
+    }
+  }
+  
+  // 显示填写说明
+  showFillInstructions(data) {
+    const instructions = `
+问卷星自动填写数据：
+
+准确率：${data.accuracy}%
+总题数：${data.totalQuestions}
+正确答案数：${data.correctAnswers}
+测试类型：${data.testType}
+版本：${data.version}
+测试时间：${data.timestamp}
+
+请在打开的问卷星窗口中手动填写上述数据。
+    `;
+    
+    // 创建一个模态框显示填写说明
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    `;
+    
+    content.innerHTML = `
+      <h3 style="margin-top: 0; color: #333;">问卷星填写说明</h3>
+      <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; white-space: pre-wrap; font-family: monospace;">${instructions}</pre>
+      <div style="text-align: center; margin-top: 20px;">
+        <button id="copyDataBtn" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; margin-right: 10px; cursor: pointer;">复制数据</button>
+        <button id="closeInstructionsBtn" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">关闭</button>
+      </div>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    // 复制数据到剪贴板
+    content.querySelector('#copyDataBtn').onclick = () => {
+      const dataText = `准确率：${data.accuracy}%\n总题数：${data.totalQuestions}\n正确答案数：${data.correctAnswers}`;
+      navigator.clipboard.writeText(dataText).then(() => {
+        alert('数据已复制到剪贴板');
+      }).catch(() => {
+        // 降级方案
+        const textArea = document.createElement('textarea');
+        textArea.value = dataText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('数据已复制到剪贴板');
+      });
+    };
+    
+    // 关闭说明
+    content.querySelector('#closeInstructionsBtn').onclick = () => {
+      document.body.removeChild(modal);
+    };
+    
+    // 点击背景关闭
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    };
+  }
+  
+
+  
+
 
   restoreUserSelection() {
     // 获取当前题目在原始数组中的索引
@@ -432,6 +805,115 @@ class PaperFoldingTest {
       // 预加载下一题的图片（如果存在且未缓存）
       this.preloadAdjacentQuestions();
     }
+  }
+
+  jumpToQuestion() {
+    const jumpInput = document.getElementById('jumpInput');
+    const questionNumber = parseInt(jumpInput.value);
+    
+    // 验证输入的题号
+    if (isNaN(questionNumber) || questionNumber < 1 || questionNumber > this.filteredQuestions.length) {
+      alert(`请输入有效的题号（1-${this.filteredQuestions.length}）`);
+      jumpInput.value = '';
+      return;
+    }
+    
+    // 跳转到指定题目（题号从1开始，数组索引从0开始）
+    this.currentQuestionIndex = questionNumber - 1;
+    this.displayQuestion();
+    this.updateProgress();
+    
+    // 预加载相邻题目的图片
+    this.preloadAdjacentQuestions();
+    
+    // 清空输入框
+    jumpInput.value = '';
+    
+    // 显示跳转成功提示
+    const answerFeedback = document.getElementById('answerFeedback');
+    answerFeedback.textContent = `已跳转到第 ${questionNumber} 题`;
+    answerFeedback.className = 'answer-feedback success';
+    
+    // 3秒后清除提示
+    setTimeout(() => {
+      if (answerFeedback.textContent.includes('已跳转到')) {
+        answerFeedback.textContent = '';
+        answerFeedback.className = 'answer-feedback';
+      }
+    }, 3000);
+  }
+  
+  // 切换版本
+  switchVersion(version) {
+    if (this.currentVersion === version) {
+      return; // 如果已经是当前版本，不需要切换
+    }
+    
+    // 确认切换（如果用户已经开始答题）
+    const hasAnswered = this.userAnswers.some(answer => answer !== null);
+    if (hasAnswered) {
+      const confirmSwitch = confirm(`切换版本将清空当前答题进度，确定要切换到${version === 'demo' ? 'Demo版' : '完整版'}吗？`);
+      if (!confirmSwitch) {
+        return;
+      }
+    }
+    
+    // 更新版本
+    this.currentVersion = version;
+    
+    // 更新按钮状态
+    document.querySelectorAll('.version-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.version === version) {
+        btn.classList.add('active');
+      }
+    });
+    
+    // 重新设置题目
+    this.setQuestionsForVersion();
+    
+    // 重置当前题目索引
+    this.currentQuestionIndex = 0;
+    
+    // 重新应用筛选
+    this.applyFilter(this.currentFilter);
+    
+    // 显示当前题目
+    this.displayQuestion();
+    this.updateProgress();
+    this.updateSubmitButton();
+    this.updateJumpInputMax();
+    
+    // 清空答题反馈
+    const answerFeedback = document.getElementById('answerFeedback');
+    answerFeedback.textContent = '';
+    answerFeedback.className = 'answer-feedback';
+    
+    // 显示切换成功提示
+    const statusDiv = document.createElement('div');
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    statusDiv.textContent = `已切换到${version === 'demo' ? 'Demo版 (3题)' : '完整版 (230题)'}`;
+    document.body.appendChild(statusDiv);
+    
+    // 3秒后移除提示
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, 3000);
+    
+    console.log(`已切换到${version}版，共${this.questions.length}道题目`);
   }
   
   // 预加载相邻题目的图片
@@ -498,6 +980,9 @@ class PaperFoldingTest {
     // 显示结果
     this.showTestResults(results);
     
+    // 上传数据到问卷星
+    this.uploadToWenjuanxing(results);
+    
     // 清除存储的答案
     this.clearStoredAnswers();
   }
@@ -508,17 +993,6 @@ class PaperFoldingTest {
     
     let message = `测试完成！\n正确率：${results.accuracy}% (${results.correctAnswers}/${results.totalQuestions})`;
     let className = 'answer-feedback ';
-    
-    // if (accuracy >= 80) {
-    //   message += '\n🎉 优秀！';
-    //   className += 'excellent';
-    // } else if (accuracy >= 60) {
-    //   message += '\n👍 良好！';
-    //   className += 'good';
-    // } else {
-    //   message += '\n💪 继续努力！';
-    //   className += 'needs-improvement';
-    // }
     
     feedbackElement.textContent = message;
     feedbackElement.className = className;
@@ -606,6 +1080,9 @@ class PaperFoldingTest {
     // 更新筛选信息
     this.updateFilterInfo();
     
+    // 更新跳转输入框的最大值
+    this.updateJumpInputMax();
+    
     // 重新显示题目
     if (this.filteredQuestions.length > 0) {
       this.displayQuestion();
@@ -633,11 +1110,20 @@ class PaperFoldingTest {
       filterInfo.textContent = infoText;
     }
   }
+
+  updateJumpInputMax() {
+    const jumpInput = document.getElementById('jumpInput');
+    if (jumpInput) {
+      jumpInput.max = this.filteredQuestions.length;
+      jumpInput.placeholder = `1-${this.filteredQuestions.length}`;
+    }
+  }
   
   initializeFilter() {
     // 初始化时显示所有题目
     this.filteredQuestions = [...this.questions];
     this.updateFilterInfo();
+    this.updateJumpInputMax();
   }
 
   // 获取测试结果
@@ -664,6 +1150,328 @@ class PaperFoldingTest {
       accuracy: (correctCount / this.questions.length * 100).toFixed(1),
       results: results
     };
+  }
+
+  // 下载题目截图
+  async downloadQuestionImage() {
+    try {
+      // 显示加载状态
+      const downloadBtn = document.getElementById('downloadBtn');
+      const originalText = downloadBtn.innerHTML;
+      downloadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 生成中...';
+      downloadBtn.disabled = true;
+
+      // 获取question-content元素
+      const questionContent = document.querySelector('.question-content');
+      if (!questionContent) {
+        throw new Error('未找到题目内容区域');
+      }
+
+      // 等待图片加载完成
+      const images = questionContent.querySelectorAll('img');
+      await Promise.all(Array.from(images).map(img => {
+        return new Promise((resolve) => {
+          if (img.complete) {
+            resolve();
+          } else {
+            img.onload = resolve;
+            img.onerror = resolve; // 即使图片加载失败也继续
+          }
+        });
+      }));
+
+      // 使用html2canvas截图
+      const canvas = await html2canvas(questionContent, {
+        backgroundColor: '#ffffff',
+        scale: 2, // 提高清晰度
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: questionContent.offsetWidth,
+        height: questionContent.offsetHeight
+      });
+
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.download = `纸折叠题目_第${this.currentQuestionIndex + 1}题_${new Date().getTime()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // 显示成功提示
+      this.showDownloadSuccess();
+
+    } catch (error) {
+      console.error('下载失败:', error);
+      this.showDownloadError(error.message);
+    } finally {
+      // 恢复按钮状态
+      const downloadBtn = document.getElementById('downloadBtn');
+      downloadBtn.innerHTML = '<i class="bi bi-download"></i> 下载题目';
+      downloadBtn.disabled = false;
+    }
+  }
+
+  // 显示下载成功提示
+  showDownloadSuccess() {
+    const statusDiv = document.createElement('div');
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    statusDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i>题目截图下载成功！';
+    document.body.appendChild(statusDiv);
+
+    // 3秒后移除提示
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, 3000);
+  }
+
+  // 显示下载错误提示
+  showDownloadError(message) {
+    const statusDiv = document.createElement('div');
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #dc3545;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    statusDiv.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i>下载失败: ${message}`;
+    document.body.appendChild(statusDiv);
+
+    // 5秒后移除提示
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, 5000);
+  }
+
+  // 下载所有题目截图
+  async downloadAllQuestions() {
+    try {
+      // 显示加载状态
+      const downloadAllBtn = document.getElementById('downloadAllBtn');
+      const originalText = downloadAllBtn.innerHTML;
+      downloadAllBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 生成中...';
+      downloadAllBtn.disabled = true;
+
+      // 获取当前版本的题目数量
+      const totalQuestions = this.questions.length;
+      const currentQuestionIndex = this.currentQuestionIndex;
+      
+      // 创建进度提示
+      const progressDiv = this.createProgressIndicator();
+      document.body.appendChild(progressDiv);
+
+      // 存储当前题目索引，稍后恢复
+      const originalIndex = this.currentQuestionIndex;
+
+      // 创建ZIP文件（使用JSZip库）
+      const zip = new JSZip();
+      const folder = zip.folder(`纸折叠题目_${this.currentVersion === 'demo' ? 'Demo版' : '完整版'}_${new Date().toISOString().split('T')[0]}`);
+
+      // 逐个截图并添加到ZIP
+      for (let i = 0; i < totalQuestions; i++) {
+        try {
+          // 更新进度
+          this.updateProgressIndicator(progressDiv, i + 1, totalQuestions);
+          
+          // 切换到当前题目
+          this.currentQuestionIndex = i;
+          this.displayQuestion();
+          
+          // 等待一小段时间确保页面渲染完成
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // 获取question-content元素
+          const questionContent = document.querySelector('.question-content');
+          if (!questionContent) {
+            console.warn(`第${i + 1}题：未找到题目内容区域`);
+            continue;
+          }
+
+          // 等待图片加载完成
+          const images = questionContent.querySelectorAll('img');
+          await Promise.all(Array.from(images).map(img => {
+            return new Promise((resolve) => {
+              if (img.complete) {
+                resolve();
+              } else {
+                img.onload = resolve;
+                img.onerror = resolve;
+              }
+            });
+          }));
+
+          // 使用html2canvas截图
+          const canvas = await html2canvas(questionContent, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width: questionContent.offsetWidth,
+            height: questionContent.offsetHeight
+          });
+
+          // 将canvas转换为blob并添加到ZIP
+          const blob = await new Promise(resolve => {
+            canvas.toBlob(resolve, 'image/png');
+          });
+          
+          folder.file(`第${String(i + 1).padStart(3, '0')}题.png`, blob);
+          
+        } catch (error) {
+          console.error(`第${i + 1}题截图失败:`, error);
+          // 继续处理下一题
+        }
+      }
+
+      // 恢复原始题目
+      this.currentQuestionIndex = originalIndex;
+      this.displayQuestion();
+
+      // 生成ZIP文件并下载
+      this.updateProgressIndicator(progressDiv, totalQuestions, totalQuestions, '正在生成压缩包...');
+      const zipBlob = await zip.generateAsync({type: 'blob'});
+      
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.download = `纸折叠题目_${this.currentVersion === 'demo' ? 'Demo版' : '完整版'}_${new Date().toISOString().split('T')[0]}.zip`;
+      link.href = URL.createObjectURL(zipBlob);
+      
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // 清理URL对象
+      URL.revokeObjectURL(link.href);
+
+      // 移除进度提示
+      document.body.removeChild(progressDiv);
+
+      // 显示成功提示
+      this.showDownloadAllSuccess(totalQuestions);
+
+    } catch (error) {
+      console.error('批量下载失败:', error);
+      this.showDownloadError(`批量下载失败: ${error.message}`);
+    } finally {
+      // 恢复按钮状态
+      const downloadAllBtn = document.getElementById('downloadAllBtn');
+      downloadAllBtn.innerHTML = '<i class="bi bi-cloud-download"></i> 下载全部';
+      downloadAllBtn.disabled = false;
+    }
+  }
+
+  // 创建进度指示器
+  createProgressIndicator() {
+    const progressDiv = document.createElement('div');
+    progressDiv.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      z-index: 10001;
+      text-align: center;
+      min-width: 300px;
+      border: 2px solid #28a745;
+    `;
+    progressDiv.innerHTML = `
+      <div style="margin-bottom: 15px; font-size: 16px; font-weight: bold; color: #333;">
+        <i class="bi bi-cloud-download" style="margin-right: 8px; color: #28a745;"></i>
+        正在批量下载题目
+      </div>
+      <div style="margin-bottom: 10px; color: #666; font-size: 14px;" id="progressText">准备中...</div>
+      <div style="width: 100%; height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+        <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #28a745, #20c997); width: 0%; transition: width 0.3s ease;"></div>
+      </div>
+      <div style="margin-top: 15px; font-size: 12px; color: #999;">请勿关闭页面，下载完成后会自动保存</div>
+    `;
+    return progressDiv;
+  }
+
+  // 更新进度指示器
+  updateProgressIndicator(progressDiv, current, total, customText = null) {
+    const progressText = progressDiv.querySelector('#progressText');
+    const progressBar = progressDiv.querySelector('#progressBar');
+    
+    const percentage = Math.round((current / total) * 100);
+    progressBar.style.width = `${percentage}%`;
+    
+    if (customText) {
+      progressText.textContent = customText;
+    } else {
+      progressText.textContent = `正在处理第 ${current} 题，共 ${total} 题 (${percentage}%)`;
+    }
+  }
+
+  // 显示批量下载成功提示
+  showDownloadAllSuccess(count) {
+    const statusDiv = document.createElement('div');
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 350px;
+    `;
+    statusDiv.innerHTML = `
+      <i class="bi bi-check-circle-fill" style="font-size: 18px;"></i>
+      <div>
+        <div style="font-weight: bold; margin-bottom: 2px;">批量下载完成！</div>
+        <div style="font-size: 12px; opacity: 0.9;">已成功下载 ${count} 道题目</div>
+      </div>
+    `;
+    document.body.appendChild(statusDiv);
+
+    // 5秒后移除提示
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, 5000);
   }
 }
 

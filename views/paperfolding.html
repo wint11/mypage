@@ -17,22 +17,34 @@
   <main class="main-content">
     <div class="test-container">
       <div class="filter-controls">
-        <div class="filter-buttons">
-          <button class="filter-btn active" data-filter="all">全部题目</button>
-          <button class="filter-btn" data-filter="3">3步折叠</button>
-          <button class="filter-btn" data-filter="4">4步折叠</button>
-          <button class="filter-btn" data-filter="5">5步折叠</button>
-        </div>
-        <div class="filter-info">
-          <span id="filterInfo">显示全部 6 道题目</span>
-        </div>
+        <div class="controls-row">
+          <div class="version-controls">
+            <div class="version-switch">
+              <label class="switch-label">版本模式：</label>
+              <button class="version-btn active" data-version="full">完整版 (230题)</button>
+              <button class="version-btn" data-version="demo">Demo版 (3题)</button>
+            </div>
+          </div>
+          <div class="filter-section">
+             <label class="filter-label">题目筛选：</label>
+             <div class="filter-buttons">
+               <button class="filter-btn active" data-filter="all">全部题目</button>
+               <button class="filter-btn" data-filter="3">3步折叠</button>
+               <button class="filter-btn" data-filter="4">4步折叠</button>
+               <button class="filter-btn" data-filter="5">5步折叠</button>
+             </div>
+           </div>
+           <div class="filter-info">
+             <span id="filterInfo">显示全部 6 道题目</span>
+           </div>
+         </div>
       </div>
       
       <!-- 题目内容 -->
       <div class="question-content">
         <!-- 题干区域 -->
         <div class="question-stem">
-          <h3>题干：【浅灰色是正面，深灰色是反面，蓝色表示镂空】</h3>
+          <h3>Question stem:</h3>
           <div class="stem-images" id="stemImages">
             <!-- 题干图片将在这里动态加载 -->
           </div>
@@ -40,7 +52,7 @@
 
         <!-- 选项区域 -->
         <div class="question-options">
-          <h3>请选择展开后的正确图案：</h3>
+          <h3>Option:</h3>
           <div class="options-container">
             <div class="option" data-option="A">
               <img id="optionA" src="" alt="选项A">
@@ -78,6 +90,18 @@
             <div class="progress-bar">
               <div class="progress-fill" id="progressFill"></div>
             </div>
+            <div class="jump-controls">
+              <input type="number" id="jumpInput" placeholder="题号" min="1" class="jump-input">
+              <button id="jumpBtn" class="jump-btn">跳转</button>
+              <button id="downloadBtn" class="download-btn">
+                <i class="bi bi-download"></i>
+                下载该题
+              </button>
+              <button id="downloadAllBtn" class="download-all-btn">
+                <i class="bi bi-cloud-download"></i>
+                下载全部
+              </button>
+            </div>
           </div>
         </div>
         
@@ -100,6 +124,8 @@
   <script src="../js/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="../js/components-loader-views.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="js/paperfolding.js"></script>
 </body>
 

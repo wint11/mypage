@@ -42,10 +42,97 @@ body {
   border: 1px solid #e9ecef;
 }
 
+/* 控件行布局 */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dee2e6;
+  flex-wrap: wrap;
+}
+
+/* 版本切换控件 */
+.version-controls {
+  flex-shrink: 0;
+}
+
+.version-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 题目筛选区域 */
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* 题目信息显示 */
+.filter-info {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.filter-info span {
+  font-size: 13px;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  white-space: nowrap;
+}
+
+.switch-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  margin: 0;
+}
+
+.version-btn {
+  padding: 6px 12px;
+  border: 2px solid #6c757d;
+  background: white;
+  color: #6c757d;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.version-btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.version-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
 .filter-buttons {
   display: flex;
   gap: 8px;
-  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
@@ -342,6 +429,7 @@ body {
   color: #666;
   font-size: 0.85rem;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .progress-bar {
@@ -357,6 +445,88 @@ body {
   background: linear-gradient(90deg, #667eea, #764ba2);
   transition: width 0.3s ease;
   width: 0%;
+}
+
+/* 跳转控件 */
+.jump-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+}
+
+.jump-input {
+  width: 60px;
+  height: 28px;
+  padding: 4px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.jump-btn {
+  padding: 4px 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.jump-btn:hover {
+  background: #0069d9;
+}
+
+.download-btn {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.download-btn:hover {
+  background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+}
+
+.download-all-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.download-all-btn:hover {
+  background: linear-gradient(135deg, #20c997 0%, #1e7e34 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.download-all-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* 结果显示 */
