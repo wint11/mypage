@@ -79,7 +79,7 @@ class PaperFoldingTest {
   setQuestionsForVersion() {
     if (this.currentVersion === 'demo') {
       // Demo版只取前3题
-      this.questions = this.allQuestions.slice(0, 3);
+      this.questions = this.allQuestions.slice(0, 50);
     } else {
       // 完整版使用全部题目
       this.questions = [...this.allQuestions];
@@ -903,7 +903,7 @@ class PaperFoldingTest {
       font-size: 14px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     `;
-    statusDiv.textContent = `已切换到${version === 'demo' ? 'Demo版 (3题)' : '完整版 (230题)'}`;
+    statusDiv.textContent = `已切换到${version === 'demo' ? 'Demo版 (50题)' : '完整版 (230题)'}`;
     document.body.appendChild(statusDiv);
     
     // 3秒后移除提示
