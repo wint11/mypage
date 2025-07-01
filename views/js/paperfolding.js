@@ -777,11 +777,13 @@ class PaperFoldingTest {
     const originalIndex = this.questions.findIndex(q => q === currentQuestion);
     const userAnswer = this.userAnswers[originalIndex];
     
+    // 先清除所有选项的选中状态
+    document.querySelectorAll('.option').forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    // 如果有用户答案，则恢复选中状态
     if (userAnswer) {
-      // 只恢复视觉状态，不触发选择逻辑
-      document.querySelectorAll('.option').forEach(option => {
-        option.classList.remove('selected');
-      });
       const optionElement = document.querySelector(`[data-option="${userAnswer}"]`);
       if (optionElement) {
         optionElement.classList.add('selected');
