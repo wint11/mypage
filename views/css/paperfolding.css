@@ -12,7 +12,7 @@ body {
 /* 主要内容区域 */
 .main-content {
   flex: 1;
-  padding: 65px 5px 4px 5px;
+  padding: 75px 5px 0px 5px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -260,7 +260,7 @@ body {
   gap: 12px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 

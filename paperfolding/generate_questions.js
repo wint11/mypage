@@ -92,6 +92,9 @@ function generateQuestionsJson() {
             }
             return a.localeCompare(b);
         });
+        
+        // 在题干最后添加一个问号图片，表示这是需要大模型回答的步骤
+        question.stemImages.push('question-mark.svg');
     });
     
     // 转换为数组并按题号排序

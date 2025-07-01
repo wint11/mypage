@@ -1081,9 +1081,11 @@ class PaperFoldingTest {
       this.filteredQuestions = [...this.questions];
     } else {
       const stepCount = parseInt(filterType);
-      this.filteredQuestions = this.questions.filter(question => 
-        question.stemImages.length === stepCount
-      );
+      this.filteredQuestions = this.questions.filter(question => {
+        // 计算实际折叠步数（排除问号图片）
+        const actualSteps = question.stemImages.filter(img => img !== 'question-mark.svg').length;
+        return actualSteps === stepCount;
+      });
     }
     
     // 重置当前题目索引
@@ -1534,6 +1536,22 @@ class PaperFoldingTest {
     }
   }
 
+  // 获取当前题目
+  getCurrentQuestion() {
+    const question = this.filteredQuestions[this.currentQuestionIndex];
+    if (!question) return null;
+    
+    // 创建一个副本并添加计算的steps属性
+    const questionWithSteps = { ...question };
+    
+    // 计算实际折叠步数（排除问号图片）
+    questionWithSteps.steps = question.stemImages.filter(img => img !== 'question-mark.svg').length;
+    questionWithSteps.id = question.questionNumber;
+    questionWithSteps.answer = question.correctAnswer;
+    
+    return questionWithSteps;
+  }
+
   // 提取当前题目内容
   extractQuestionContent() {
     const currentQuestion = this.getCurrentQuestion();
@@ -1549,11 +1567,17 @@ class PaperFoldingTest {
     // 获取题干描述
     const stemDescription = `这是一道纸折叠测试题。题目编号：${currentQuestion.id}，折叠步数：${currentQuestion.steps}步。`;
     
-    // 获取题干图片信息
+    // 获取题干图片信息（排除问号图片）
     const stemImages = document.querySelectorAll('#stemImages img');
-    const stemImageInfo = Array.from(stemImages).map((img, index) => 
-      `步骤${index + 1}: ${img.alt || '折叠步骤图'}`
-    ).join('\n');
+    const stemImageInfo = Array.from(stemImages)
+      .filter((img, index) => {
+        // 排除问号图片（通常是最后一张）
+        const imgSrc = img.src || '';
+        return !imgSrc.includes('question-mark.svg');
+      })
+      .map((img, index) => 
+        `步骤${index + 1}: ${img.alt || '折叠步骤图'}`
+      ).join('\n');
 
     // 获取选项信息
     const options = ['A', 'B', 'C', 'D'];
