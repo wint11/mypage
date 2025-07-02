@@ -1,0 +1,802 @@
+/* Dashboard 样式文件 */
+
+:root {
+    --primary-color: #3a7bd5;
+    --secondary-color: #00d2ff;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --sidebar-bg: #f8f9fa;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 0;
+    height: 100vh;
+}
+
+/* 左侧边栏样式 */
+.sidebar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.control-panel {
+    padding: 20px;
+    color: white;
+}
+
+.logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo i {
+    font-size: 2.5rem;
+    color: #00d2ff;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.logo-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #00d2ff;
+    box-shadow: 0 4px 8px rgba(0, 210, 255, 0.3);
+}
+
+.logo span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.logo small {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    display: block;
+}
+
+/* 电源按钮 */
+.power-button {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.btn-power {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-power:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-power.active {
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+}
+
+/* 模式选择 */
+.mode-selection {
+    margin: 30px 0;
+}
+
+.mode-item {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+}
+
+.mode-item input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.mode-item label {
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* 飞行控制 */
+.flight-controls {
+    margin: 30px 0;
+}
+
+.flight-controls h6 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.slider-container {
+    margin-bottom: 25px;
+}
+
+.slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00d2ff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00d2ff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.slider-value {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 600;
+    color: #00d2ff;
+}
+
+/* 启动按钮 */
+.start-button {
+    margin: 30px 0;
+}
+
+.start-button button {
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.start-button .btn-danger {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.start-button .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.start-button .btn-warning {
+    background: linear-gradient(135deg, #ffa726, #ff9800);
+}
+
+.start-button .btn-info {
+    background: linear-gradient(135deg, #42a5f5, #2196f3);
+}
+
+/* 任务进度样式已移到卡片中 */
+
+.progress {
+    height: 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.progress-bar {
+    border-radius: 10px;
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+    font-size: 0.8rem;
+    line-height: 8px;
+}
+
+.weather-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-item:last-child {
+    border-bottom: none;
+}
+
+.weather-item i {
+    width: 20px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.weather-item span {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+/* 卡片内的天气信息样式 */
+.card .weather-item {
+    color: #333;
+}
+
+.card .weather-item span {
+    color: #333;
+}
+
+.card .weather-item i {
+    margin-right: 8px;
+}
+
+/* 任务状态 */
+.task-status {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.task-status h6 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.task-status .progress {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.task-status .progress-bar {
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    line-height: 10px;
+}
+
+.task-status small {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+}
+
+/* 天气状态 */
+.weather-status {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.weather-status h6 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.weather-status .weather-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-status .weather-item:last-child {
+    border-bottom: none;
+}
+
+.weather-status .weather-item i {
+    width: 20px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.weather-status .weather-item span {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.weather-status .weather-item .float-end {
+    font-weight: 600;
+    color: #00d2ff;
+}
+
+/* 主要内容区域 */
+.main-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* 航拍视图 */
+.aerial-view {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.aerial-view img,
+.aerial-view video {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.view-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.view-overlay .badge {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+/* 卡片样式 */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #eee;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px 20px;
+}
+
+.card-header h6 {
+    margin: 0;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* 地图卡片 */
+.map-card {
+    height: 480px;
+}
+
+.map-container {
+    height: 380px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    color: white;
+    flex: 1;
+}
+
+.map-card .card-body {
+    justify-content: stretch;
+}
+
+.map-placeholder {
+    text-align: center;
+}
+
+.map-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    opacity: 0.7;
+}
+
+/* 统计卡片 */
+.stats-card {
+    height: 480px;
+}
+
+.stats-card .card-header {
+    background: var(--primary-color) !important;
+    color: white;
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* 图表卡片 */
+.chart-card {
+    height: 380px;
+}
+
+/* 电池卡片 */
+.battery-card {
+    height: 380px;
+}
+
+.battery-indicator {
+    width: 100px;
+    height: 40px;
+    border: 3px solid #ddd;
+    border-radius: 8px;
+    position: relative;
+    margin: 0 auto 20px;
+    background: #f8f9fa;
+}
+
+.battery-indicator::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 12px;
+    width: 6px;
+    height: 16px;
+    background: #ddd;
+    border-radius: 0 3px 3px 0;
+}
+
+.battery-level {
+    height: 100%;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* 设备状态卡片 */
+.device-card {
+    height: 380px;
+}
+
+.device-status {
+    padding: 10px 0;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.status-row:last-child {
+    border-bottom: none;
+}
+
+.device-name {
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+/* 控制按钮样式 */
+.control-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.emergency-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.emergency-btn:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+}
+
+.return-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.return-btn:hover {
+    background: linear-gradient(135deg, #2980b9, #21618c);
+    transform: translateY(-1px);
+}
+
+.photo-btn {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+}
+
+.photo-btn:hover {
+    background: linear-gradient(135deg, #229954, #1e8449);
+    transform: translateY(-1px);
+}
+
+.record-btn {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+}
+
+.record-btn:hover {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    transform: translateY(-1px);
+}
+
+.record-btn.recording {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    animation: pulse 1s infinite;
+}
+
+/* 地图相关样式 */
+.map-container {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#flightMap {
+    border-radius: 10px;
+}
+
+/* 自定义地图标记样式 */
+.custom-marker {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drone-marker i {
+    animation: pulse 2s infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 123, 255, 0.3));
+}
+
+.start-marker i {
+    filter: drop-shadow(0 2px 4px rgba(40, 167, 69, 0.3));
+}
+
+.end-marker i {
+    filter: drop-shadow(0 2px 4px rgba(220, 53, 69, 0.3));
+}
+
+/* Leaflet弹窗样式优化 */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .aerial-view img,
+    .aerial-view video {
+        height: 200px;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .chart-card,
+    .battery-card,
+    .device-card {
+        height: auto;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+    }
+    
+    .control-btn {
+        margin-bottom: 8px;
+    }
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
+}
+
+@keyframes glow {
+    from { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    to { box-shadow: 0 4px 20px rgba(58, 123, 213, 0.3); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.btn-power.active {
+    animation: pulse 2s infinite;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 通知系统样式 */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+}
+
+.notification {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideInRight 0.3s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.notification-info {
+    border-left-color: #17a2b8;
+}
+
+.notification-success {
+    border-left-color: #28a745;
+}
+
+.notification-warning {
+    border-left-color: #ffc107;
+}
+
+.notification-danger {
+    border-left-color: #dc3545;
+}
+
+.notification-message {
+    flex: 1;
+    color: #333;
+    font-weight: 500;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-close:hover {
+    color: #333;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 垃圾标记样式 */
+.trash-marker {
+    background: transparent;
+    border: none;
+}
+
+.trash-icon {
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s ease;
+}
+
+.trash-icon:hover {
+    transform: scale(1.2);
+}

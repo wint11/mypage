@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能垃圾预测助手 - 启元慧学</title>
+    <!-- Bootstrap CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义样式 -->
+    <link href="css/prediction.css" rel="stylesheet">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- 顶部导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <div class="navbar-brand d-flex align-items-center">
+                    <img src="data/巡洁者logo.jpg" alt="巡洁者" class="logo-img me-2">
+                    <div>
+                        <span class="fw-bold">巡洁者 AI助手</span>
+                        <small class="d-block text-light opacity-75">Sky Sweeper AI Assistant</small>
+                    </div>
+                </div>
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-link text-light d-flex align-items-center">
+                        <div class="status-indicator online me-2"></div>
+                        <span>Qwen3-8B 在线</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 聊天界面 -->
+        <div class="chat-interface">
+            <!-- 聊天消息区域 -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- 欢迎消息 -->
+                <div class="message ai-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="sender-name">巡洁者AI助手</span>
+                            <span class="message-time">刚刚</span>
+                        </div>
+                        <div class="message-text">
+                            <p>👋 您好！我是巡洁者智能垃圾预测助手，基于Qwen3-8B模型和RAG技术。</p>
+                            <p>我可以帮您：</p>
+                            <ul>
+                                <li>🔮 预测特定区域的垃圾堆积情况</li>
+                                <li>📊 分析影响因素和历史趋势</li>
+                                <li>🌤️ 结合天气和人流数据进行智能分析</li>
+                                <li>💡 提供清洁建议和优化方案</li>
+                            </ul>
+                            <p>请告诉我您想了解什么？比如："预测明天中午公园B区的垃圾情况"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <div class="quick-actions">
+                        <button class="btn btn-outline-primary btn-sm quick-btn" data-query="预测明天中午公园各区域的垃圾情况">
+                            📍 区域预测
+                        </button>
+                        <button class="btn btn-outline-success btn-sm quick-btn" data-query="分析当前天气对垃圾产生的影响">
+                            🌤️ 天气影响
+                        </button>
+                        <button class="btn btn-outline-info btn-sm quick-btn" data-query="查看过去一周的垃圾分布趋势">
+                            📈 历史趋势
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm quick-btn" data-query="给出今天的清洁建议">
+                            💡 清洁建议
+                        </button>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            class="form-control" 
+                            placeholder="请输入您的问题..." 
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="btn btn-outline-secondary btn-sm" id="attachBtn" title="附加数据">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button class="btn btn-primary" id="sendBtn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- 侧边栏（可折叠） -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h6><i class="fas fa-cog"></i> 系统状态</h6>
+                <button class="btn btn-sm btn-outline-light" id="toggleSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- AI模型状态 -->
+                <div class="status-section">
+                    <h6><i class="fas fa-robot"></i> AI模型</h6>
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <span>Qwen3-8B</span>
+                        <small class="text-success">在线</small>
+                    </div>
+                    <div class="model-metrics">
+                        <small>延迟: <span class="text-info">120ms</span></small><br>
+                        <small>准确率: <span class="text-success">94.2%</span></small>
+                    </div>
+                </div>
+
+                <!-- 知识库状态 -->
+                <div class="status-section">
+                    <h6><i class="fas fa-database"></i> 知识库</h6>
+                    <div class="kb-item">
+                        <i class="fas fa-chart-line text-info"></i>
+                        <span>历史数据</span>
+                        <small class="text-success">7天</small>
+                    </div>
+                    <div class="kb-item">
+                        <i class="fas fa-cloud-sun text-warning"></i>
+                        <span>天气数据</span>
+                        <small class="text-success">实时</small>
+                    </div>
+                    <div class="kb-item">
+                        <i class="fas fa-users text-primary"></i>
+                        <span>人流统计</span>
+                        <small class="text-success">实时</small>
+                    </div>
+                </div>
+
+                <!-- 实时环境数据 -->
+                <div class="status-section">
+                    <h6><i class="fas fa-thermometer-half"></i> 环境数据</h6>
+                    <div class="env-item">
+                        <i class="fas fa-thermometer-half text-danger"></i>
+                        <span>温度</span>
+                        <strong>24°C</strong>
+                    </div>
+                    <div class="env-item">
+                        <i class="fas fa-tint text-info"></i>
+                        <span>湿度</span>
+                        <strong>65%</strong>
+                    </div>
+                    <div class="env-item">
+                        <i class="fas fa-wind text-primary"></i>
+                        <span>风速</span>
+                        <strong>3.2m/s</strong>
+                    </div>
+                    <div class="env-item">
+                        <i class="fas fa-users text-warning"></i>
+                        <span>A区人流</span>
+                        <strong>142人</strong>
+                    </div>
+                    <div class="env-item">
+                        <i class="fas fa-users text-success"></i>
+                        <span>B区人流</span>
+                        <strong>186人</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 侧边栏切换按钮 -->
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-info-circle"></i>
+        </button>
+    </div>
+
+    <!-- 图表详情模态框 -->
+    <div class="modal fade" id="chartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chartModalTitle">详细图表</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="modalChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义JS -->
+    <script src="js/prediction.js"></script>
+</body>
+</html>
