@@ -18,13 +18,12 @@ class PaperFoldingTest {
     };
     
     this.allQuestions = [];
-    this.allQuestions = []; // 存储完整题目数据
     this.filteredQuestions = [];
     this.currentQuestionIndex = 0;
     this.userAnswers = [];
     this.testCompleted = false;
     this.currentFilter = 'all';
-    this.currentVersion = 'full'; // 当前版本：demo 或 full
+    this.currentVersion = 'task1'; // 当前版本：task1, task2, task3
     this.imageCache = new Map(); // 图片缓存
     this.cacheAccessOrder = []; // LRU缓存访问顺序
     this.maxCacheSize = 100; // 最大缓存图片数量
@@ -54,12 +53,25 @@ class PaperFoldingTest {
 
   async loadQuestions() {
     try {
-      const response = await fetch('../paperfolding/questions.json');
+      const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      this.allQuestions = data.questions || [];
+      const text = await response.text();
+      
+      // 解析JSONL格式
+      const lines = text.trim().split('\n');
+      this.allQuestions = lines.map((line, index) => {
+        const data = JSON.parse(line);
+        return {
+          id: index + 1,
+          image: data.image,
+          answer: data.answer,
+          // 从图片路径提取形状类型和编号
+          shape: this.extractShapeFromPath(data.image),
+          number: this.extractNumberFromPath(data.image)
+        };
+      });
       
       if (this.allQuestions.length === 0) {
         throw new Error('没有找到题目数据');
@@ -68,21 +80,42 @@ class PaperFoldingTest {
       // 根据当前版本设置题目
       this.setQuestionsForVersion();
       
-      console.log(`成功加载 ${this.questions.length} 道题目 (${this.currentVersion}版)`);
+      console.log(`成功加载 ${this.questions.length} 道题目 (${this.currentVersion})`);
     } catch (error) {
       console.error('加载题目失败:', error);
       throw error;
     }
   }
   
+  // 从图片路径提取形状类型
+  extractShapeFromPath(imagePath) {
+    const filename = imagePath.split('/').pop();
+    if (filename.startsWith('circle_')) return 'circle';
+    if (filename.startsWith('Hexagon_')) return 'hexagon';
+    if (filename.startsWith('House_')) return 'house';
+    if (filename.startsWith('Rectangle_')) return 'rectangle';
+    if (filename.startsWith('square_')) return 'square';
+    return 'unknown';
+  }
+  
+  // 从图片路径提取编号
+  extractNumberFromPath(imagePath) {
+    const filename = imagePath.split('/').pop();
+    const match = filename.match(/(\d+)\.png$/);
+    return match ? parseInt(match[1]) : 0;
+  }
+  
   // 根据版本设置题目
   setQuestionsForVersion() {
-    if (this.currentVersion === 'demo') {
-      // Demo版只取前3题
-      this.questions = this.allQuestions.slice(0, 50);
-    } else {
-      // 完整版使用全部题目
+    if (this.currentVersion === 'task1') {
+      // 任务壹使用全部题目
       this.questions = [...this.allQuestions];
+    } else if (this.currentVersion === 'task2') {
+      // 任务贰暂时为空
+      this.questions = [];
+    } else if (this.currentVersion === 'task3') {
+      // 任务叁暂时为空
+      this.questions = [];
     }
     
     // 重新初始化用户答案数组
@@ -112,7 +145,9 @@ class PaperFoldingTest {
     document.querySelectorAll('.version-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const version = e.target.dataset.version;
-        this.switchVersion(version);
+        if (!e.target.disabled) {
+          this.switchVersion(version);
+        }
       });
     });
     
@@ -206,13 +241,9 @@ class PaperFoldingTest {
     if (this.filteredQuestions.length === 0) return;
     
     const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
-    const currentImages = [
-      ...currentQuestion.stemImages,
-      ...Object.values(currentQuestion.options)
-    ];
+    const imagePath = currentQuestion.image;
     
-    const promises = currentImages.map(imagePath => this.preloadImage(imagePath));
-    await Promise.all(promises);
+    await this.preloadImage(imagePath);
     
     // 当前题目图片加载完成后，立即更新显示
     this.displayQuestion();
@@ -228,11 +259,7 @@ class PaperFoldingTest {
     for (let i = start; i < end; i++) {
       if (i !== this.currentQuestionIndex) {
         const question = this.filteredQuestions[i];
-        const questionImages = [
-          ...question.stemImages,
-          ...Object.values(question.options)
-        ];
-        imagesToLoad.push(...questionImages);
+        imagesToLoad.push(question.image);
       }
     }
     
@@ -269,7 +296,7 @@ class PaperFoldingTest {
         this.setCacheItem(imagePath, placeholderSrc);
         resolve(placeholderSrc);
       };
-      img.src = `../paperfolding/images/${imagePath}`;
+      img.src = `../task1/task1_selected_algorithm2/${imagePath}`;
     });
   }
   
@@ -340,11 +367,11 @@ class PaperFoldingTest {
     
     const question = this.filteredQuestions[this.currentQuestionIndex];
     
-    // 显示题干图片
-    this.displayStemImages(question.stemImages);
+    // 显示完整题目图片
+    this.displayQuestionImage(question.image);
     
-    // 显示选项图片
-    this.displayOptions(question.options);
+    // 隐藏选项区域（因为现在是完整图片）
+    this.hideOptionsArea();
     
     // 恢复用户之前的选择
     this.restoreUserSelection();
@@ -359,57 +386,68 @@ class PaperFoldingTest {
     this.clearFeedback();
   }
 
-  displayStemImages(stemImages) {
+  displayQuestionImage(imagePath) {
     const container = document.getElementById('stemImages');
     container.innerHTML = '';
     
-    stemImages.forEach((imagePath, index) => {
-      const img = document.createElement('img');
-      img.alt = `题干图片 ${index + 1}`;
-      
-      // 使用缓存的图片或占位符
-      if (this.imageCache.has(imagePath)) {
-        img.src = this.imageCache.get(imagePath);
-        // 更新LRU访问顺序
-        this.updateCacheAccess(imagePath);
-      } else {
-        // 如果缓存中没有，使用占位符并异步加载
-        img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
-        this.preloadImage(imagePath).then(src => {
-          img.src = src;
-        });
-      }
-      
-      container.appendChild(img);
-      
-      // 添加箭头（除了最后一张图片）
-      if (index < stemImages.length - 1) {
-        const arrow = document.createElement('div');
-        arrow.className = 'fold-arrow';
-        arrow.innerHTML = '→';
-        container.appendChild(arrow);
-      }
-    });
+    const img = document.createElement('img');
+    img.alt = '题目图片';
+    img.style.maxWidth = '100%';
+    img.style.height = 'auto';
+    
+    // 使用缓存的图片或占位符
+    if (this.imageCache.has(imagePath)) {
+      img.src = this.imageCache.get(imagePath);
+      // 更新LRU访问顺序
+      this.updateCacheAccess(imagePath);
+    } else {
+      // 如果缓存中没有，使用占位符并异步加载
+      img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
+      this.preloadImage(imagePath).then(src => {
+        img.src = src;
+      });
+    }
+    
+    container.appendChild(img);
   }
 
-  displayOptions(options) {
+  hideOptionsArea() {
+    // 隐藏选项图片，但保留选项按钮用于答题
     ['A', 'B', 'C', 'D'].forEach(option => {
       const img = document.getElementById(`option${option}`);
-      const imagePath = options[option];
-      
-      // 使用缓存的图片或占位符
-      if (this.imageCache.has(imagePath)) {
-        img.src = this.imageCache.get(imagePath);
-        // 更新LRU访问顺序
-        this.updateCacheAccess(imagePath);
-      } else {
-        // 如果缓存中没有，使用占位符并异步加载
-        img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquWKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=';
-        this.preloadImage(imagePath).then(src => {
-          img.src = src;
-        });
-      }
+      img.style.display = 'none';
     });
+    
+    // 可以考虑添加文字选项或者保持原有的选项区域用于答题
+    const optionsContainer = document.querySelector('.options-container');
+    if (optionsContainer) {
+      optionsContainer.style.display = 'flex';
+      // 为选项添加文字标签
+      ['A', 'B', 'C', 'D'].forEach(option => {
+        const optionDiv = document.querySelector(`[data-option="${option}"]`);
+        if (optionDiv) {
+          optionDiv.style.display = 'flex';
+          optionDiv.style.alignItems = 'center';
+          optionDiv.style.justifyContent = 'center';
+          optionDiv.style.minHeight = '60px';
+          optionDiv.style.border = '2px solid #ddd';
+          optionDiv.style.borderRadius = '8px';
+          optionDiv.style.cursor = 'pointer';
+          optionDiv.style.backgroundColor = '#f8f9fa';
+          
+          // 清空内容并添加选项标签
+          const img = optionDiv.querySelector('img');
+          if (img) img.style.display = 'none';
+          
+          const label = optionDiv.querySelector('.option-label');
+          if (label) {
+            label.style.fontSize = '24px';
+            label.style.fontWeight = 'bold';
+            label.style.color = '#333';
+          }
+        }
+      });
+    }
   }
 
   selectOption(selectedOption) {
@@ -1078,14 +1116,29 @@ class PaperFoldingTest {
     
     // 根据筛选条件过滤题目
     if (filterType === 'all') {
-      this.filteredQuestions = [...this.questions];
+      // 显示所有题目，但每种折叠类型最多10道
+      const fold1Questions = this.questions.filter(q => q.image.includes('fold_1/')).slice(0, 10);
+      const fold2Questions = this.questions.filter(q => q.image.includes('fold_2/')).slice(0, 10);
+      const fold3Questions = this.questions.filter(q => q.image.includes('fold_3/')).slice(0, 10);
+      this.filteredQuestions = [...fold1Questions, ...fold2Questions, ...fold3Questions];
     } else {
       const stepCount = parseInt(filterType);
-      this.filteredQuestions = this.questions.filter(question => {
-        // 计算实际折叠步数（排除问号图片）
-        const actualSteps = question.stemImages.filter(img => img !== 'question-mark.svg').length;
-        return actualSteps === stepCount;
-      });
+      let foldType = '';
+      if (stepCount === 3) {
+        foldType = 'fold_1';
+      } else if (stepCount === 4) {
+        foldType = 'fold_2';
+      } else if (stepCount === 5) {
+        foldType = 'fold_3';
+      }
+      
+      if (foldType) {
+        this.filteredQuestions = this.questions
+          .filter(question => question.image.includes(`${foldType}/`))
+          .slice(0, 10); // 每种类型最多显示10道题
+      } else {
+        this.filteredQuestions = [];
+      }
     }
     
     // 重置当前题目索引

@@ -244,6 +244,37 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* 题目图片样式 */
+.question-image {
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  min-height: 400px;
+  max-height: 600px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 0 auto;
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+.question-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 题目图片容器 */
+.question-image-container {
+  text-align: center;
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+}
+
 .question-stem {
   margin-bottom: 15px;
 }
@@ -281,8 +312,8 @@ body {
 }
 
 .stem-images img {
-  max-width: 150px;
-  max-height: 150px;
+  max-width: 300px;
+  max-height: 300px;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   object-fit: contain;
@@ -792,6 +823,17 @@ body {
 
   .question-content {
     padding: 8px;
+  }
+  
+  /* 移动端题目图片样式 */
+  .question-image {
+    min-height: 250px;
+    max-height: 400px;
+  }
+  
+  .question-image-container {
+    margin: 10px 0;
+    padding: 10px;
   }
   
   .stem-images img {
