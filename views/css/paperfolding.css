@@ -12,7 +12,7 @@ body {
 /* 主要内容区域 */
 .main-content {
   flex: 1;
-  padding: 75px 5px 0px 5px;
+  padding: 65px 5px 0px 5px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -149,49 +149,9 @@ body {
   min-width: 70px;
 }
 
-/* AI解答按钮 */
-.ai-section {
-  flex-shrink: 0;
-  margin-left: auto;
-}
 
-.ai-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-  outline: none;
-}
 
-.ai-btn:hover {
-  background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-}
 
-.ai-btn:active {
-  transform: translateY(0);
-}
-
-.ai-btn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.ai-btn i {
-  font-size: 14px;
-}
 
 .filter-btn:hover {
   background: #007bff;
@@ -312,10 +272,10 @@ body {
 }
 
 .stem-images img {
-  max-width: 300px;
-  max-height: 300px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  max-height: 360px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   object-fit: contain;
 }
 
@@ -347,6 +307,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding: 4px;
 }
 
 .option:hover {
@@ -357,7 +318,28 @@ body {
 
 .option.selected {
   border-color: #667eea;
-  background: #f8f9ff;
+  background: #bbdefb;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+}
+
+.option.selected::before {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  color: #1976d2;
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 1;
+  background: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .option.correct {
@@ -643,6 +625,119 @@ body {
   border-left: 3px solid #007bff;
 }
 
+/* AI解答按钮样式 - 全新设计 */
+.ai-section {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.ai-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px 28px !important;
+  background: linear-gradient(145deg, #4f46e5, #7c3aed, #ec4899) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3), 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  outline: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 140px !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.ai-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.ai-btn::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition: width 0.6s ease, height 0.6s ease !important;
+  pointer-events: none !important;
+}
+
+.ai-btn:hover::before {
+  left: 100% !important;
+}
+
+.ai-btn:hover::after {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+.ai-btn:hover {
+  background: linear-gradient(145deg, #6366f1, #8b5cf6, #f472b6) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4), 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ai-btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3) !important;
+}
+
+.ai-btn:disabled {
+  background: linear-gradient(145deg, #9ca3af, #6b7280) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  opacity: 0.5 !important;
+}
+
+.ai-btn:disabled::before,
+.ai-btn:disabled::after {
+  display: none !important;
+}
+
+.ai-btn i {
+  font-size: 18px !important;
+  z-index: 1 !important;
+  position: relative !important;
+  transition: all 0.4s ease !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+  display: inline-block !important;
+}
+
+.ai-btn:hover i {
+  transform: rotate(15deg) scale(1.2) !important;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)) !important;
+}
+
+.ai-btn span {
+  z-index: 1 !important;
+  position: relative !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+  color: #ffffff !important;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .main-content {
@@ -682,144 +777,7 @@ body {
     font-size: 11px;
   }
   
-/* AI模态框样式 */
-.modal-content {
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
 
-.modal-header {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  border-radius: 12px 12px 0 0;
-  border-bottom: none;
-}
-
-.modal-title {
-  font-weight: 600;
-}
-
-.btn-close {
-  filter: invert(1);
-}
-
-/* Markdown内容样式 */
-.markdown-content {
-  line-height: 1.6;
-  color: #333;
-}
-
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3,
-.markdown-content h4,
-.markdown-content h5,
-.markdown-content h6 {
-  color: #2c3e50;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  font-weight: 600;
-}
-
-.markdown-content h1 {
-  font-size: 1.8em;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 0.3em;
-}
-
-.markdown-content h2 {
-  font-size: 1.5em;
-  border-bottom: 1px solid #e9ecef;
-  padding-bottom: 0.3em;
-}
-
-.markdown-content h3 {
-  font-size: 1.3em;
-}
-
-.markdown-content p {
-  margin-bottom: 1em;
-}
-
-.markdown-content ul,
-.markdown-content ol {
-  margin-bottom: 1em;
-  padding-left: 2em;
-}
-
-.markdown-content li {
-  margin-bottom: 0.5em;
-}
-
-.markdown-content code {
-  background: #f8f9fa;
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-  color: #e83e8c;
-}
-
-.markdown-content pre {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  padding: 1em;
-  overflow-x: auto;
-  margin-bottom: 1em;
-}
-
-.markdown-content pre code {
-  background: none;
-  padding: 0;
-  color: #333;
-}
-
-.markdown-content blockquote {
-  border-left: 4px solid #007bff;
-  margin: 1em 0;
-  padding: 0.5em 1em;
-  background: #f8f9fa;
-  color: #6c757d;
-}
-
-.markdown-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1em;
-}
-
-.markdown-content th,
-.markdown-content td {
-  border: 1px solid #dee2e6;
-  padding: 0.5em;
-  text-align: left;
-}
-
-.markdown-content th {
-  background: #f8f9fa;
-  font-weight: 600;
-}
-
-.markdown-content strong {
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.markdown-content em {
-  font-style: italic;
-  color: #6c757d;
-}
-
-.markdown-content a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.markdown-content a:hover {
-  text-decoration: underline;
-}
 
   .question-content {
     padding: 8px;
@@ -837,8 +795,24 @@ body {
   }
   
   .stem-images img {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 280px;
+    max-height: 280px;
+  }
+  
+  .option {
+    padding: 6px;
+  }
+  
+  .option:hover {
+    transform: none;
+  }
+  
+  .option.selected::before {
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+    top: 2px;
+    right: 4px;
   }
   
   .fold-arrow {
@@ -851,7 +825,7 @@ body {
   }
   
   .option {
-    padding: 4px;
+    padding: 3px;
     min-width: 70px;
   }
   

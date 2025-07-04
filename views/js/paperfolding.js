@@ -29,7 +29,7 @@ class PaperFoldingTest {
     this.maxCacheSize = 100; // 最大缓存图片数量
     this.preloadRange = 5; // 预加载范围：前后5题
     this.loadingProgress = { loaded: 0, total: 0 }; // 加载进度
-    this.init();
+    this.randomSeed = null; // 随机种子
   }
 
   async init() {
@@ -118,11 +118,9 @@ class PaperFoldingTest {
       this.questions = [];
     }
     
-    // 重新初始化用户答案数组
-    this.userAnswers = new Array(this.questions.length).fill(null);
-    
-    // 从localStorage恢复答案
-    this.loadAnswersFromStorage();
+    // 注意：userAnswers数组将在applyFilter后根据filteredQuestions重新初始化
+    // 这里先初始化为空数组
+    this.userAnswers = [];
   }
 
   setupEventListeners() {
@@ -186,10 +184,7 @@ class PaperFoldingTest {
       this.analyzeWithAI();
     });
 
-    // 复制AI回答按钮事件
-    document.getElementById('copyAiResponse').addEventListener('click', () => {
-      this.copyAIResponse();
-    });
+
 
     // 选项点击事件
     document.querySelectorAll('.option').forEach(option => {
@@ -453,21 +448,17 @@ class PaperFoldingTest {
   selectOption(selectedOption) {
     if (this.testCompleted) return;
     
-    // 清除之前的选择状态
+    // 清除之前的选择状态和反馈状态
     document.querySelectorAll('.option').forEach(option => {
-      option.classList.remove('selected');
+      option.classList.remove('selected', 'correct', 'incorrect');
     });
     
     // 标记当前选择
     const optionElement = document.querySelector(`[data-option="${selectedOption}"]`);
     optionElement.classList.add('selected');
     
-    // 获取当前题目在原始数组中的索引
-    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
-    const originalIndex = this.questions.findIndex(q => q === currentQuestion);
-    
-    // 保存用户答案到原始数组对应位置
-    this.userAnswers[originalIndex] = selectedOption;
+    // 直接使用当前筛选题目的索引保存答案
+    this.userAnswers[this.currentQuestionIndex] = selectedOption;
     
     // 保存到localStorage
     this.saveAnswersToStorage();
@@ -477,28 +468,38 @@ class PaperFoldingTest {
   }
 
   saveAnswersToStorage() {
-    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    const storageKey = `paperfolding_answers_${this.currentVersion}_filtered`;
     localStorage.setItem(storageKey, JSON.stringify(this.userAnswers));
+    console.log('保存筛选题目答案到localStorage:', this.userAnswers.length, '题');
   }
   
   loadAnswersFromStorage() {
-    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    const storageKey = `paperfolding_answers_${this.currentVersion}_filtered`;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const answers = JSON.parse(saved);
-        if (answers.length === this.questions.length) {
+        if (answers.length === this.filteredQuestions.length) {
           this.userAnswers = answers;
+          console.log('从localStorage加载筛选题目答案:', answers.length, '题');
+        } else {
+          console.log('localStorage中答案数量不匹配，重新初始化');
+          this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
         }
       } catch (e) {
         console.warn('无法加载保存的答案:', e);
+        this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
       }
+    } else {
+      this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
     }
   }
   
   clearStoredAnswers() {
-    const storageKey = `paperfolding_answers_${this.currentVersion}`;
+    const storageKey = `paperfolding_answers_${this.currentVersion}_filtered`;
     localStorage.removeItem(storageKey);
+    this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
+    console.log('清除localStorage中的筛选题目答案');
   }
 
   // 上传数据到问卷星
@@ -731,7 +732,7 @@ class PaperFoldingTest {
 总题数：${data.totalQuestions}
 正确答案数：${data.correctAnswers}
 测试类型：${data.testType}
-版本：${data.version}
+任务：${data.version}
 测试时间：${data.timestamp}
 
 请在打开的问卷星窗口中手动填写上述数据。
@@ -805,27 +806,34 @@ class PaperFoldingTest {
     };
   }
   
-
-  
-
-
   restoreUserSelection() {
-    // 获取当前题目在原始数组中的索引
-    const currentQuestion = this.filteredQuestions[this.currentQuestionIndex];
-    const originalIndex = this.questions.findIndex(q => q === currentQuestion);
-    const userAnswer = this.userAnswers[originalIndex];
-    
-    // 先清除所有选项的选中状态
+    // 强制清除所有选项的选中状态，并添加视觉反馈
     document.querySelectorAll('.option').forEach(option => {
-      option.classList.remove('selected');
+      option.classList.remove('selected', 'correct', 'incorrect');
+      // 添加清除动画效果
+      option.style.transition = 'all 0.3s ease';
+      option.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        option.style.transform = 'scale(1)';
+      }, 150);
     });
+    
+    // 直接使用当前筛选题目的索引获取用户答案
+    const userAnswer = this.userAnswers[this.currentQuestionIndex];
     
     // 如果有用户答案，则恢复选中状态
     if (userAnswer) {
-      const optionElement = document.querySelector(`[data-option="${userAnswer}"]`);
-      if (optionElement) {
-        optionElement.classList.add('selected');
-      }
+      setTimeout(() => {
+        const optionElement = document.querySelector(`[data-option="${userAnswer}"]`);
+        if (optionElement) {
+          optionElement.classList.add('selected');
+          // 添加恢复选中的动画效果
+          optionElement.style.transform = 'scale(1.05)';
+          setTimeout(() => {
+            optionElement.style.transform = 'scale(1)';
+          }, 200);
+        }
+      }, 200);
     }
   }
 
@@ -922,8 +930,10 @@ class PaperFoldingTest {
     // 重新设置题目
     this.setQuestionsForVersion();
     
-    // 重置当前题目索引
-    this.currentQuestionIndex = 0;
+    // 尝试保持当前题目的相对位置，如果超出范围则重置为0
+    if (this.currentQuestionIndex >= this.filteredQuestions.length) {
+      this.currentQuestionIndex = 0;
+    }
     
     // 重新应用筛选
     this.applyFilter(this.currentFilter);
@@ -975,10 +985,19 @@ class PaperFoldingTest {
     for (let i = start; i < end; i++) {
       if (i !== this.currentQuestionIndex) {
         const question = this.filteredQuestions[i];
-        const images = [
-          ...question.stemImages,
-          ...Object.values(question.options)
-        ];
+        let images = [];
+        
+        // 检查数据结构类型
+        if (question.stemImages && Array.isArray(question.stemImages)) {
+          // 新的数据结构（有 stemImages 和 options）
+          images = [
+            ...question.stemImages,
+            ...Object.values(question.options || {})
+          ];
+        } else if (question.image) {
+          // 旧的数据结构（只有 image 字段）
+          images = [question.image];
+        }
         
         images.forEach(imagePath => {
           if (!this.imageCache.has(imagePath)) {
@@ -1014,11 +1033,29 @@ class PaperFoldingTest {
   
   updateSubmitButton() {
     const submitBtn = document.getElementById('submitBtn');
-    const answeredCount = this.userAnswers.filter(answer => answer !== null).length;
-    const allAnswered = answeredCount === this.questions.length;
     
-    submitBtn.disabled = !allAnswered;
-    submitBtn.textContent = allAnswered ? '提交测试' : `已答题 ${answeredCount}/${this.questions.length}`;
+    // 直接计算userAnswers数组中的已答题数量
+    let filteredAnsweredCount = 0;
+    for (let i = 0; i < this.userAnswers.length; i++) {
+      if (this.userAnswers[i] !== null && this.userAnswers[i] !== undefined && this.userAnswers[i] !== '') {
+        filteredAnsweredCount++;
+      }
+    }
+    
+    // 检查是否完成了当前筛选的所有题目
+    const allFilteredAnswered = filteredAnsweredCount === this.filteredQuestions.length;
+    
+    // 只有完成当前筛选的所有题目才能提交，且必须至少有1道题
+    submitBtn.disabled = !allFilteredAnswered || this.filteredQuestions.length === 0;
+    
+    if (allFilteredAnswered && this.filteredQuestions.length > 0) {
+      submitBtn.textContent = '提交测试';
+    } else {
+      submitBtn.textContent = `已答题 ${filteredAnsweredCount}/${this.filteredQuestions.length} (需全部完成)`;
+    }
+    
+    // 调试信息
+    console.log(`筛选题目数: ${this.filteredQuestions.length}, 已答题数: ${filteredAnsweredCount}, userAnswers长度: ${this.userAnswers.length}`);
   }
   
   submitTest() {
@@ -1059,8 +1096,11 @@ class PaperFoldingTest {
   
   showCorrectAnswers() {
     const question = this.filteredQuestions[this.currentQuestionIndex];
-    const originalIndex = this.questions.findIndex(q => q === question);
-    const userAnswer = this.userAnswers[originalIndex];
+    // 修复：使用当前筛选后的索引获取用户答案
+    const userAnswer = this.userAnswers[this.currentQuestionIndex];
+    
+    // 获取正确答案（兼容不同数据结构）
+    const correctAnswer = question.correctAnswer || question.answer;
     
     // 清除之前的状态
     document.querySelectorAll('.option').forEach(option => {
@@ -1070,16 +1110,22 @@ class PaperFoldingTest {
     // 显示用户选择和正确答案
     if (userAnswer) {
       const userOption = document.querySelector(`[data-option="${userAnswer}"]`);
-      if (userAnswer === question.correctAnswer) {
-        userOption.classList.add('correct');
-      } else {
-        userOption.classList.add('incorrect');
+      if (userOption) {
+        if (userAnswer === correctAnswer) {
+          userOption.classList.add('correct');
+        } else {
+          userOption.classList.add('incorrect');
+        }
       }
     }
     
     // 显示正确答案
-    const correctOption = document.querySelector(`[data-option="${question.correctAnswer}"]`);
-    correctOption.classList.add('correct');
+    if (correctAnswer) {
+      const correctOption = document.querySelector(`[data-option="${correctAnswer}"]`);
+      if (correctOption) {
+        correctOption.classList.add('correct');
+      }
+    }
   }
 
   showError(message) {
@@ -1120,7 +1166,14 @@ class PaperFoldingTest {
       const fold1Questions = this.questions.filter(q => q.image.includes('fold_1/')).slice(0, 10);
       const fold2Questions = this.questions.filter(q => q.image.includes('fold_2/')).slice(0, 10);
       const fold3Questions = this.questions.filter(q => q.image.includes('fold_3/')).slice(0, 10);
-      this.filteredQuestions = [...fold1Questions, ...fold2Questions, ...fold3Questions];
+      const allQuestions = [...fold1Questions, ...fold2Questions, ...fold3Questions];
+      
+      // 使用基于种子的随机打乱算法
+      if (this.randomSeed !== null) {
+        this.filteredQuestions = this.shuffleArrayWithSeed(allQuestions, this.randomSeed);
+      } else {
+        this.filteredQuestions = allQuestions;
+      }
     } else {
       const stepCount = parseInt(filterType);
       let foldType = '';
@@ -1133,9 +1186,16 @@ class PaperFoldingTest {
       }
       
       if (foldType) {
-        this.filteredQuestions = this.questions
+        const typeQuestions = this.questions
           .filter(question => question.image.includes(`${foldType}/`))
           .slice(0, 10); // 每种类型最多显示10道题
+        
+        // 使用基于种子的随机打乱算法
+        if (this.randomSeed !== null) {
+          this.filteredQuestions = this.shuffleArrayWithSeed(typeQuestions, this.randomSeed + stepCount);
+        } else {
+          this.filteredQuestions = typeQuestions;
+        }
       } else {
         this.filteredQuestions = [];
       }
@@ -1143,6 +1203,12 @@ class PaperFoldingTest {
     
     // 重置当前题目索引
     this.currentQuestionIndex = 0;
+    
+    // 重新初始化用户答案数组，只针对筛选后的题目
+    this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
+    
+    // 从localStorage恢复答案（基于筛选后的题目）
+    this.loadAnswersFromStorage();
     
     // 更新筛选信息
     this.updateFilterInfo();
@@ -1154,6 +1220,7 @@ class PaperFoldingTest {
     if (this.filteredQuestions.length > 0) {
       this.displayQuestion();
       this.updateProgress();
+      this.updateSubmitButton();
       
       // 预加载当前筛选后的第一题图片（如果还没有缓存）
       this.preloadCurrentQuestionImages().then(() => {
@@ -1187,10 +1254,77 @@ class PaperFoldingTest {
   }
   
   initializeFilter() {
-    // 初始化时显示所有题目
-    this.filteredQuestions = [...this.questions];
-    this.updateFilterInfo();
-    this.updateJumpInputMax();
+    // 检查localStorage中是否有保存的题目数据和随机种子
+    const storedQuestions = localStorage.getItem('paperfolding_questions');
+    const storedSeed = localStorage.getItem('paperfolding_seed');
+    
+    if (storedQuestions && storedSeed) {
+      // 如果有保存的数据，直接使用
+      this.filteredQuestions = JSON.parse(storedQuestions);
+      this.randomSeed = parseInt(storedSeed);
+      console.log('从localStorage加载题目数据，种子:', this.randomSeed);
+      
+      // 更新筛选信息和跳转输入框
+      this.updateFilterInfo();
+      this.updateJumpInputMax();
+    } else {
+      // 如果没有保存的数据，生成新的随机种子并应用筛选
+      this.randomSeed = this.generateRandomSeed();
+      this.applyFilter('all');
+      // 保存到localStorage
+      localStorage.setItem('paperfolding_questions', JSON.stringify(this.filteredQuestions));
+      localStorage.setItem('paperfolding_seed', this.randomSeed.toString());
+      console.log('生成新的题目数据，种子:', this.randomSeed);
+    }
+  }
+
+  // 生成随机种子
+  generateRandomSeed() {
+    return Math.floor(Math.random() * 1000000);
+  }
+
+  // 基于种子的伪随机数生成器
+  seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
+  // 基于种子的数组打乱算法
+  shuffleArrayWithSeed(array, seed) {
+    const shuffled = [...array];
+    let currentSeed = seed;
+    
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      currentSeed = (currentSeed * 9301 + 49297) % 233280; // 线性同余生成器
+      const j = Math.floor((currentSeed / 233280) * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled;
+  }
+
+  // 清除存储的题目数据
+  clearStoredQuestions() {
+    localStorage.removeItem('paperfolding_questions');
+    localStorage.removeItem('paperfolding_seed');
+    console.log('已清除存储的题目数据');
+  }
+
+  // 重新生成题目（清除localStorage并重新随机）
+  regenerateQuestions() {
+    this.clearStoredQuestions();
+    this.randomSeed = this.generateRandomSeed();
+    this.applyFilter('all');
+    // 保存新的数据到localStorage
+    localStorage.setItem('paperfolding_questions', JSON.stringify(this.filteredQuestions));
+    localStorage.setItem('paperfolding_seed', this.randomSeed.toString());
+    console.log('重新生成题目数据，新种子:', this.randomSeed);
+    
+    // 重新显示题目
+    this.currentQuestionIndex = 0;
+    this.displayQuestion();
+    this.updateProgress();
+    this.updateSubmitButton();
   }
 
   // 获取测试结果
@@ -1198,23 +1332,27 @@ class PaperFoldingTest {
     let correctCount = 0;
     const results = [];
     
-    this.questions.forEach((question, index) => {
-      const userAnswer = this.userAnswers[index];
-      const isCorrect = userAnswer === question.correctAnswer;
+    // 只计算当前筛选题目的结果
+    this.filteredQuestions.forEach((question, filteredIndex) => {
+      // 修复：使用筛选后的索引获取用户答案，因为userAnswers是按筛选后的顺序存储的
+      const userAnswer = this.userAnswers[filteredIndex];
+      // 兼容不同数据结构的正确答案字段
+      const correctAnswer = question.correctAnswer || question.answer;
+      const isCorrect = userAnswer === correctAnswer;
       if (isCorrect) correctCount++;
       
       results.push({
-        questionNumber: index + 1,
+        questionNumber: filteredIndex + 1,
         userAnswer: userAnswer,
-        correctAnswer: question.correctAnswer,
+        correctAnswer: correctAnswer,
         isCorrect: isCorrect
       });
     });
     
     return {
-      totalQuestions: this.questions.length,
+      totalQuestions: this.filteredQuestions.length,
       correctAnswers: correctCount,
-      accuracy: (correctCount / this.questions.length * 100).toFixed(1),
+      accuracy: this.filteredQuestions.length > 0 ? (correctCount / this.filteredQuestions.length * 100).toFixed(1) : '0.0',
       results: results
     };
   }
@@ -1542,289 +1680,16 @@ class PaperFoldingTest {
   }
 
   // AI解答功能
-  async analyzeWithAI() {
-    const aiBtn = document.getElementById('aiAnalyzeBtn');
-    const modal = new bootstrap.Modal(document.getElementById('aiModal'));
-    const loadingIndicator = document.getElementById('aiLoadingIndicator');
-    const responseContent = document.getElementById('aiResponseContent');
-    const copyBtn = document.getElementById('copyAiResponse');
-
-    // 禁用按钮并显示加载状态
-    aiBtn.disabled = true;
-    aiBtn.innerHTML = '<i class="bi bi-hourglass-split"></i><span>分析中...</span>';
-
-    // 显示模态框和加载指示器
-    modal.show();
-    loadingIndicator.style.display = 'block';
-    responseContent.style.display = 'none';
-    copyBtn.style.display = 'none';
-
-    try {
-      // 获取当前题目内容
-      const questionData = this.extractQuestionContent();
-      
-      // 调用AI分析
-      const aiResponse = await this.callAIAPI(questionData);
-      
-      // 渲染markdown内容
-      const renderedContent = this.renderMarkdown(aiResponse);
-      
-      // 显示结果
-      responseContent.innerHTML = renderedContent;
-      loadingIndicator.style.display = 'none';
-      responseContent.style.display = 'block';
-      copyBtn.style.display = 'inline-block';
-      
-      // 存储原始响应用于复制
-      this.lastAIResponse = aiResponse;
-      
-    } catch (error) {
-      console.error('AI分析失败:', error);
-      this.showAIError(error.message);
-      loadingIndicator.style.display = 'none';
-    } finally {
-      // 恢复按钮状态
-      aiBtn.disabled = false;
-      aiBtn.innerHTML = '<i class="bi bi-robot"></i><span>AI解答</span>';
-    }
-  }
-
-  // 获取当前题目
-  getCurrentQuestion() {
-    const question = this.filteredQuestions[this.currentQuestionIndex];
-    if (!question) return null;
-    
-    // 创建一个副本并添加计算的steps属性
-    const questionWithSteps = { ...question };
-    
-    // 计算实际折叠步数（排除问号图片）
-    questionWithSteps.steps = question.stemImages.filter(img => img !== 'question-mark.svg').length;
-    questionWithSteps.id = question.questionNumber;
-    questionWithSteps.answer = question.correctAnswer;
-    
-    return questionWithSteps;
-  }
-
-  // 提取当前题目内容
-  extractQuestionContent() {
-    const currentQuestion = this.getCurrentQuestion();
-    if (!currentQuestion) {
-      throw new Error('无法获取当前题目信息');
-    }
-
-    const questionContainer = document.querySelector('.question-content');
-    if (!questionContainer) {
-      throw new Error('无法找到题目容器');
-    }
-
-    // 获取题干描述
-    const stemDescription = `这是一道纸折叠测试题。题目编号：${currentQuestion.id}，折叠步数：${currentQuestion.steps}步。`;
-    
-    // 获取题干图片信息（排除问号图片）
-    const stemImages = document.querySelectorAll('#stemImages img');
-    const stemImageInfo = Array.from(stemImages)
-      .filter((img, index) => {
-        // 排除问号图片（通常是最后一张）
-        const imgSrc = img.src || '';
-        return !imgSrc.includes('question-mark.svg');
-      })
-      .map((img, index) => 
-        `步骤${index + 1}: ${img.alt || '折叠步骤图'}`
-      ).join('\n');
-
-    // 获取选项信息
-    const options = ['A', 'B', 'C', 'D'];
-    const optionInfo = options.map(option => {
-      const optionImg = document.getElementById(`option${option}`);
-      return `选项${option}: ${optionImg?.alt || '选项图片'}`;
-    }).join('\n');
-
-    return {
-      questionId: currentQuestion.id,
-      steps: currentQuestion.steps,
-      description: stemDescription,
-      stemImages: stemImageInfo,
-      options: optionInfo,
-      correctAnswer: currentQuestion.answer
-    };
-  }
-
-  // 调用AI API
-  async callAIAPI(questionData) {
-    // 构建提示词
-    const prompt = `请分析这道纸折叠测试题：
-
-${questionData.description}
-
-折叠步骤：
-${questionData.stemImages}
-
-选项：
-${questionData.options}
-
-请提供详细的解题思路和分析过程，包括：
-1. 题目理解
-2. 折叠过程分析
-3. 逻辑推理步骤
-4. 答案选择理由
-
-请用markdown格式回答，使用清晰的标题和列表结构。`;
-
-    // 这里应该调用实际的AI API
-    // 目前返回一个模拟响应
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`# 纸折叠测试题解析
-
-## 题目理解
-
-这是一道${questionData.steps}步折叠的空间推理题。需要根据给定的折叠步骤，推断最终展开后的图案。
-
-## 解题思路
-
-### 1. 分析折叠过程
-- 仔细观察每个折叠步骤
-- 理解纸张的折叠方向和位置
-- 注意折叠后形成的层次关系
-
-### 2. 推理展开结果
-- 从最后一步开始逆向思考
-- 考虑每次展开时图案的对称性
-- 注意孔洞或图案的位置变化
-
-### 3. 验证答案
-- 将推理结果与各选项对比
-- 检查对称性和图案分布
-- 确认最符合逻辑的选项
-
-## 解题要点
-
-- **空间想象能力**：需要在脑海中模拟折叠和展开过程
-- **对称性原理**：折叠产生的图案通常具有对称性
-- **层次分析**：理解折叠层数对最终图案的影响
-
-## 建议
-
-1. 多练习类似题目提高空间想象能力
-2. 可以用实际纸张模拟折叠过程
-3. 注意观察图案的细节和位置关系
-
-*注：具体答案需要结合实际图像进行详细分析。*`);
-      }, 2000); // 模拟API调用延迟
-    });
-  }
-
-  // 渲染Markdown内容
-  renderMarkdown(markdownText) {
-    // 简单的markdown渲染，可以根据需要使用更完整的markdown库
-    let html = markdownText
-      // 标题
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      // 粗体
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // 斜体
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      // 代码
-      .replace(/`(.*?)`/g, '<code>$1</code>')
-      // 列表项
-      .replace(/^- (.*$)/gim, '<li>$1</li>')
-      .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
-      // 段落
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br>');
-
-    // 包装列表
-    html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
-    
-    // 包装段落
-    if (!html.startsWith('<h') && !html.startsWith('<ul')) {
-      html = '<p>' + html + '</p>';
-    }
-
-    return html;
-  }
-
-  // 复制AI回答
-  copyAIResponse() {
-    if (this.lastAIResponse) {
-      navigator.clipboard.writeText(this.lastAIResponse).then(() => {
-        this.showCopySuccess();
-      }).catch(err => {
-        console.error('复制失败:', err);
-        this.showCopyError();
-      });
-    }
-  }
-
-  // 显示AI错误
-  showAIError(message) {
-    const responseContent = document.getElementById('aiResponseContent');
-    responseContent.innerHTML = `
-      <div class="alert alert-danger" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <strong>分析失败</strong><br>
-        ${message}
-      </div>
-    `;
-    responseContent.style.display = 'block';
-  }
-
-  // 显示复制成功提示
-  showCopySuccess() {
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 6px;
-      z-index: 10001;
-      font-size: 14px;
-    `;
-    toast.textContent = '内容已复制到剪贴板';
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
-    }, 3000);
-  }
-
-  // 显示复制错误提示
-  showCopyError() {
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #dc3545;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 6px;
-      z-index: 10001;
-      font-size: 14px;
-    `;
-    toast.textContent = '复制失败，请手动复制';
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
-    }, 3000);
+  analyzeWithAI() {
+    // 简单的alert提示，告知功能还在开发中
+    alert('AI解答功能还在开发中，敬请期待！');
   }
 }
 
 // 页面加载完成后初始化测试
 document.addEventListener('DOMContentLoaded', () => {
   window.paperFoldingTest = new PaperFoldingTest();
+  window.paperFoldingTest.init(); // 调用初始化方法
   
   // 添加全局调试方法
   window.checkCacheStatus = () => {

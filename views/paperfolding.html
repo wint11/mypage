@@ -124,38 +124,6 @@
     </div>
   </main>
 
-  <!-- AI解答模态框 -->
-  <div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="aiModalLabel">
-            <i class="bi bi-robot me-2"></i>AI解答结果
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div id="aiLoadingIndicator" class="text-center py-4">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">正在分析中...</span>
-            </div>
-            <p class="mt-2 text-muted">AI正在分析题目，请稍候...</p>
-          </div>
-          <div id="aiResponseContent" class="markdown-content" style="display: none;">
-            <!-- AI解答内容将在这里显示 -->
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-primary" id="copyAiResponse" style="display: none;">
-            <i class="bi bi-clipboard"></i> 复制内容
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
 
   <script src="../js/bootstrap.bundle.min.js"></script>
   <script src="../js/firebase-app-compat.js"></script>
