@@ -1366,39 +1366,57 @@ class PaperFoldingTest {
       downloadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 生成中...';
       downloadBtn.disabled = true;
 
-      // 获取question-content元素
-      const questionContent = document.querySelector('.question-content');
-      if (!questionContent) {
-        throw new Error('未找到题目内容区域');
+      // 获取当前显示的img元素
+      const stemImages = document.querySelectorAll('.stem-images img');
+      const optionImages = document.querySelectorAll('.options-container img');
+      
+      // 找到第一个可见且有效的图片
+      let targetImg = null;
+      
+      // 优先查找题干图片
+      for (let img of stemImages) {
+        if (img.src && !img.src.includes('data:image') && img.style.display !== 'none') {
+          targetImg = img;
+          break;
+        }
+      }
+      
+      // 如果没有题干图片，查找选项图片
+      if (!targetImg) {
+        for (let img of optionImages) {
+          if (img.src && !img.src.includes('data:image') && img.style.display !== 'none') {
+            targetImg = img;
+            break;
+          }
+        }
+      }
+      
+      if (!targetImg) {
+        throw new Error('未找到可下载的图片');
       }
 
       // 等待图片加载完成
-      const images = questionContent.querySelectorAll('img');
-      await Promise.all(Array.from(images).map(img => {
-        return new Promise((resolve) => {
-          if (img.complete) {
-            resolve();
-          } else {
-            img.onload = resolve;
-            img.onerror = resolve; // 即使图片加载失败也继续
-          }
-        });
-      }));
+      await new Promise((resolve) => {
+        if (targetImg.complete) {
+          resolve();
+        } else {
+          targetImg.onload = resolve;
+          targetImg.onerror = resolve;
+        }
+      });
 
-      // 使用html2canvas截图
-      const canvas = await html2canvas(questionContent, {
+      // 直接使用html2canvas截图该img元素
+      const canvas = await html2canvas(targetImg, {
         backgroundColor: '#ffffff',
         scale: 2, // 提高清晰度
         useCORS: true,
         allowTaint: true,
-        logging: false,
-        width: questionContent.offsetWidth,
-        height: questionContent.offsetHeight
+        logging: false
       });
 
       // 创建下载链接
       const link = document.createElement('a');
-      link.download = `纸折叠题目_第${this.currentQuestionIndex + 1}题_${new Date().getTime()}.png`;
+      link.download = `纸折叠图片_第${this.currentQuestionIndex + 1}题_${new Date().getTime()}.png`;
       link.href = canvas.toDataURL('image/png');
       
       // 触发下载
@@ -1438,7 +1456,7 @@ class PaperFoldingTest {
       align-items: center;
       gap: 8px;
     `;
-    statusDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i>题目截图下载成功！';
+    statusDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i>图片下载成功！';
     document.body.appendChild(statusDiv);
 
     // 3秒后移除提示
@@ -1487,9 +1505,13 @@ class PaperFoldingTest {
       downloadAllBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 生成中...';
       downloadAllBtn.disabled = true;
 
-      // 获取当前版本的题目数量
-      const totalQuestions = this.questions.length;
+      // 获取当前筛选的题目数量
+      const totalQuestions = this.filteredQuestions.length;
       const currentQuestionIndex = this.currentQuestionIndex;
+      
+      if (totalQuestions === 0) {
+        throw new Error('没有可下载的题目');
+      }
       
       // 创建进度提示
       const progressDiv = this.createProgressIndicator();
@@ -1500,7 +1522,7 @@ class PaperFoldingTest {
 
       // 创建ZIP文件（使用JSZip库）
       const zip = new JSZip();
-      const folder = zip.folder(`纸折叠题目_${this.currentVersion === 'demo' ? 'Demo版' : '完整版'}_${new Date().toISOString().split('T')[0]}`);
+      const folder = zip.folder(`纸折叠题目_${this.currentFilter === 'all' ? '全部题目' : this.currentFilter + '步折叠'}_${new Date().toISOString().split('T')[0]}`);
 
       // 逐个截图并添加到ZIP
       for (let i = 0; i < totalQuestions; i++) {
@@ -1515,35 +1537,40 @@ class PaperFoldingTest {
           // 等待一小段时间确保页面渲染完成
           await new Promise(resolve => setTimeout(resolve, 500));
           
-          // 获取question-content元素
-          const questionContent = document.querySelector('.question-content');
-          if (!questionContent) {
-            console.warn(`第${i + 1}题：未找到题目内容区域`);
+          // 查找第一个可见且有效的img元素（只要题干图片）
+          const stemImages = document.querySelectorAll('.stem-images img');
+          let targetImg = null;
+          
+          // 优先选择题干图片
+          for (const img of stemImages) {
+            if (img.src && !img.src.includes('data:image') && img.offsetWidth > 0 && img.offsetHeight > 0) {
+              targetImg = img;
+              break;
+            }
+          }
+          
+          if (!targetImg) {
+            console.warn(`第${i + 1}题：未找到可下载的题干图片`);
             continue;
           }
 
           // 等待图片加载完成
-          const images = questionContent.querySelectorAll('img');
-          await Promise.all(Array.from(images).map(img => {
-            return new Promise((resolve) => {
-              if (img.complete) {
-                resolve();
-              } else {
-                img.onload = resolve;
-                img.onerror = resolve;
-              }
-            });
-          }));
+          await new Promise((resolve) => {
+            if (targetImg.complete) {
+              resolve();
+            } else {
+              targetImg.onload = resolve;
+              targetImg.onerror = resolve;
+            }
+          });
 
-          // 使用html2canvas截图
-          const canvas = await html2canvas(questionContent, {
+          // 直接对img元素进行截图
+          const canvas = await html2canvas(targetImg, {
             backgroundColor: '#ffffff',
             scale: 2,
             useCORS: true,
             allowTaint: true,
-            logging: false,
-            width: questionContent.offsetWidth,
-            height: questionContent.offsetHeight
+            logging: false
           });
 
           // 将canvas转换为blob并添加到ZIP
@@ -1551,7 +1578,7 @@ class PaperFoldingTest {
             canvas.toBlob(resolve, 'image/png');
           });
           
-          folder.file(`第${String(i + 1).padStart(3, '0')}题.png`, blob);
+          folder.file(`第${String(i + 1).padStart(3, '0')}题图片.png`, blob);
           
         } catch (error) {
           console.error(`第${i + 1}题截图失败:`, error);
@@ -1569,7 +1596,7 @@ class PaperFoldingTest {
       
       // 创建下载链接
       const link = document.createElement('a');
-      link.download = `纸折叠题目_${this.currentVersion === 'demo' ? 'Demo版' : '完整版'}_${new Date().toISOString().split('T')[0]}.zip`;
+      link.download = `纸折叠题目图片_${this.currentFilter === 'all' ? '全部题目' : this.currentFilter + '步折叠'}_${totalQuestions}题_${new Date().toISOString().split('T')[0]}.zip`;
       link.href = URL.createObjectURL(zipBlob);
       
       // 触发下载
