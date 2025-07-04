@@ -7,7 +7,7 @@ const path = require('path');
  */
 class Task1FoldClassificationManager {
     constructor() {
-        this.sourceImageDir = 'task1_image';
+        this.sourceImageDir = 'task1_1_images';
         this.outputImageDir = 'task1_selected_algorithm2';
         this.outputJsonlFile = 'task1_selected_algorithm2.jsonl';
         this.targetPerFold = 200;
