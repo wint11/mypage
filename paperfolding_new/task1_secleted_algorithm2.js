@@ -212,12 +212,33 @@ class Task1FoldClassificationManager {
     }
 
     /**
+     * 递归删除目录（兼容旧版本 Node.js）
+     * @param {string} dirPath - 要删除的目录路径
+     */
+    removeDirectoryRecursive(dirPath) {
+        if (fs.existsSync(dirPath)) {
+            const files = fs.readdirSync(dirPath);
+            for (const file of files) {
+                const filePath = path.join(dirPath, file);
+                const stat = fs.statSync(filePath);
+                if (stat.isDirectory()) {
+                    this.removeDirectoryRecursive(filePath);
+                } else {
+                    fs.unlinkSync(filePath);
+                }
+            }
+            fs.rmdirSync(dirPath);
+        }
+    }
+
+    /**
      * 创建输出目录
      * @returns {string} 输出目录路径
      */
     createOutputDirectories() {
         if (fs.existsSync(this.outputImageDir)) {
-            fs.rmSync(this.outputImageDir, { recursive: true, force: true });
+            // 兼容旧版本 Node.js，使用递归删除目录的方法
+            this.removeDirectoryRecursive(this.outputImageDir);
         }
         
         fs.mkdirSync(this.outputImageDir, { recursive: true });
