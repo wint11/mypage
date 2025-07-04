@@ -103,14 +103,12 @@ class Task1FoldClassificationManager {
     }
 
     /**
-     * 全局平衡选择图片
+     * 改进的平衡选择算法 - 确保每个fold内形状分布也均衡
      * @param {Object} foldData - 分类数据
      * @param {number} targetPerFold - 每个fold的目标数量
      * @returns {Object} 选择的图片数据
      */
     selectGloballyBalancedImages(foldData, targetPerFold = 200) {
-        const totalTarget = targetPerFold * 3; // 总共600张
-        
         // 获取所有可用的形状
         const allShapes = new Set();
         for (const foldShapes of Object.values(foldData)) {
@@ -119,82 +117,154 @@ class Task1FoldClassificationManager {
             }
         }
         
-        const allShapesArray = Array.from(allShapes);
-        const targetPerShape = Math.floor(totalTarget / allShapesArray.length);
-        const shapeRemainder = totalTarget % allShapesArray.length;
+        const allShapesArray = Array.from(allShapes).sort(); // 排序确保一致性
+        const targetPerShapePerFold = Math.floor(targetPerFold / allShapesArray.length);
+        const remainderPerFold = targetPerFold % allShapesArray.length;
         
-        // 计算每种形状的目标数量
-        const shapeTargets = {};
-        allShapesArray.forEach((shape, index) => {
-            shapeTargets[shape] = targetPerShape + (index < shapeRemainder ? 1 : 0);
-        });
+        console.log(`每个fold目标: ${targetPerFold}张, 形状数: ${allShapesArray.length}`);
+        console.log(`每个fold每种形状基础目标: ${targetPerShapePerFold}张`);
         
-        console.log('形状目标分布:', shapeTargets);
-        
-        // 收集所有图片按形状分类
-        const allImagesByShape = {};
-        for (const [foldName, foldShapes] of Object.entries(foldData)) {
-            for (const [shapeName, shapeAnswers] of Object.entries(foldShapes)) {
-                if (!allImagesByShape[shapeName]) allImagesByShape[shapeName] = [];
-                for (const [answer, images] of Object.entries(shapeAnswers)) {
-                    for (const img of images) {
-                        allImagesByShape[shapeName].push([img, foldName, answer]);
-                    }
-                }
-            }
-        }
-        
-        // 为每种形状选择目标数量的图片
         const selectedByFold = {};
         this.folds.forEach(fold => selectedByFold[fold] = []);
         
-        for (const [shape, targetCount] of Object.entries(shapeTargets)) {
-            const availableImages = allImagesByShape[shape] || [];
-            
-            let selectedImages;
-            if (availableImages.length <= targetCount) {
-                selectedImages = availableImages;
-            } else {
-                selectedImages = this.shuffleArray([...availableImages]).slice(0, targetCount);
-            }
-            
-            // 按fold分组
-            for (const [img, foldName, answer] of selectedImages) {
-                selectedByFold[foldName].push(img);
-            }
-        }
-        
-        // 确保每个fold都有足够的图片
+        // 为每个fold分别进行平衡选择
         for (const fold of this.folds) {
-            const currentCount = selectedByFold[fold].length;
+            console.log(`\n处理 ${fold}...`);
             
-            if (currentCount < targetPerFold) {
-                const needMore = targetPerFold - currentCount;
+            if (!foldData[fold]) {
+                console.warn(`警告: ${fold} 没有数据`);
+                continue;
+            }
+            
+            // 计算该fold中每种形状的目标数量
+            const foldShapeTargets = {};
+            allShapesArray.forEach((shape, index) => {
+                foldShapeTargets[shape] = targetPerShapePerFold + (index < remainderPerFold ? 1 : 0);
+            });
+            
+            console.log(`${fold} 形状目标分布:`, foldShapeTargets);
+            
+            // 收集该fold中每种形状的所有图片
+            const foldImagesByShape = {};
+            for (const [shapeName, shapeAnswers] of Object.entries(foldData[fold])) {
+                foldImagesByShape[shapeName] = [];
+                for (const [answer, images] of Object.entries(shapeAnswers)) {
+                    for (const img of images) {
+                        foldImagesByShape[shapeName].push([img, answer]);
+                    }
+                }
+            }
+            
+            // 为每种形状选择目标数量的图片
+            const foldSelectedImages = [];
+            for (const [shape, targetCount] of Object.entries(foldShapeTargets)) {
+                const availableImages = foldImagesByShape[shape] || [];
                 
-                // 收集该fold中所有未选择的图片
+                if (availableImages.length === 0) {
+                    console.warn(`警告: ${fold} 中没有 ${shape} 形状的图片`);
+                    continue;
+                }
+                
+                let selectedCount = Math.min(targetCount, availableImages.length);
+                
+                // 如果某种形状图片不足，记录实际选择数量
+                if (availableImages.length < targetCount) {
+                    console.warn(`${fold} 中 ${shape} 只有 ${availableImages.length} 张，少于目标 ${targetCount} 张`);
+                }
+                
+                // 随机选择图片，确保答案分布尽可能均衡
+                const selectedForShape = this.selectBalancedByAnswer(availableImages, selectedCount);
+                
+                for (const [img, answer] of selectedForShape) {
+                    foldSelectedImages.push(img);
+                }
+                
+                console.log(`${fold} ${shape}: 选择了 ${selectedForShape.length}/${availableImages.length} 张`);
+            }
+            
+            // 如果总数不足，从剩余图片中补充
+            if (foldSelectedImages.length < targetPerFold) {
+                const deficit = targetPerFold - foldSelectedImages.length;
+                console.log(`${fold} 需要补充 ${deficit} 张图片`);
+                
+                // 收集所有未选择的图片
                 const allFoldImages = [];
-                if (foldData[fold]) {
-                    for (const [shapeName, shapeAnswers] of Object.entries(foldData[fold])) {
-                        for (const [answer, images] of Object.entries(shapeAnswers)) {
-                            allFoldImages.push(...images);
-                        }
+                for (const [shapeName, shapeAnswers] of Object.entries(foldData[fold])) {
+                    for (const [answer, images] of Object.entries(shapeAnswers)) {
+                        allFoldImages.push(...images);
                     }
                 }
                 
-                // 排除已选择的图片
-                const availableForSupplement = allFoldImages.filter(img => !selectedByFold[fold].includes(img));
+                const availableForSupplement = allFoldImages.filter(img => !foldSelectedImages.includes(img));
                 
                 if (availableForSupplement.length > 0) {
-                    const supplementCount = Math.min(needMore, availableForSupplement.length);
+                    const supplementCount = Math.min(deficit, availableForSupplement.length);
                     const supplementImages = this.shuffleArray(availableForSupplement).slice(0, supplementCount);
-                    selectedByFold[fold].push(...supplementImages);
+                    foldSelectedImages.push(...supplementImages);
+                    console.log(`${fold} 补充了 ${supplementImages.length} 张图片`);
                 }
-            } else if (currentCount > targetPerFold) {
-                selectedByFold[fold] = this.shuffleArray(selectedByFold[fold]).slice(0, targetPerFold);
             }
+            
+            // 如果超出目标，随机移除多余的
+            if (foldSelectedImages.length > targetPerFold) {
+                const excess = foldSelectedImages.length - targetPerFold;
+                console.log(`${fold} 移除多余的 ${excess} 张图片`);
+                selectedByFold[fold] = this.shuffleArray(foldSelectedImages).slice(0, targetPerFold);
+            } else {
+                selectedByFold[fold] = foldSelectedImages;
+            }
+            
+            console.log(`${fold} 最终选择: ${selectedByFold[fold].length} 张图片`);
         }
         
         return selectedByFold;
+    }
+    
+    /**
+     * 按答案平衡选择图片
+     * @param {Array} imageAnswerPairs - [[图片名, 答案], ...]
+     * @param {number} targetCount - 目标数量
+     * @returns {Array} 选择的图片答案对
+     */
+    selectBalancedByAnswer(imageAnswerPairs, targetCount) {
+        if (imageAnswerPairs.length <= targetCount) {
+            return imageAnswerPairs;
+        }
+        
+        // 按答案分组
+        const byAnswer = {};
+        for (const [img, answer] of imageAnswerPairs) {
+            if (!byAnswer[answer]) byAnswer[answer] = [];
+            byAnswer[answer].push([img, answer]);
+        }
+        
+        const answers = Object.keys(byAnswer);
+        const targetPerAnswer = Math.floor(targetCount / answers.length);
+        const remainder = targetCount % answers.length;
+        
+        const selected = [];
+        
+        // 为每个答案选择目标数量
+        answers.forEach((answer, index) => {
+            const answerTarget = targetPerAnswer + (index < remainder ? 1 : 0);
+            const available = byAnswer[answer];
+            const selectedCount = Math.min(answerTarget, available.length);
+            
+            const shuffled = this.shuffleArray(available);
+            selected.push(...shuffled.slice(0, selectedCount));
+        });
+        
+        // 如果还需要更多，从剩余中随机选择
+        if (selected.length < targetCount) {
+            const remaining = imageAnswerPairs.filter(pair => 
+                !selected.some(sel => sel[0] === pair[0])
+            );
+            const needed = targetCount - selected.length;
+            const additional = this.shuffleArray(remaining).slice(0, needed);
+            selected.push(...additional);
+        }
+        
+        return selected.slice(0, targetCount);
     }
 
     /**
@@ -252,7 +322,7 @@ class Task1FoldClassificationManager {
     }
 
     /**
-     * 复制选中的图片到输出目录并重命名
+     * 复制选中的图片到输出目录并重命名（打乱顺序）
      * @param {Array} selectedImages - 选中的图片列表
      * @param {string} sourceDir - 源目录
      * @param {string} outputDir - 输出目录
@@ -263,10 +333,14 @@ class Task1FoldClassificationManager {
         const foldOutputDir = path.join(outputDir, foldName);
         const fileNameMapping = {};
         
+        // 先打乱图片顺序，让答案分布更随机
+        const shuffledImages = this.shuffleArray([...selectedImages]);
+        console.log(`${foldName}: 已打乱 ${shuffledImages.length} 张图片的顺序`);
+        
         // 按形状分组统计
         const shapeCounters = {};
         
-        for (const filename of selectedImages) {
+        for (const filename of shuffledImages) {
             const shape = this.extractShapeFromFilename(filename);
             if (shape) {
                 shapeCounters[shape] = (shapeCounters[shape] || 0) + 1;
