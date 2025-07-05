@@ -63,15 +63,29 @@ class PaperFoldingTest {
       const lines = text.trim().split('\n');
       this.allQuestions = lines.map((line, index) => {
         const data = JSON.parse(line);
+        const shape = this.extractShapeFromPath(data.image);
+        
+        // 调试信息：显示前10个题目的形状识别结果
+        if (index < 10) {
+          console.log(`题目 ${index + 1}: 路径=${data.image}, 识别形状=${shape}`);
+        }
+        
         return {
           id: index + 1,
           image: data.image,
           answer: data.answer,
           // 从图片路径提取形状类型和编号
-          shape: this.extractShapeFromPath(data.image),
+          shape: shape,
           number: this.extractNumberFromPath(data.image)
         };
       });
+      
+      // 统计所有形状类型的分布
+      const shapeStats = {};
+      this.allQuestions.forEach(q => {
+        shapeStats[q.shape] = (shapeStats[q.shape] || 0) + 1;
+      });
+      console.log('数据加载完成，所有题目的形状分布:', shapeStats);
       
       if (this.allQuestions.length === 0) {
         throw new Error('没有找到题目数据');
@@ -90,11 +104,16 @@ class PaperFoldingTest {
   // 从图片路径提取形状类型
   extractShapeFromPath(imagePath) {
     const filename = imagePath.split('/').pop();
-    if (filename.startsWith('circle_')) return 'circle';
-    if (filename.startsWith('Hexagon_')) return 'hexagon';
-    if (filename.startsWith('House_')) return 'house';
-    if (filename.startsWith('Rectangle_')) return 'rectangle';
-    if (filename.startsWith('square_')) return 'square';
+    
+    // 处理新的路径格式：fold_1/circle_001.png
+    if (filename.includes('circle_')) return 'circle';
+    if (filename.includes('Hexagon_')) return 'hexagon';
+    if (filename.includes('House_')) return 'house';
+    if (filename.includes('Rectangle_')) return 'rectangle';
+    if (filename.includes('square_')) return 'square';
+    
+    // 调试信息：输出无法识别的文件名
+    console.warn('无法识别的形状类型:', filename, '完整路径:', imagePath);
     return 'unknown';
   }
   
@@ -1160,19 +1179,62 @@ class PaperFoldingTest {
       }
     });
     
+    console.log('=== 开始筛选过程 ===');
+    console.log('筛选类型:', filterType);
+    console.log('总题目数:', this.questions.length);
+    
     // 根据筛选条件过滤题目
     if (filterType === 'all') {
-      // 显示所有题目，但每种折叠类型最多10道
-      const fold1Questions = this.questions.filter(q => q.image.includes('fold_1/')).slice(0, 10);
-      const fold2Questions = this.questions.filter(q => q.image.includes('fold_2/')).slice(0, 10);
-      const fold3Questions = this.questions.filter(q => q.image.includes('fold_3/')).slice(0, 10);
-      const allQuestions = [...fold1Questions, ...fold2Questions, ...fold3Questions];
+      // 显示所有题目，确保每种形状类型都有代表
+      const allQuestions = [];
+      
+      // 对每种折叠类型，按形状类型分组选择
+      ['fold_1', 'fold_2', 'fold_3'].forEach(foldType => {
+        console.log(`\n处理折叠类型: ${foldType}`);
+        const foldQuestions = this.questions.filter(q => q.image.includes(`${foldType}/`));
+        console.log(`${foldType} 总题目数:`, foldQuestions.length);
+        
+        // 按形状类型分组
+        const shapeGroups = {};
+        foldQuestions.forEach(q => {
+          const shape = q.shape || 'unknown';
+          if (!shapeGroups[shape]) {
+            shapeGroups[shape] = [];
+          }
+          shapeGroups[shape].push(q);
+        });
+        
+        console.log(`${foldType} 形状分组:`, Object.keys(shapeGroups).map(shape => `${shape}: ${shapeGroups[shape].length}`));
+        
+        // 确保每种形状类型都有代表，每种形状选择2道题
+        const shapesPerFold = Object.keys(shapeGroups);
+        const questionsPerShape = 2; // 每种形状固定选择2道题
+        
+        shapesPerFold.forEach(shape => {
+          const shapeQuestions = shapeGroups[shape].slice(0, questionsPerShape);
+          console.log(`从 ${shape} 选择了 ${shapeQuestions.length} 道题:`, shapeQuestions.map(q => q.image));
+          allQuestions.push(...shapeQuestions);
+        });
+      });
+      
+      console.log('\n筛选前总题目数:', allQuestions.length);
+      console.log('筛选前形状分布:', allQuestions.reduce((acc, q) => {
+        const shape = q.shape || 'unknown';
+        acc[shape] = (acc[shape] || 0) + 1;
+        return acc;
+      }, {}));
       
       // 使用基于种子的随机打乱算法
       if (this.randomSeed !== null) {
         this.filteredQuestions = this.shuffleArrayWithSeed(allQuestions, this.randomSeed);
       } else {
         this.filteredQuestions = allQuestions;
+      }
+      
+      // 限制题目数量为30题
+      if (this.filteredQuestions.length > 30) {
+        this.filteredQuestions = this.filteredQuestions.slice(0, 30);
+        console.log('题目数量超过30题，已截取前30题');
       }
     } else {
       const stepCount = parseInt(filterType);
@@ -1186,15 +1248,39 @@ class PaperFoldingTest {
       }
       
       if (foldType) {
-        const typeQuestions = this.questions
-          .filter(question => question.image.includes(`${foldType}/`))
-          .slice(0, 10); // 每种类型最多显示10道题
+        const foldQuestions = this.questions.filter(question => question.image.includes(`${foldType}/`));
+        
+        // 按形状类型分组
+        const shapeGroups = {};
+        foldQuestions.forEach(q => {
+          const shape = q.shape || 'unknown';
+          if (!shapeGroups[shape]) {
+            shapeGroups[shape] = [];
+          }
+          shapeGroups[shape].push(q);
+        });
+        
+        // 从每种形状类型中选择题目，确保多样性
+        const typeQuestions = [];
+        const shapesInFold = Object.keys(shapeGroups);
+        const questionsPerShape = 2; // 每种形状固定选择2道题
+        
+        shapesInFold.forEach(shape => {
+          const shapeQuestions = shapeGroups[shape].slice(0, questionsPerShape);
+          typeQuestions.push(...shapeQuestions);
+        });
         
         // 使用基于种子的随机打乱算法
         if (this.randomSeed !== null) {
           this.filteredQuestions = this.shuffleArrayWithSeed(typeQuestions, this.randomSeed + stepCount);
         } else {
           this.filteredQuestions = typeQuestions;
+        }
+        
+        // 限制题目数量为30题
+        if (this.filteredQuestions.length > 30) {
+          this.filteredQuestions = this.filteredQuestions.slice(0, 30);
+          console.log('题目数量超过30题，已截取前30题');
         }
       } else {
         this.filteredQuestions = [];
@@ -1218,6 +1304,20 @@ class PaperFoldingTest {
     
     // 重新显示题目
     if (this.filteredQuestions.length > 0) {
+      // 调试信息：显示筛选后的题目类型分布
+      const shapeCount = {};
+      this.filteredQuestions.forEach(q => {
+        const shape = q.shape || 'unknown';
+        shapeCount[shape] = (shapeCount[shape] || 0) + 1;
+      });
+      console.log(`筛选后的题目类型分布:`, shapeCount);
+      console.log(`筛选后的前5道题目:`, this.filteredQuestions.slice(0, 5).map(q => ({ image: q.image, shape: q.shape })));
+      
+      // 保存筛选结果到localStorage
+      localStorage.setItem('paperfolding_questions', JSON.stringify(this.filteredQuestions));
+      localStorage.setItem('paperfolding_seed', this.randomSeed.toString());
+      console.log('已保存筛选结果到localStorage:', this.filteredQuestions.length, '题，种子:', this.randomSeed);
+      
       this.displayQuestion();
       this.updateProgress();
       this.updateSubmitButton();
@@ -1254,28 +1354,56 @@ class PaperFoldingTest {
   }
   
   initializeFilter() {
-    // 检查localStorage中是否有保存的题目数据和随机种子
+    // 检查localStorage中是否已有题目数据
     const storedQuestions = localStorage.getItem('paperfolding_questions');
     const storedSeed = localStorage.getItem('paperfolding_seed');
     
     if (storedQuestions && storedSeed) {
-      // 如果有保存的数据，直接使用
-      this.filteredQuestions = JSON.parse(storedQuestions);
-      this.randomSeed = parseInt(storedSeed);
-      console.log('从localStorage加载题目数据，种子:', this.randomSeed);
-      
-      // 更新筛选信息和跳转输入框
-      this.updateFilterInfo();
-      this.updateJumpInputMax();
-    } else {
-      // 如果没有保存的数据，生成新的随机种子并应用筛选
-      this.randomSeed = this.generateRandomSeed();
-      this.applyFilter('all');
-      // 保存到localStorage
-      localStorage.setItem('paperfolding_questions', JSON.stringify(this.filteredQuestions));
-      localStorage.setItem('paperfolding_seed', this.randomSeed.toString());
-      console.log('生成新的题目数据，种子:', this.randomSeed);
+      try {
+        // 使用存储的题目数据
+        this.filteredQuestions = JSON.parse(storedQuestions);
+        this.randomSeed = parseInt(storedSeed);
+        
+        // 验证数据完整性
+        if (this.filteredQuestions.length > 0 && this.filteredQuestions.length <= 30) {
+          console.log('从localStorage加载题目数据:', this.filteredQuestions.length, '题，种子:', this.randomSeed);
+          
+          // 重置当前题目索引
+          this.currentQuestionIndex = 0;
+          
+          // 重新初始化用户答案数组
+          this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
+          
+          // 从localStorage恢复答案
+          this.loadAnswersFromStorage();
+          
+          // 更新UI
+          this.updateFilterInfo();
+          this.updateJumpInputMax();
+          
+          if (this.filteredQuestions.length > 0) {
+            this.displayQuestion();
+            this.updateProgress();
+            this.updateSubmitButton();
+            
+            // 预加载图片
+            this.preloadCurrentQuestionImages().then(() => {
+              this.preloadRangeImages();
+            });
+          }
+          
+          return; // 成功加载存储数据，直接返回
+        }
+      } catch (error) {
+        console.warn('加载存储的题目数据失败:', error);
+      }
     }
+    
+    // 如果没有存储数据或数据无效，重新生成题目
+    console.log('localStorage中无有效题目数据，重新筛选30题');
+    this.randomSeed = this.generateRandomSeed();
+    this.applyFilter('all');
+    console.log('重新生成题目数据，种子:', this.randomSeed);
   }
 
   // 生成随机种子
