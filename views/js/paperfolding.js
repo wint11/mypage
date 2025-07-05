@@ -203,6 +203,11 @@ class PaperFoldingTest {
       this.analyzeWithAI();
     });
 
+    // 重新生成题目按钮事件
+    document.getElementById('regenerateBtn').addEventListener('click', () => {
+      this.regenerateQuestions();
+    });
+
 
 
     // 选项点击事件
@@ -1440,19 +1445,68 @@ class PaperFoldingTest {
 
   // 重新生成题目（清除localStorage并重新随机）
   regenerateQuestions() {
-    this.clearStoredQuestions();
-    this.randomSeed = this.generateRandomSeed();
-    this.applyFilter('all');
-    // 保存新的数据到localStorage
-    localStorage.setItem('paperfolding_questions', JSON.stringify(this.filteredQuestions));
-    localStorage.setItem('paperfolding_seed', this.randomSeed.toString());
-    console.log('重新生成题目数据，新种子:', this.randomSeed);
+    // 确认操作
+    if (!confirm('确定要重新生成题目吗？这将清除当前的答题记录。')) {
+      return;
+    }
     
-    // 重新显示题目
+    // 清除所有相关的localStorage数据
+    this.clearStoredQuestions();
+    this.clearStoredAnswers();
+    
+    // 重新生成随机种子
+    this.randomSeed = this.generateRandomSeed();
+    
+    // 重新筛选题目
+    this.applyFilter('all');
+    
+    // 重置当前题目索引
     this.currentQuestionIndex = 0;
+    
+    // 重新初始化用户答案数组
+    this.userAnswers = new Array(this.filteredQuestions.length).fill(null);
+    
+    // 更新UI
     this.displayQuestion();
     this.updateProgress();
     this.updateSubmitButton();
+    
+    // 重新开始图片预加载
+    this.startImagePreloading();
+    
+    console.log('重新生成题目完成，新种子:', this.randomSeed, '题目数量:', this.filteredQuestions.length);
+    
+    // 显示成功提示
+    this.showRegenerateSuccess();
+  }
+  
+  // 显示重新生成成功提示
+  showRegenerateSuccess() {
+    const statusDiv = document.createElement('div');
+    statusDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    statusDiv.innerHTML = '<i class="bi bi-arrow-clockwise"></i>题目重新生成成功！';
+    document.body.appendChild(statusDiv);
+
+    // 3秒后移除提示
+    setTimeout(() => {
+      if (statusDiv.parentNode) {
+        statusDiv.parentNode.removeChild(statusDiv);
+      }
+    }, 3000);
   }
 
   // 获取测试结果
