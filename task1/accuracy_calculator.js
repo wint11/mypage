@@ -113,7 +113,7 @@ class AccuracyCalculator {
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
         const files = [
-            'doubao-seed-1-6-flash-250615 2025-07-04.txt',
+            'doubao-seed-1-6-flash-250615 epoch3.txt',
         ];
         
         console.log('开始分析实验数据...');
