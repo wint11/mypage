@@ -10,7 +10,7 @@ export class ImageCache {
     this.maxCacheSize = cacheConfig.maxCacheSize || 100; // 最大缓存图片数量
     this.preloadRange = cacheConfig.preloadRange || 5; // 预加载范围：前后5题
     this.loadingProgress = { loaded: 0, total: 0 }; // 加载进度
-    this.imagePath = dataConfig.imagePath || '../task1_selected_algorithm2/';
+    this.imagePath = dataConfig.imagePath || '../task1/task1_selected_algorithm2/';
   }
 
   /**
