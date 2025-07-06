@@ -1,6 +1,11 @@
 // 纸张折叠测试 JavaScript
+import { Config } from './paperfolding/Config.js';
+
 class PaperFoldingTest {
   constructor() {
+    // 初始化配置
+    this.config = new Config();
+    
     // 问卷星配置 - 需要根据实际情况修改
     this.wenjuanxingConfig = {
       enabled: true, // 设置为true启用问卷星上传
@@ -53,7 +58,7 @@ class PaperFoldingTest {
 
   async loadQuestions() {
     try {
-      const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
+      const response = await fetch(this.config.getDataPath());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -315,7 +320,7 @@ class PaperFoldingTest {
         this.setCacheItem(imagePath, placeholderSrc);
         resolve(placeholderSrc);
       };
-      img.src = `../task1/task1_selected_algorithm2/${imagePath}`;
+      img.src = `${this.config.getImageBasePath()}${imagePath}`;
     });
   }
   

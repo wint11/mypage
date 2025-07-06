@@ -3,6 +3,8 @@
  * 导出所有模块供外部使用
  */
 
+import { PaperFoldingTest } from './PaperFoldingTest.js';
+
 export { Config } from './Config.js';
 export { ImageCache } from './ImageCache.js';
 export { WenjuanxingUploader } from './WenjuanxingUploader.js';

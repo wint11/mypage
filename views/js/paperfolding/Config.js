@@ -38,8 +38,8 @@ export class Config {
     
     // 数据路径配置
     this.dataConfig = {
-      jsonlPath: '../task1/task1_selected_algorithm2.jsonl',
-      imagePath: '../task1/task1_selected_algorithm2/'
+      jsonlPath: '../task1_selected_algorithm2.jsonl',
+      imagePath: '../task1_selected_algorithm2/'
     };
   }
   
@@ -69,6 +69,20 @@ export class Config {
    */
   getDataConfig() {
     return this.dataConfig;
+  }
+  
+  /**
+   * 获取数据文件路径
+   */
+  getDataPath() {
+    return this.dataConfig.jsonlPath;
+  }
+  
+  /**
+   * 获取图片基础路径
+   */
+  getImageBasePath() {
+    return this.dataConfig.imagePath;
   }
   
   /**

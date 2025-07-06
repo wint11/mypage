@@ -5,10 +5,12 @@ export class ImageCache {
   constructor(config) {
     this.imageCache = new Map(); // 图片缓存
     this.cacheAccessOrder = []; // LRU缓存访问顺序
-    this.maxCacheSize = config.maxCacheSize || 100; // 最大缓存图片数量
-    this.preloadRange = config.preloadRange || 5; // 预加载范围：前后5题
+    const cacheConfig = config.getCacheConfig();
+    const dataConfig = config.getDataConfig();
+    this.maxCacheSize = cacheConfig.maxCacheSize || 100; // 最大缓存图片数量
+    this.preloadRange = cacheConfig.preloadRange || 5; // 预加载范围：前后5题
     this.loadingProgress = { loaded: 0, total: 0 }; // 加载进度
-    this.imagePath = config.imagePath || '../task1/task1_selected_algorithm2/';
+    this.imagePath = dataConfig.imagePath || '../task1_selected_algorithm2/';
   }
 
   /**
@@ -158,5 +160,12 @@ export class ImageCache {
     }
     
     await this.batchPreload(imagesToLoad);
+  }
+
+  /**
+   * 预加载图片数组（兼容方法）
+   */
+  async preloadImages(imagePaths) {
+    return this.batchPreload(imagePaths);
   }
 }

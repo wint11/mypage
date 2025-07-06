@@ -136,7 +136,26 @@
   <script src="../js/components-loader-views.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="js/paperfolding.js"></script>
+  
+  <!-- 使用模块化版本 -->
+  <script type="module">
+    import PaperFoldingTest from './js/paperfolding/index.js';
+    
+    // 等待DOM加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 初始化纸折叠测试
+      const paperFoldingTest = new PaperFoldingTest();
+      
+      // 将实例暴露到全局作用域以便调试
+      window.paperFoldingTest = paperFoldingTest;
+      
+      // 暴露调试方法
+      window.checkCacheStatus = () => paperFoldingTest.checkCacheStatus();
+      window.clearImageCache = () => paperFoldingTest.clearImageCache();
+      
+      console.log('纸折叠测试模块化版本已初始化');
+    });
+  </script>
 </body>
 
 </html>

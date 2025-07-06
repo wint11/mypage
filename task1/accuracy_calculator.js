@@ -113,7 +113,7 @@ class AccuracyCalculator {
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
         const files = [
-            'GPT-4o epoch2.txt',
+            'GLM-Z1-Airx epoch1.txt',
         ];
         
         console.log('开始分析实验数据...');

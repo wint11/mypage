@@ -11,7 +11,7 @@ import { RandomUtils } from './RandomUtils.js';
 export class PaperFoldingTest {
   constructor() {
     this.config = new Config();
-    this.imageCache = new ImageCache();
+    this.imageCache = new ImageCache(this.config);
     this.wenjuanxingUploader = new WenjuanxingUploader();
     this.downloader = new Downloader();
     this.filter = new Filter();
@@ -69,7 +69,12 @@ export class PaperFoldingTest {
       
       this.allQuestions = lines.map(line => {
         try {
-          return JSON.parse(line);
+          const question = JSON.parse(line);
+          // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
+          if (question.image) {
+            question.image_path = this.config.getImageBasePath() + question.image;
+          }
+          return question;
         } catch (e) {
           console.warn('解析题目数据失败:', line);
           return null;
@@ -280,19 +285,16 @@ export class PaperFoldingTest {
     const stemImages = document.querySelector('.stem-images');
     if (stemImages) {
       // 检查缓存
-      const cachedImage = this.imageCache.getCacheItem(imagePath);
+      const cachedImage = this.imageCache.getCachedImage(imagePath);
       if (cachedImage) {
-        stemImages.innerHTML = `<img src="${cachedImage.src}" alt="题目图片" style="max-width: 100%; height: auto;">`;
+        stemImages.innerHTML = `<img src="${cachedImage}" alt="题目图片" style="max-width: 100%; height: auto;">`;
       } else {
         // 显示加载状态
         stemImages.innerHTML = '<div class="loading-placeholder">加载中...</div>';
         
         // 异步加载图片
-        this.imageCache.preloadImage(imagePath).then(() => {
-          const newCachedImage = this.imageCache.getCacheItem(imagePath);
-          if (newCachedImage) {
-            stemImages.innerHTML = `<img src="${newCachedImage.src}" alt="题目图片" style="max-width: 100%; height: auto;">`;
-          }
+        this.imageCache.preloadImage(imagePath).then((imageSrc) => {
+          stemImages.innerHTML = `<img src="${imageSrc}" alt="题目图片" style="max-width: 100%; height: auto;">`;
         }).catch(error => {
           console.error('加载图片失败:', error);
           stemImages.innerHTML = '<div class="error-placeholder">图片加载失败</div>';
