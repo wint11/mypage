@@ -113,7 +113,7 @@ class AccuracyCalculator {
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
         const files = [
-            'gemini-2.5-flash epoch2.txt',
+            'GLM-4-plus epoch3.txt',
         ];
         
         console.log('开始分析实验数据...');
