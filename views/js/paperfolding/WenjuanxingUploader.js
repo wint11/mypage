@@ -251,71 +251,10 @@ export class WenjuanxingUploader {
 请在打开的问卷星窗口中手动填写上述数据。
     `;
     
-    // 创建一个模态框显示填写说明
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    `;
+    // 只在控制台输出说明，不创建重复的模态框
+    console.log('问卷星填写说明:', instructions);
     
-    const content = document.createElement('div');
-    content.style.cssText = `
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    `;
-    
-    content.innerHTML = `
-      <h3 style="margin-top: 0; color: #333;">问卷星填写说明</h3>
-      <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; white-space: pre-wrap; font-family: monospace;">${instructions}</pre>
-      <div style="text-align: center; margin-top: 20px;">
-        <button id="copyDataBtn" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; margin-right: 10px; cursor: pointer;">复制数据</button>
-        <button id="closeInstructionsBtn" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">关闭</button>
-      </div>
-    `;
-    
-    modal.appendChild(content);
-    document.body.appendChild(modal);
-    
-    // 复制数据到剪贴板
-    content.querySelector('#copyDataBtn').onclick = () => {
-      const dataText = `准确率：${data.accuracy}%\n总题数：${data.totalQuestions}\n正确答案数：${data.correctAnswers}`;
-      navigator.clipboard.writeText(dataText).then(() => {
-        alert('数据已复制到剪贴板');
-      }).catch(() => {
-        // 降级方案
-        const textArea = document.createElement('textarea');
-        textArea.value = dataText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('数据已复制到剪贴板');
-      });
-    };
-    
-    // 关闭说明
-    content.querySelector('#closeInstructionsBtn').onclick = () => {
-      document.body.removeChild(modal);
-    };
-    
-    // 点击背景关闭
-    modal.onclick = (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal);
-      }
-    };
+    // 显示简单的状态提示
+    this.showUploadStatus('问卷星窗口即将打开，请手动填写数据', '#28a745');
   }
 }

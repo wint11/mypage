@@ -13,7 +13,7 @@ export class PaperFoldingTest {
   constructor() {
     this.config = new Config();
     this.imageCache = new ImageCache(this.config);
-    this.wenjuanxingUploader = new WenjuanxingUploader();
+    this.wenjuanxingUploader = new WenjuanxingUploader(this.config.getWenjuanxingConfig());
     this.downloader = new Downloader();
     this.filter = new Filter();
     this.instructionsPage = new InstructionsPage();
@@ -217,6 +217,14 @@ export class PaperFoldingTest {
         );
       });
     }
+    
+    // 一键选择按钮
+    const quickSelectBtn = document.getElementById('quickSelectBtn');
+    if (quickSelectBtn) {
+      quickSelectBtn.addEventListener('click', () => {
+        this.quickSelectOption();
+      });
+    }
   }
 
   /**
@@ -284,8 +292,8 @@ export class PaperFoldingTest {
     // 显示题目图片
     this.displayQuestionImage(question.image_path);
     
-    // 隐藏选项区域（因为这是图片题目）
-    this.hideOptionArea();
+    // 显示选项区域
+    this.showOptionArea();
     
     // 恢复用户选择
     this.restoreUserSelection(index);
@@ -330,12 +338,25 @@ export class PaperFoldingTest {
   }
 
   /**
-   * 隐藏选项区域
+   * 显示选项区域
    */
-  hideOptionArea() {
+  showOptionArea() {
     const optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
-      optionsContainer.style.display = 'none';
+      optionsContainer.style.display = 'flex';
+      
+      // 清空选项图片并确保选项标签可见
+      const optionImages = optionsContainer.querySelectorAll('img');
+      optionImages.forEach(img => {
+        img.src = '';
+        img.style.display = 'none';
+      });
+      
+      // 确保选项标签可见
+      const optionLabels = optionsContainer.querySelectorAll('.option-label');
+      optionLabels.forEach(label => {
+        label.style.display = 'block';
+      });
     }
   }
 
@@ -354,6 +375,149 @@ export class PaperFoldingTest {
     this.updateSubmitButton();
     
     console.log(`题目 ${this.currentQuestionIndex + 1} 选择了选项: ${optionValue}`);
+  }
+
+  /**
+   * 一键随机选择选项
+   */
+  quickSelectOption() {
+    const filteredQuestions = this.filter.getFilteredQuestions();
+    if (filteredQuestions.length === 0) return;
+    
+    // 为所有题目随机选择答案
+    const options = ['A', 'B', 'C', 'D'];
+    let selectedCount = 0;
+    
+    for (let i = 0; i < filteredQuestions.length; i++) {
+      // 如果该题目还没有答案，则随机选择一个
+      if (!this.userAnswers[i]) {
+        const randomIndex = Math.floor(Math.random() * options.length);
+        const selectedOption = options[randomIndex];
+        this.userAnswers[i] = selectedOption;
+        selectedCount++;
+      }
+    }
+    
+    // 保存答案到本地存储
+    this.saveAnswersToStorage();
+    
+    // 更新当前题目的UI显示
+    this.restoreUserSelection(this.currentQuestionIndex);
+    this.updateSubmitButton();
+    
+    // 显示提示信息
+    this.showQuickSelectAllFeedback(selectedCount, filteredQuestions.length);
+  }
+
+  /**
+   * 显示一键选择反馈
+   */
+  showQuickSelectFeedback(selectedOption) {
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      z-index: 10000;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+      animation: slideInRight 0.3s ease;
+    `;
+    feedbackDiv.innerHTML = `<i class="bi bi-lightning-fill"></i> 已随机选择选项 ${selectedOption}`;
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(feedbackDiv);
+    
+    // 3秒后自动移除
+    setTimeout(() => {
+      if (feedbackDiv.parentNode) {
+        feedbackDiv.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => {
+          feedbackDiv.remove();
+          style.remove();
+        }, 300);
+      }
+    }, 3000);
+  }
+
+  /**
+   * 显示一键选择全部题目的反馈
+   */
+  showQuickSelectAllFeedback(selectedCount, totalCount) {
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      z-index: 10000;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+      animation: slideInRight 0.4s ease;
+      border-left: 4px solid #fff;
+    `;
+    
+    let message;
+    if (selectedCount === 0) {
+      message = `<i class="bi bi-check-circle-fill"></i> 所有 ${totalCount} 道题已完成！`;
+    } else {
+      message = `<i class="bi bi-lightning-fill"></i> 已为 ${selectedCount} 道题随机选择答案<br><small style="opacity: 0.9;">总共 ${totalCount} 道题</small>`;
+    }
+    
+    feedbackDiv.innerHTML = message;
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(feedbackDiv);
+    
+    // 4秒后自动移除
+    setTimeout(() => {
+      if (feedbackDiv.parentNode) {
+        feedbackDiv.style.animation = 'slideInRight 0.4s ease reverse';
+        setTimeout(() => {
+          feedbackDiv.remove();
+          style.remove();
+        }, 400);
+      }
+    }, 4000);
   }
 
   /**
@@ -598,8 +762,8 @@ export class PaperFoldingTest {
     // 显示结果
     this.showTestResults(results);
     
-    // 上传到问卷星
-    this.wenjuanxingUploader.uploadToWenjuanxing(results);
+    // 上传到问卷星 (已禁用)
+    // this.wenjuanxingUploader.uploadToWenjuanxing(results);
     
     // 清除存储的答案
     this.clearStoredAnswers();
@@ -645,40 +809,47 @@ export class PaperFoldingTest {
     `;
     
     modalContent.innerHTML = `
-      <h2 style="color: #28a745; margin-bottom: 20px;">
-        <i class="bi bi-check-circle-fill"></i> 测试完成！
-      </h2>
-      <div style="font-size: 18px; margin-bottom: 15px;">
-        <strong>准确率: ${results.accuracy}%</strong>
-      </div>
-      <div style="margin-bottom: 20px; color: #666;">
-        总题数: ${results.totalQuestions} 题<br>
-        正确: ${results.correctAnswers} 题<br>
-        用时: ${results.timeSpent}
-      </div>
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <button id="copyResultBtn" class="btn btn-outline-primary">
-          <i class="bi bi-clipboard"></i> 复制数据
+      <div style="position: relative;">
+        <button id="closeResultBtn" style="position: absolute; top: -10px; right: -10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;" title="关闭">
+          ×
         </button>
-        <button id="closeResultBtn" class="btn btn-primary">
-          关闭
-        </button>
+        <h2 style="color: #28a745; margin-bottom: 20px;">
+          <i class="bi bi-check-circle-fill"></i> 测试完成！
+        </h2>
+        <div style="font-size: 18px; margin-bottom: 15px;">
+          <strong>准确率: ${results.accuracy}%</strong>
+        </div>
+        <div style="margin-bottom: 20px; color: #666;">
+          总题数: ${results.totalQuestions} 题<br>
+          正确: ${results.correctAnswers} 题<br>
+          用时: ${results.timeSpent}
+        </div>
+        <div style="text-align: center;">
+          <button id="downloadExcelBtn" class="btn btn-outline-success">
+            <i class="bi bi-download"></i> 下载答题数据
+          </button>
+        </div>
       </div>
     `;
     
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
     
-    // 绑定事件
-    document.getElementById('copyResultBtn').addEventListener('click', () => {
-      const resultText = `纸折叠测试结果\n准确率: ${results.accuracy}%\n总题数: ${results.totalQuestions}\n正确: ${results.correctAnswers}\n用时: ${results.timeSpent}`;
-      navigator.clipboard.writeText(resultText).then(() => {
-        alert('结果已复制到剪贴板');
-      });
-    });
-    
+    // 绑定关闭事件
     document.getElementById('closeResultBtn').addEventListener('click', () => {
       document.body.removeChild(modal);
+    });
+    
+    // 绑定下载Excel事件
+    document.getElementById('downloadExcelBtn').addEventListener('click', () => {
+      this.downloadAnswerDataAsExcel(results);
+    });
+    
+    // 点击模态框背景也可以关闭
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
     });
   }
 
@@ -794,14 +965,23 @@ export class PaperFoldingTest {
   getTestResults() {
     const filteredQuestions = this.filter.getFilteredQuestions();
     let correctCount = 0;
+    const results = [];
     
     filteredQuestions.forEach((question, index) => {
       const userAnswer = this.userAnswers[index];
       const correctAnswer = question.answer;
+      const isCorrect = userAnswer === correctAnswer;
       
-      if (userAnswer === correctAnswer) {
+      if (isCorrect) {
         correctCount++;
       }
+      
+      results.push({
+        questionNumber: index + 1,
+        userAnswer: userAnswer || '未答',
+        correctAnswer: correctAnswer,
+        isCorrect: isCorrect
+      });
     });
     
     const accuracy = Math.round((correctCount / filteredQuestions.length) * 100);
@@ -815,7 +995,8 @@ export class PaperFoldingTest {
       answers: this.userAnswers,
       version: this.currentVersion,
       filter: this.filter.getCurrentFilter(),
-      seed: this.filter.getCurrentSeed()
+      seed: this.filter.getCurrentSeed(),
+      results: results
     };
   }
 
@@ -839,6 +1020,74 @@ export class PaperFoldingTest {
    */
   analyzeWithAI() {
     alert('AI分析功能开发中...');
+  }
+
+  /**
+   * 下载答题数据为Excel文件
+   */
+  downloadAnswerDataAsExcel(results) {
+    try {
+      const filteredQuestions = this.filter.getFilteredQuestions();
+      
+      // 创建CSV数据（Excel可以打开CSV文件）
+      let csvContent = '\uFEFF'; // BOM for UTF-8
+      csvContent += '题目编号,题目描述,正确答案,用户答案,答题结果\n';
+      
+      filteredQuestions.forEach((question, index) => {
+        const userAnswer = this.userAnswers[index] || '未答';
+        const correctAnswer = question.answer;
+        const isCorrect = userAnswer === correctAnswer ? '正确' : '错误';
+        const questionDesc = question.image || `第${index + 1}题`;
+        
+        // 转义CSV中的特殊字符
+        const escapeCsvField = (field) => {
+          if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
+            return '"' + field.replace(/"/g, '""') + '"';
+          }
+          return field;
+        };
+        
+        csvContent += `${escapeCsvField(index + 1)},${escapeCsvField(questionDesc)},${escapeCsvField(correctAnswer)},${escapeCsvField(userAnswer)},${escapeCsvField(isCorrect)}\n`;
+      });
+      
+      // 添加汇总信息
+      csvContent += '\n汇总信息\n';
+      csvContent += `总题数,${results.totalQuestions}\n`;
+      csvContent += `正确题数,${results.correctAnswers}\n`;
+      csvContent += `准确率,${results.accuracy}%\n`;
+      csvContent += `用时,${results.timeSpent}\n`;
+      csvContent += `测试版本,${this.currentVersion}\n`;
+      csvContent += `测试时间,${new Date().toLocaleString()}\n`;
+      
+      // 创建下载链接
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `纸折叠测试答题数据_${new Date().toISOString().slice(0, 10)}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // 显示下载成功提示
+      const downloadBtn = document.getElementById('downloadExcelBtn');
+      if (downloadBtn) {
+        const originalText = downloadBtn.innerHTML;
+        downloadBtn.innerHTML = '<i class="bi bi-check"></i> 下载成功';
+        downloadBtn.style.background = '#28a745';
+        downloadBtn.style.color = 'white';
+        setTimeout(() => {
+          downloadBtn.innerHTML = originalText;
+          downloadBtn.style.background = '';
+          downloadBtn.style.color = '';
+        }, 2000);
+      }
+      
+    } catch (error) {
+      console.error('下载Excel文件失败:', error);
+      alert('下载失败，请稍后重试');
+    }
   }
 
   // 调试方法
