@@ -4,6 +4,7 @@ import { WenjuanxingUploader } from './WenjuanxingUploader.js';
 import { Downloader } from './Downloader.js';
 import { Filter } from './Filter.js';
 import { RandomUtils } from './RandomUtils.js';
+import { InstructionsPage } from './InstructionsPage.js';
 
 /**
  * 纸折叠测试主类
@@ -15,21 +16,42 @@ export class PaperFoldingTest {
     this.wenjuanxingUploader = new WenjuanxingUploader();
     this.downloader = new Downloader();
     this.filter = new Filter();
+    this.instructionsPage = new InstructionsPage();
     
     this.allQuestions = [];
     this.currentQuestionIndex = 0;
     this.userAnswers = {};
     this.startTime = null;
     this.currentVersion = 'A';
+    this.isInitialized = false;
     
-    this.init();
+    this.setupInstructionsPage();
+  }
+
+  /**
+   * 设置答题须知页面
+   */
+  setupInstructionsPage() {
+    // 设置确认回调函数
+    this.instructionsPage.setOnConfirmCallback(() => {
+      this.init();
+    });
+    
+    console.log('答题须知页面已设置');
   }
 
   /**
    * 初始化
    */
   async init() {
+    if (this.isInitialized) {
+      console.log('测试已经初始化过了');
+      return;
+    }
+    
     try {
+      console.log('开始初始化纸折叠测试...');
+      
       await this.loadQuestions();
       this.setupEventListeners();
       this.loadAnswersFromStorage();
@@ -47,6 +69,10 @@ export class PaperFoldingTest {
       // 开始预加载
       this.preloadCurrentQuestion();
       
+      // 记录开始时间
+      this.startTime = new Date();
+      
+      this.isInitialized = true;
       console.log('纸折叠测试初始化完成');
     } catch (error) {
       console.error('初始化失败:', error);

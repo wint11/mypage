@@ -36,7 +36,7 @@ export class ImageCache {
         this.setCacheItem(imagePath, placeholderSrc);
         resolve(placeholderSrc);
       };
-      img.src = `${this.imagePath}${imagePath}`;
+      img.src = imagePath;
     });
   }
   

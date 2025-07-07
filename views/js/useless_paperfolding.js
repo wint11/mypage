@@ -1,5 +1,5 @@
 // 纸张折叠测试 JavaScript
-import { Config } from './paperfolding/Config.js';
+// import { Config } from './paperfolding/Config.js';
 
 class PaperFoldingTest {
   constructor() {

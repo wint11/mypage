@@ -13,8 +13,32 @@
 <body>
   <div id="nav-container"></div>
 
+  <!-- 答题须知页面 -->
+  <div id="instructionsPage" class="instructions-page">
+    <div class="instructions-container">
+      <div class="instructions-content">
+        <h2 class="instructions-title">答题须知</h2>
+        <div class="instructions-text">
+          <p>欢迎同学参加折纸游戏测试！请仔细阅读以下说明：</p>
+          <ul>
+            <li>本测试包含多道折纸题目，每题都有4个选项</li>
+            <li>请根据题干中的折叠步骤，选择正确的最终结果</li>
+            <li>一共需要回答任务壹的30道题目，并可以随时跳转到指定题目</li>
+            <li>请认真思考每一道题目，确保答案准确</li>
+          </ul>
+          <p class="instructions-note">请确认您已阅读并理解以上说明，然后点击确认按钮开始答题。</p>
+        </div>
+        <div class="instructions-actions">
+          <button id="confirmBtn" class="confirm-btn" disabled>
+            <span id="confirmText">确认 (5)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 主要内容区域 -->
-  <main class="main-content">
+  <main class="main-content" style="display: none;">
     <div class="test-container">
       <div class="filter-controls">
         <div class="controls-row">
@@ -87,10 +111,12 @@
 
       <!-- 导航控制 -->
       <div class="navigation-controls">
-        <button id="prevBtn" class="nav-btn prev-btn" disabled>
-          <i class="bi bi-chevron-left"></i>
-          上一题
-        </button>
+        <div class="left-section">
+          <button id="prevBtn" class="nav-btn prev-btn" disabled>
+            <i class="bi bi-chevron-left"></i>
+            上一题
+          </button>
+        </div>
         
         <div class="center-section">
           <div class="answer-feedback" id="answerFeedback">
@@ -114,16 +140,17 @@
               </button>
             </div>
           </div>
+          <button id="nextBtn" class="nav-btn next-btn">
+            下一题
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
         
-        <button id="nextBtn" class="nav-btn next-btn">
-          下一题
-          <i class="bi bi-chevron-right"></i>
-        </button>
-        
-        <button id="submitBtn" class="nav-btn submit-btn" disabled>
-          已答题 0/0
-        </button>
+        <div class="right-section">
+          <button id="submitBtn" class="nav-btn submit-btn" disabled>
+            已答题 0/0
+          </button>
+        </div>
       </div>
     </div>
   </main>
@@ -136,7 +163,6 @@
   <script src="../js/components-loader-views.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  
   <!-- 使用模块化版本 -->
   <script type="module">
     import PaperFoldingTest from './js/paperfolding/index.js';

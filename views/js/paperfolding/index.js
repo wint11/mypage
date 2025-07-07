@@ -11,6 +11,7 @@ export { WenjuanxingUploader } from './WenjuanxingUploader.js';
 export { Downloader } from './Downloader.js';
 export { Filter } from './Filter.js';
 export { RandomUtils } from './RandomUtils.js';
+export { InstructionsPage } from './InstructionsPage.js';
 export { PaperFoldingTest } from './PaperFoldingTest.js';
 
 // 默认导出主类
