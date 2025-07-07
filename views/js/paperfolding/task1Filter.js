@@ -47,12 +47,23 @@ export class Task1Filter {
    * 从路径中提取步数
    */
   extractStepsFromPath(imagePath) {
-    // 从文件名中提取步数，如 circle_3_001.png -> 3
+    // 从路径中提取步数，如 fold_1/circle_001.png -> 3 (fold_1对应3步)
+    // fold_1 -> 3步, fold_2 -> 4步, fold_3 -> 5步
+    if (imagePath.includes('fold_1')) {
+      return 3;
+    } else if (imagePath.includes('fold_2')) {
+      return 4;
+    } else if (imagePath.includes('fold_3')) {
+      return 5;
+    }
+    
+    // 兼容旧格式：circle_3_001.png -> 3
     const fileName = imagePath.split('/').pop() || '';
     const match = fileName.match(/_([345])_/);
     if (match) {
       return parseInt(match[1]);
     }
+    
     return 3; // 默认3步
   }
 
@@ -198,7 +209,7 @@ export class Task1Filter {
     };
     
     try {
-      localStorage.setItem(this.config.getStorageKey('questions'), JSON.stringify(data));
+      localStorage.setItem('paperfolding_questions_task1', JSON.stringify(data));
       console.log('题目已保存到本地存储');
     } catch (error) {
       console.error('保存题目到本地存储失败:', error);
@@ -210,7 +221,7 @@ export class Task1Filter {
    */
   loadQuestionsFromStorage() {
     try {
-      const stored = localStorage.getItem(this.config.getStorageKey('questions'));
+      const stored = localStorage.getItem('paperfolding_questions_task1');
       if (stored) {
         const data = JSON.parse(stored);
         
@@ -239,7 +250,7 @@ export class Task1Filter {
    */
   clearStoredQuestions() {
     try {
-      localStorage.removeItem(this.config.getStorageKey('questions'));
+      localStorage.removeItem('paperfolding_questions_task1');
       console.log('已清除存储的题目');
     } catch (error) {
       console.error('清除存储的题目失败:', error);

@@ -130,6 +130,20 @@ export class PaperFoldingTest {
           throw new Error('邀请码数据无效：缺少setId');
         }
         
+        // 清除localStorage中的相关缓存，确保使用新的题目集
+        try {
+          // 清除task1题目缓存
+          localStorage.removeItem('paperfolding_questions_task1');
+          // 清除task2题目缓存
+          localStorage.removeItem('paperfolding_questions_task2');
+          // 清除答案缓存
+          localStorage.removeItem('paperfolding_answers_task1');
+          localStorage.removeItem('paperfolding_answers_task2');
+          console.log('已清除localStorage中的题目和答案缓存');
+        } catch (error) {
+          console.warn('清除localStorage缓存失败:', error);
+        }
+        
         // 加载所有题目集数据
         const response = await fetch('../task1/all_question_sets.json');
         if (!response.ok) {
@@ -423,8 +437,8 @@ export class PaperFoldingTest {
           return;
         }
         this.downloader.downloadAllQuestions(
-          this.filter.getFilteredQuestions(),
-          this.filter.getCurrentFilter(),
+          this.getCurrentFilter().getFilteredQuestions(),
+          this.getCurrentFilter().getCurrentFilter(),
           (index) => this.displayQuestion(index)
         );
       });
@@ -459,7 +473,7 @@ export class PaperFoldingTest {
    * 预加载指定范围的题目
    */
   preloadRange(startIndex, endIndex) {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     const imagesToPreload = [];
     
     for (let i = startIndex; i <= endIndex; i++) {
@@ -750,7 +764,8 @@ export class PaperFoldingTest {
         version: this.currentVersion,
         timestamp: Date.now()
       };
-      localStorage.setItem(this.config.getStorageKey('answers'), JSON.stringify(data));
+      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      localStorage.setItem(answerKey, JSON.stringify(data));
     } catch (error) {
       console.error('保存答案失败:', error);
     }
@@ -761,7 +776,8 @@ export class PaperFoldingTest {
    */
   loadAnswersFromStorage() {
     try {
-      const stored = localStorage.getItem(this.config.getStorageKey('answers'));
+      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      const stored = localStorage.getItem(answerKey);
       if (stored) {
         const data = JSON.parse(stored);
         this.userAnswers = data.answers || {};
@@ -781,7 +797,8 @@ export class PaperFoldingTest {
    */
   clearStoredAnswers() {
     try {
-      localStorage.removeItem(this.config.getStorageKey('answers'));
+      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      localStorage.removeItem(answerKey);
       console.log('已清除存储的答案');
     } catch (error) {
       console.error('清除答案失败:', error);
@@ -832,7 +849,7 @@ export class PaperFoldingTest {
    * 下一题
    */
   nextQuestion() {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     if (this.currentQuestionIndex < filteredQuestions.length - 1) {
       this.displayQuestion(this.currentQuestionIndex + 1);
     }
@@ -1124,7 +1141,7 @@ export class PaperFoldingTest {
     });
     
     // 应用筛选
-     this.getCurrentFilter().applyFilter();
+    this.getCurrentFilter().applyFilter(this.allQuestions, filterType);
     
     // 重置到第一题
     this.currentQuestionIndex = 0;
@@ -1166,7 +1183,7 @@ export class PaperFoldingTest {
     this.clearStoredAnswers();
     
     // 重新生成题目
-     this.getCurrentFilter().regenerateQuestions();
+    this.getCurrentFilter().regenerateQuestions(this.allQuestions, this.getCurrentFilter().getCurrentFilter());
     
     // 重置UI
     this.displayQuestion(0);

@@ -198,7 +198,7 @@ export class Task2Filter {
     };
     
     try {
-      localStorage.setItem(this.config.getStorageKey('task2_questions'), JSON.stringify(data));
+      localStorage.setItem('paperfolding_questions_task2', JSON.stringify(data));
       console.log('任务二题目已保存到本地存储');
     } catch (error) {
       console.error('保存任务二题目到本地存储失败:', error);
@@ -210,7 +210,7 @@ export class Task2Filter {
    */
   loadQuestionsFromStorage() {
     try {
-      const stored = localStorage.getItem(this.config.getStorageKey('task2_questions'));
+      const stored = localStorage.getItem('paperfolding_questions_task2');
       if (stored) {
         const data = JSON.parse(stored);
         
@@ -239,7 +239,7 @@ export class Task2Filter {
    */
   clearStoredQuestions() {
     try {
-      localStorage.removeItem(this.config.getStorageKey('task2_questions'));
+      localStorage.removeItem('paperfolding_questions_task2');
       console.log('已清除存储的任务二题目');
     } catch (error) {
       console.error('清除存储的任务二题目失败:', error);
