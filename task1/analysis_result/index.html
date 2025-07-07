@@ -167,6 +167,173 @@
             width: 0%;
             transition: width 0.3s ease;
         }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .modal-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .model-response {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .model-name {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 8px;
+        }
+        
+        .response-text {
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .translate-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .translate-btn:hover {
+            background: #218838;
+        }
+        
+        .clickable-question {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+        
+        .clickable-question:hover {
+            color: #0056b3;
+        }
+        
+        .response-actions {
+            margin: 10px 0;
+            text-align: right;
+        }
+        
+        .response-actions .translate-btn {
+            position: static;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+        
+        .response-actions .translate-btn:hover {
+            background: #138496;
+        }
+        
+        .response-content {
+            margin-top: 10px;
+        }
+        
+        .response-text-content {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 8px 0;
+            max-height: none;
+            overflow: visible;
+        }
+        
+        .response-toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .toggle-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-btn:hover {
+            background: #5a6268;
+        }
+        
+        .toggle-btn i {
+            margin-right: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-btn.expanded i {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -232,6 +399,121 @@
         </div>
     </div>
 
+    <!-- 图片查看模态框 -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-title" id="imageModalTitle">题目图片</div>
+            <img id="modalImage" class="modal-image" src="" alt="题目图片">
+        </div>
+    </div>
+
+    <!-- 模型回复模态框 -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-title" id="responseModalTitle">模型回复详情</div>
+            <div id="responseContent"></div>
+        </div>
+    </div>
+
     <script src="analyzer.js"></script>
+    <script>
+        // 全局变量和函数
+        let analyzer;
+        
+        // 全局函数，用于在表格中调用
+        function showQuestionImage(questionPath) {
+            if (analyzer) {
+                analyzer.showQuestionImage(questionPath);
+            }
+        }
+        
+        // 模态框关闭功能
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+        
+        function closeResponseModal() {
+            document.getElementById('responseModal').style.display = 'none';
+        }
+        
+        function translateResponses() {
+            alert('翻译功能待实现，可以在这里调用大模型API进行翻译');
+        }
+        
+        // 翻译指定元素的文本
+        function translateText(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                // 这里可以调用翻译API，目前显示提示
+                alert(`翻译功能待实现，将翻译元素 ${elementId} 的内容`);
+                // 示例：可以在这里调用Google Translate API或其他翻译服务
+                // const text = element.textContent;
+                // translateAPI(text).then(translatedText => {
+                //     element.textContent = translatedText;
+                // });
+            }
+        }
+        
+        // 切换回复内容的展开/收起状态
+        function toggleResponseContent(elementId, button) {
+            const element = document.getElementById(elementId);
+            const isExpanded = button.classList.contains('expanded');
+            
+            if (isExpanded) {
+                // 收起内容
+                const shortText = decodeURIComponent(button.dataset.short);
+                element.textContent = shortText;
+                button.innerHTML = '<i class="fas fa-chevron-down"></i> 展开详情';
+                button.classList.remove('expanded');
+            } else {
+                // 展开内容
+                const fullText = decodeURIComponent(button.dataset.full);
+                element.textContent = fullText;
+                button.innerHTML = '<i class="fas fa-chevron-up"></i> 收起内容';
+                button.classList.add('expanded');
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化分析器
+            analyzer = new ModelAnalyzer();
+            window.analyzer = analyzer;
+            
+            // 图片模态框关闭
+            const imageModal = document.getElementById('imageModal');
+            const imageCloseBtn = document.querySelector('#imageModal .close');
+            
+            if (imageCloseBtn) {
+                imageCloseBtn.onclick = closeImageModal;
+            }
+            
+            // 回复模态框关闭
+            const responseModal = document.getElementById('responseModal');
+            const responseCloseBtn = document.querySelector('#responseModal .close');
+            
+            if (responseCloseBtn) {
+                responseCloseBtn.onclick = closeResponseModal;
+            }
+            
+            // 点击模态框外部关闭
+            window.onclick = function(event) {
+                if (event.target === imageModal) {
+                    closeImageModal();
+                }
+                if (event.target === responseModal) {
+                    closeResponseModal();
+                }
+            }
+            
+            // 翻译按钮功能（预留）
+            const translateBtn = document.getElementById('translateBtn');
+            if (translateBtn) {
+                translateBtn.onclick = translateResponses;
+            }
+        });
+    </script>
 </body>
 </html>

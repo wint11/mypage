@@ -245,8 +245,10 @@ class ModelAnalyzer {
                     const response = await fetch(filePath);
                     if (response.ok) {
                         const content = await response.text();
-                        const data = this.parseExperimentFile(content, filePath);
-                        this.experimentData.push(...data);
+                        const data = this.parseAllExperimentData(content, filePath);
+                        if (data && data.length > 0) {
+                            this.experimentData.push(...data);
+                        }
                         loadedFiles++;
                         this.updateProgress(20 + (loadedFiles / defaultDataFiles.length) * 30, `加载文件 ${loadedFiles}/${defaultDataFiles.length}...`);
                     }
@@ -443,6 +445,13 @@ class ModelAnalyzer {
             options: {
                 indexAxis: 'y',
                 responsive: true,
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const question = top20[index].question;
+                        this.showModelResponses(question);
+                    }
+                },
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -478,6 +487,13 @@ class ModelAnalyzer {
             options: {
                 indexAxis: 'y',
                 responsive: true,
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const question = top20Correct[index].question;
+                        this.showModelResponses(question);
+                    }
+                },
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -576,8 +592,14 @@ class ModelAnalyzer {
             
             row.className = rowClass;
             
+            const questionText = result.question.length > 50 ? result.question.substring(0, 50) + '...' : result.question;
+            
             row.innerHTML = `
-                <td title="${result.question}">${result.question.length > 50 ? result.question.substring(0, 50) + '...' : result.question}</td>
+                <td title="${result.question}">
+                    <span class="clickable-question" onclick="showQuestionImage('${result.question}')">
+                        ${questionText}
+                    </span>
+                </td>
                 <td>${(result.errorRate * 100).toFixed(1)}%</td>
                 <td>${(result.correctRate * 100).toFixed(1)}%</td>
                 <td>${result.total}</td>
@@ -610,21 +632,243 @@ class ModelAnalyzer {
         document.getElementById('results').style.display = 'block';
         document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
     }
+
+    // 显示题目图片
+    showQuestionImage(questionPath) {
+        // 构建图片路径，从task1_selected_algorithm2目录查找
+        const imagePath = `../task1_selected_algorithm2/${questionPath}`;
+        
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('imageModalTitle');
+        
+        modalTitle.textContent = `题目: ${questionPath}`;
+        modalImage.src = imagePath;
+        modalImage.onerror = () => {
+            modalImage.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+acquaJvuS4jeWIsOaIluaWh+S7tuS4jeWtmOWcqDwvdGV4dD48L3N2Zz4=';
+        };
+        
+        modal.style.display = 'block';
+    }
+
+    // 显示模型回复详情
+    async showModelResponses(questionPath) {
+        const modal = document.getElementById('responseModal');
+        const modalTitle = document.getElementById('responseModalTitle');
+        const responseContent = document.getElementById('responseContent');
+        
+        modalTitle.textContent = `题目: ${questionPath}`;
+        
+        // 显示加载状态
+        responseContent.innerHTML = '<p>正在加载模型回复数据...</p>';
+        modal.style.display = 'block';
+        
+        try {
+            // 查找该题目的所有模型回复
+            const responses = await this.getModelResponsesForQuestion(questionPath);
+            
+            if (responses.length === 0) {
+                responseContent.innerHTML = '<p>未找到该题目的模型回复数据</p>';
+            } else {
+                let html = '';
+                responses.forEach((response, index) => {
+                    const responseId = `response-${index}`;
+                    const fullResponse = response.fullResponse || '无详细回复';
+                    const maxLength = 300; // 设置默认显示长度
+                    const isLong = fullResponse.length > maxLength;
+                    const shortResponse = isLong ? fullResponse.substring(0, maxLength) + '...' : fullResponse;
+                    
+                    html += `
+                        <div class="model-response">
+                            <div class="model-name">${response.modelName}</div>
+                            <div class="response-text">
+                                <strong>正确答案:</strong> ${response.correctAnswer}<br>
+                                <strong>预测答案:</strong> ${response.predictedAnswer}<br>
+                                <strong>模型回复:</strong>
+                                <div class="response-actions">
+                                    <button class="translate-btn" onclick="translateText('${responseId}')" title="翻译">
+                                        <i class="fas fa-language"></i> 翻译
+                                    </button>
+                                </div>
+                                <div class="response-content">
+                                    <pre id="${responseId}" class="response-text-content" style="white-space: pre-wrap; word-wrap: break-word;">${isLong ? shortResponse : fullResponse}</pre>
+                                    ${isLong ? `
+                                        <div class="response-toggle">
+                                            <button class="toggle-btn" onclick="toggleResponseContent('${responseId}', this)" data-full="${encodeURIComponent(fullResponse)}" data-short="${encodeURIComponent(shortResponse)}">
+                                                <i class="fas fa-chevron-down"></i> 展开详情
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                responseContent.innerHTML = html;
+            }
+        } catch (error) {
+            console.error('加载模型回复时出错:', error);
+            responseContent.innerHTML = '<p>加载模型回复数据时出错，请稍后重试</p>';
+        }
+    }
+
+    // 获取指定题目的所有模型回复
+    async getModelResponsesForQuestion(questionPath) {
+        const responses = [];
+        
+        try {
+            // 获取experiment_data目录下的所有文件
+            const experimentFiles = [
+                'GLM-4-plus epoch1.txt', 'GLM-4-plus epoch2.txt', 'GLM-4-plus epoch3.txt',
+                'GLM-4.1V-Thinking-Flash epoch1.txt', 'GLM-4.1V-Thinking-Flash epoch2.txt', 'GLM-4.1V-Thinking-Flash epoch3.txt',
+                'GLM-Z1-Airx epoch1.txt', 'GLM-Z1-Airx epoch2.txt', 'GLM-Z1-Airx epoch3.txt',
+                'GPT-4o epoch1.txt', 'GPT-4o epoch2.txt', 'GPT-4o epoch3.txt',
+                'GPT-4o-mini epoch1.txt', 'GPT-4o-mini epoch2.txt', 'GPT-4o-mini epoch3.txt',
+                'claude-3-7-sonnet-thinking epoch1.txt',
+                'doubao-seed-1-6-flash-250615 epoch1.txt', 'doubao-seed-1-6-flash-250615 epoch2.txt', 'doubao-seed-1-6-flash-250615 epoch3.txt',
+                'gemini-2.5-flash epoch1.txt', 'gemini-2.5-flash epoch2.txt',
+                'qwen2-vl-72b-instruct epoch1.txt', 'qwen2-vl-72b-instruct epoch2.txt', 'qwen2-vl-72b-instruct epoch3.txt',
+                'qwen2.5-vl-72b-instruct epoch1.txt', 'qwen2.5-vl-72b-instruct epoch2.txt', 'qwen2.5-vl-72b-instruct epoch3.txt', 'qwen2.5-vl-72b-instruct epoch4.txt'
+            ];
+            
+            // 遍历每个实验文件
+            for (const filename of experimentFiles) {
+                try {
+                    const response = await fetch(`../experiment_data/${filename}`);
+                    if (response.ok) {
+                        const content = await response.text();
+                        const questionData = this.parseExperimentFile(content, questionPath);
+                        
+                        if (questionData) {
+                            responses.push({
+                                modelName: this.extractModelName(filename),
+                                correctAnswer: questionData.correctAnswer,
+                                predictedAnswer: questionData.predictedAnswer,
+                                fullResponse: questionData.fullResponse || '无详细回复'
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`无法读取文件 ${filename}:`, error);
+                }
+            }
+        } catch (error) {
+            console.error('获取模型回复时出错:', error);
+        }
+        
+        return responses;
+    }
+    
+    // 解析实验文件内容，获取所有数据记录
+    parseAllExperimentData(content, filename) {
+        const results = [];
+        const blocks = content.split('==================================================');
+        
+        for (const block of blocks) {
+            if (block.trim() === '') continue;
+            
+            const lines = block.trim().split('\n');
+            let questionLine = '';
+            let correctAnswer = '';
+            let predictedAnswer = '';
+            let fullResponse = '';
+            
+            let isReadingResponse = false;
+            
+            for (const line of lines) {
+                if (line.startsWith('题目: ')) {
+                    questionLine = line.substring(3).trim();
+                } else if (line.startsWith('正确答案: ')) {
+                    correctAnswer = line.substring(5).trim();
+                } else if (line.startsWith('预测答案: ')) {
+                    predictedAnswer = line.substring(5).trim();
+                } else if (line.startsWith('大模型完整回复:')) {
+                    isReadingResponse = true;
+                    fullResponse = '';
+                } else if (isReadingResponse && line.trim() !== '') {
+                    fullResponse += line + '\n';
+                }
+            }
+            
+            // 如果找到了完整的数据记录，添加到结果中
+            if (questionLine && correctAnswer && predictedAnswer) {
+                results.push({
+                    question: questionLine,
+                    correctAnswer: correctAnswer,
+                    predictedAnswer: predictedAnswer,
+                    fullResponse: fullResponse.trim(),
+                    filename: filename
+                });
+            }
+        }
+        
+        return results;
+    }
+    
+    // 解析实验文件内容，查找指定题目的数据
+    parseExperimentFile(content, targetQuestion) {
+        const blocks = content.split('==================================================');
+        
+        for (const block of blocks) {
+            if (block.trim() === '') continue;
+            
+            const lines = block.trim().split('\n');
+            let questionLine = '';
+            let correctAnswer = '';
+            let predictedAnswer = '';
+            let fullResponse = '';
+            
+            let isReadingResponse = false;
+            
+            for (const line of lines) {
+                if (line.startsWith('题目: ')) {
+                    questionLine = line.substring(3).trim();
+                } else if (line.startsWith('正确答案: ')) {
+                    correctAnswer = line.substring(5).trim();
+                } else if (line.startsWith('预测答案: ')) {
+                    predictedAnswer = line.substring(5).trim();
+                } else if (line.startsWith('大模型完整回复:')) {
+                    isReadingResponse = true;
+                    fullResponse = '';
+                } else if (isReadingResponse && line.trim() !== '') {
+                    fullResponse += line + '\n';
+                }
+            }
+            
+            // 检查是否匹配目标题目
+            if (questionLine === targetQuestion) {
+                return {
+                    correctAnswer: correctAnswer,
+                    predictedAnswer: predictedAnswer,
+                    fullResponse: fullResponse.trim()
+                };
+            }
+        }
+        
+        return null;
+    }
+
+    // 从文件名提取模型名称
+    extractModelName(filename) {
+        if (typeof filename !== 'string') return '未知模型';
+        
+        // 移除路径和扩展名
+        const baseName = filename.split('/').pop().split('\\').pop().replace('.txt', '');
+        
+        // 提取模型名称（去掉epoch信息）
+        return baseName.replace(/\s+epoch\d+$/i, '').trim();
+    }
 }
 
 // 全局函数
 function analyzeData() {
-    analyzer.analyzeData();
+    if (window.analyzer) {
+        window.analyzer.analyzeData();
+    }
 }
 
 function analyzeDefaultData() {
-    analyzer.analyzeDefaultData();
+    if (window.analyzer) {
+        window.analyzer.analyzeDefaultData();
+    }
 }
-
-// 初始化分析器
-const analyzer = new ModelAnalyzer();
-
-// 页面加载完成后的初始化
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('大模型答题错误率分析系统已加载');
-});
