@@ -3,6 +3,8 @@ import { ImageCache } from './ImageCache.js';
 import { WenjuanxingUploader } from './WenjuanxingUploader.js';
 import { Downloader } from './Downloader.js';
 import { Filter } from './Filter.js';
+import { Task1Filter } from './task1Filter.js';
+import { Task2Filter } from './task2Filter.js';
 import { RandomUtils } from './RandomUtils.js';
 import { InstructionsPage } from './InstructionsPage.js';
 
@@ -16,6 +18,8 @@ export class PaperFoldingTest {
     this.wenjuanxingUploader = new WenjuanxingUploader(this.config.getWenjuanxingConfig());
     this.downloader = new Downloader();
     this.filter = new Filter();
+    this.task1Filter = new Task1Filter();
+    this.task2Filter = new Task2Filter();
     this.instructionsPage = new InstructionsPage();
     
     this.allQuestions = [];
@@ -23,6 +27,7 @@ export class PaperFoldingTest {
     this.userAnswers = {};
     this.startTime = null;
     this.currentVersion = 'A';
+    this.currentTask = 'task1'; // 当前任务
     this.isInitialized = false;
     this.currentInviteCodeData = null; // 当前使用的邀请码数据
     
@@ -59,14 +64,14 @@ export class PaperFoldingTest {
       this.loadAnswersFromStorage();
       
       // 初始化筛选器
-      this.filter.initializeFilter(this.allQuestions);
+      this.getCurrentFilter().initializeFilter(this.allQuestions);
       
       this.displayQuestion(0);
       this.updateProgress();
       this.updateNavigationButtons();
       this.updateSubmitButton();
-      this.filter.updateFilterInfo();
-      this.filter.updateJumpInputMax();
+      this.getCurrentFilter().updateFilterInfo();
+      this.getCurrentFilter().updateJumpInputMax();
       
       // 开始预加载
       this.preloadCurrentQuestion();
@@ -94,25 +99,31 @@ export class PaperFoldingTest {
       
       // 检查是否为常规模式
       if (inviteCodeData.isRegularMode) {
-        // 常规模式：加载原有的600题题库
-        const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        // 常规模式：根据当前任务加载对应的题库
+        if (this.currentTask === 'task2') {
+          // 加载task2数据
+          await this.loadTask2Questions();
+        } else {
+          // 默认加载task1数据
+          const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const text = await response.text();
+          const lines = text.trim().split('\n');
+          
+          this.allQuestions = lines.map(line => {
+            const question = JSON.parse(line);
+            // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
+            if (question.image) {
+              question.image_path = this.config.getImageBasePath() + question.image;
+            }
+            return question;
+          });
         }
         
-        const text = await response.text();
-        const lines = text.trim().split('\n');
-        
-        this.allQuestions = lines.map(line => {
-          const question = JSON.parse(line);
-          // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
-          if (question.image) {
-            question.image_path = this.config.getImageBasePath() + question.image;
-          }
-          return question;
-        });
-        
-        console.log(`常规模式：加载了完整题库，共 ${this.allQuestions.length} 道题目`);
+        console.log(`常规模式：加载了${this.currentTask}题库，共 ${this.allQuestions.length} 道题目`);
       } else {
         // 邀请码模式：加载特定题目集
         if (!inviteCodeData.setId) {
@@ -155,6 +166,157 @@ export class PaperFoldingTest {
     } catch (error) {
       console.error('加载题目失败:', error);
       throw error;
+    }
+  }
+
+  /**
+   * 加载task2题目数据
+   */
+  async loadTask2Questions() {
+    try {
+      // 基于实际文件命名模式构造题目数据
+      // 文件名格式: circle-id_X-fold_Y-sample_0-candidate_4-answ_Z.png
+      this.allQuestions = [];
+      
+      // 根据实际文件列表构造题目
+      const knownFiles = [
+        // 1折题目 (fold_1)
+        { id: 0, fold: 1, answer: 'C' }, { id: 1, fold: 1, answer: 'C' }, { id: 2, fold: 1, answer: 'C' },
+        { id: 3, fold: 1, answer: 'A' }, { id: 4, fold: 1, answer: 'D' }, { id: 5, fold: 1, answer: 'B' },
+        { id: 6, fold: 1, answer: 'C' }, { id: 7, fold: 1, answer: 'A' }, { id: 8, fold: 1, answer: 'C' },
+        { id: 9, fold: 1, answer: 'A' }, { id: 10, fold: 1, answer: 'B' }, { id: 11, fold: 1, answer: 'C' },
+        { id: 12, fold: 1, answer: 'B' }, { id: 13, fold: 1, answer: 'B' }, { id: 14, fold: 1, answer: 'A' },
+        { id: 15, fold: 1, answer: 'A' }, { id: 16, fold: 1, answer: 'A' },
+        
+        // 2折题目 (fold_2)
+        { id: 17, fold: 2, answer: 'A' }, { id: 18, fold: 2, answer: 'C' }, { id: 19, fold: 2, answer: 'B' },
+        { id: 20, fold: 2, answer: 'D' }, { id: 21, fold: 2, answer: 'B' }, { id: 22, fold: 2, answer: 'A' },
+        { id: 23, fold: 2, answer: 'D' }, { id: 24, fold: 2, answer: 'D' }, { id: 25, fold: 2, answer: 'D' },
+        { id: 26, fold: 2, answer: 'A' }, { id: 27, fold: 2, answer: 'A' }, { id: 28, fold: 2, answer: 'D' },
+        { id: 29, fold: 2, answer: 'D' }, { id: 30, fold: 2, answer: 'B' }, { id: 31, fold: 2, answer: 'C' },
+        { id: 32, fold: 2, answer: 'A' }, { id: 33, fold: 2, answer: 'A' }
+      ];
+      
+      knownFiles.forEach(file => {
+        const imageName = `circle-id_${file.id}-fold_${file.fold}-sample_0-candidate_4-answ_${file.answer}.png`;
+        const imagePath = `../task2/test_images/${imageName}`;
+        
+        this.allQuestions.push({
+          image: imageName,
+          image_path: imagePath,
+          answer: file.answer,
+          steps: file.fold + 2, // fold_1 对应 3步, fold_2 对应 4步
+          shape: 'circle'
+        });
+      });
+      
+      console.log(`Task2数据加载完成: ${this.allQuestions.length} 题`);
+    } catch (error) {
+      console.error('加载task2数据失败:', error);
+      // 如果加载失败，创建一些示例数据
+      this.allQuestions = this.createTask2SampleData();
+    }
+  }
+  
+  /**
+   * 创建task2示例数据
+   */
+  createTask2SampleData() {
+    const sampleQuestions = [];
+    const shapes = ['circle', 'square', 'triangle'];
+    const steps = [3, 4, 5];
+    
+    for (let i = 1; i <= 30; i++) {
+      const shape = shapes[i % shapes.length];
+      const step = steps[i % steps.length];
+      const questionId = String(i).padStart(3, '0');
+      const imageName = `${shape}-id_${step}_${questionId}.png`;
+      
+      sampleQuestions.push({
+        image: imageName,
+        image_path: `../task2/test_images/${imageName}`,
+        answer: ['A', 'B', 'C', 'D'][i % 4],
+        steps: step,
+        shape: shape
+      });
+    }
+    
+    console.log(`创建task2示例数据: ${sampleQuestions.length} 题`);
+    return sampleQuestions;
+  }
+  
+  /**
+   * 获取当前筛选器
+   */
+  getCurrentFilter() {
+    if (this.currentTask === 'task2') {
+      return this.task2Filter;
+    } else {
+      return this.task1Filter;
+    }
+  }
+  
+  /**
+   * 切换任务
+   */
+  async switchTask(task) {
+    if (task === this.currentTask) return;
+    
+    const hasAnswers = Object.keys(this.userAnswers).length > 0;
+    if (hasAnswers) {
+      const confirmed = confirm('切换任务将清除当前答案，确定要继续吗？');
+      if (!confirmed) return;
+    }
+    
+    this.currentTask = task;
+    this.userAnswers = {};
+    this.currentQuestionIndex = 0;
+    
+    // 更新UI
+    document.querySelectorAll('.version-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.version === task);
+    });
+    
+    // 重新加载题目数据
+    try {
+      await this.loadQuestions(this.currentInviteCodeData);
+      
+      // 重新初始化筛选器
+      this.getCurrentFilter().initializeFilter(this.allQuestions);
+      
+      // 重新显示题目
+      this.displayQuestion(0);
+      this.updateProgress();
+      this.updateNavigationButtons();
+      this.updateSubmitButton();
+      this.getCurrentFilter().updateFilterInfo();
+      this.getCurrentFilter().updateJumpInputMax();
+      
+      // 显示状态消息
+      const statusDiv = document.createElement('div');
+      statusDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        z-index: 10000;
+        font-size: 14px;
+      `;
+      statusDiv.textContent = `已切换到${task === 'task2' ? '任务贰' : '任务壹'}`;
+      document.body.appendChild(statusDiv);
+      
+      setTimeout(() => {
+        if (statusDiv.parentNode) {
+          statusDiv.parentNode.removeChild(statusDiv);
+        }
+      }, 3000);
+      
+    } catch (error) {
+      console.error('切换任务失败:', error);
+      alert('切换任务失败，请重试');
     }
   }
 
@@ -224,11 +386,11 @@ export class PaperFoldingTest {
       });
     });
 
-    // 版本切换
+    // 任务切换
     document.querySelectorAll('.version-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const version = e.target.dataset.version;
-        this.switchVersion(version);
+        const task = e.target.dataset.version;
+        this.switchTask(task);
       });
     });
 
@@ -281,7 +443,7 @@ export class PaperFoldingTest {
    * 预加载当前题目
    */
   preloadCurrentQuestion() {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     if (filteredQuestions.length === 0) return;
     
     const currentQuestion = filteredQuestions[this.currentQuestionIndex];
@@ -316,7 +478,7 @@ export class PaperFoldingTest {
     const preloadRange = 2;
     const startIndex = Math.max(0, this.currentQuestionIndex - preloadRange);
     const endIndex = Math.min(
-      this.filter.getFilteredQuestions().length - 1,
+      this.getCurrentFilter().getFilteredQuestions().length - 1,
       this.currentQuestionIndex + preloadRange
     );
     
@@ -327,7 +489,7 @@ export class PaperFoldingTest {
    * 显示题目
    */
   displayQuestion(index) {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     if (index < 0 || index >= filteredQuestions.length) return;
     
     this.currentQuestionIndex = index;
@@ -414,7 +576,7 @@ export class PaperFoldingTest {
    * 选择选项
    */
   selectOption(optionValue) {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     if (this.currentQuestionIndex >= filteredQuestions.length) return;
     
     this.userAnswers[this.currentQuestionIndex] = optionValue;
@@ -437,7 +599,7 @@ export class PaperFoldingTest {
       return;
     }
     
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     if (filteredQuestions.length === 0) return;
     
     // 为所有题目随机选择答案
@@ -683,7 +845,7 @@ export class PaperFoldingTest {
     const jumpInput = document.getElementById('jumpInput');
     if (jumpInput) {
       const targetIndex = parseInt(jumpInput.value) - 1;
-      const filteredQuestions = this.filter.getFilteredQuestions();
+      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
       
       if (targetIndex >= 0 && targetIndex < filteredQuestions.length) {
         this.displayQuestion(targetIndex);
@@ -716,14 +878,14 @@ export class PaperFoldingTest {
     });
     
     // 重新筛选题目
-    this.filter.applyFilter(this.allQuestions, this.filter.getCurrentFilter());
+     this.getCurrentFilter().applyFilter();
     
     this.displayQuestion(0);
     this.updateProgress();
     this.updateNavigationButtons();
     this.updateSubmitButton();
-    this.filter.updateFilterInfo();
-    this.filter.updateJumpInputMax();
+    this.getCurrentFilter().updateFilterInfo();
+    this.getCurrentFilter().updateJumpInputMax();
     
     // 显示状态消息
     const statusDiv = document.createElement('div');
@@ -754,7 +916,7 @@ export class PaperFoldingTest {
   updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     
     if (prevBtn) {
       prevBtn.disabled = this.currentQuestionIndex === 0;
@@ -771,7 +933,7 @@ export class PaperFoldingTest {
   updateProgress() {
     const progressText = document.getElementById('progressText');
     const progressBar = document.getElementById('progressBar');
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     
     if (progressText) {
       progressText.textContent = `${this.currentQuestionIndex + 1} / ${filteredQuestions.length}`;
@@ -789,7 +951,7 @@ export class PaperFoldingTest {
   updateSubmitButton() {
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) {
-      const filteredQuestions = this.filter.getFilteredQuestions();
+      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
       const answeredCount = Object.keys(this.userAnswers).length;
       const allAnswered = answeredCount === filteredQuestions.length;
       
@@ -804,7 +966,7 @@ export class PaperFoldingTest {
    * 提交测试
    */
   submitTest() {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     const answeredCount = Object.keys(this.userAnswers).length;
     
     if (answeredCount < filteredQuestions.length) {
@@ -913,7 +1075,7 @@ export class PaperFoldingTest {
    * 显示正确答案
    */
   showCorrectAnswers() {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     
     filteredQuestions.forEach((question, index) => {
       const userAnswer = this.userAnswers[index];
@@ -962,7 +1124,7 @@ export class PaperFoldingTest {
     });
     
     // 应用筛选
-    this.filter.applyFilter(this.allQuestions, filterType);
+     this.getCurrentFilter().applyFilter();
     
     // 重置到第一题
     this.currentQuestionIndex = 0;
@@ -972,8 +1134,8 @@ export class PaperFoldingTest {
     this.updateProgress();
     this.updateNavigationButtons();
     this.updateSubmitButton();
-    this.filter.updateFilterInfo();
-    this.filter.updateJumpInputMax();
+    this.getCurrentFilter().updateFilterInfo();
+    this.getCurrentFilter().updateJumpInputMax();
     
     // 开始预加载
     this.preloadCurrentQuestion();
@@ -1004,28 +1166,28 @@ export class PaperFoldingTest {
     this.clearStoredAnswers();
     
     // 重新生成题目
-    this.filter.regenerateQuestions(this.allQuestions, this.filter.getCurrentFilter());
+     this.getCurrentFilter().regenerateQuestions();
     
     // 重置UI
     this.displayQuestion(0);
     this.updateProgress();
     this.updateNavigationButtons();
     this.updateSubmitButton();
-    this.filter.updateFilterInfo();
-    this.filter.updateJumpInputMax();
+    this.getCurrentFilter().updateFilterInfo();
+    this.getCurrentFilter().updateJumpInputMax();
     
     // 重新开始预加载
     this.preloadCurrentQuestion();
     
     // 显示成功提示
-    this.filter.showRegenerateSuccess();
+    this.getCurrentFilter().showRegenerateSuccess();
   }
 
   /**
    * 获取测试结果
    */
   getTestResults() {
-    const filteredQuestions = this.filter.getFilteredQuestions();
+    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
     let correctCount = 0;
     const results = [];
     
@@ -1056,8 +1218,8 @@ export class PaperFoldingTest {
       timeSpent: timeSpent,
       answers: this.userAnswers,
       version: this.currentVersion,
-      filter: this.filter.getCurrentFilter(),
-      seed: this.filter.getCurrentSeed(),
+      filter: this.getCurrentFilter().getCurrentFilter(),
+      seed: this.getCurrentFilter().getCurrentSeed(),
       results: results
     };
   }
@@ -1095,7 +1257,7 @@ export class PaperFoldingTest {
    */
   downloadAnswerDataAsExcel(results) {
     try {
-      const filteredQuestions = this.filter.getFilteredQuestions();
+      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
       
       // 创建CSV数据（Excel可以打开CSV文件）
       let csvContent = '\uFEFF'; // BOM for UTF-8

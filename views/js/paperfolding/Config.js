@@ -31,6 +31,7 @@ export class Config {
       questionsPerShape: 2, // 每种形状固定选择的题目数
       storageKeys: {
         questions: 'paperfolding_questions',
+        task2_questions: 'paperfolding_task2_questions',
         seed: 'paperfolding_seed',
         answers: 'paperfolding_answers'
       }

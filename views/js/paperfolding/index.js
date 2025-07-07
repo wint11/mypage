@@ -10,6 +10,8 @@ export { ImageCache } from './ImageCache.js';
 export { WenjuanxingUploader } from './WenjuanxingUploader.js';
 export { Downloader } from './Downloader.js';
 export { Filter } from './Filter.js';
+export { Task1Filter } from './task1Filter.js';
+export { Task2Filter } from './task2Filter.js';
 export { RandomUtils } from './RandomUtils.js';
 export { InstructionsPage } from './InstructionsPage.js';
 export { PaperFoldingTest } from './PaperFoldingTest.js';
