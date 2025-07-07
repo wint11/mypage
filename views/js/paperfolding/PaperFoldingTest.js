@@ -24,6 +24,7 @@ export class PaperFoldingTest {
     this.startTime = null;
     this.currentVersion = 'A';
     this.isInitialized = false;
+    this.currentInviteCodeData = null; // 当前使用的邀请码数据
     
     this.setupInstructionsPage();
   }
@@ -33,8 +34,8 @@ export class PaperFoldingTest {
    */
   setupInstructionsPage() {
     // 设置确认回调函数
-    this.instructionsPage.setOnConfirmCallback(() => {
-      this.init();
+    this.instructionsPage.setOnConfirmCallback((inviteCodeData) => {
+      this.init(inviteCodeData);
     });
     
     console.log('答题须知页面已设置');
@@ -42,17 +43,18 @@ export class PaperFoldingTest {
 
   /**
    * 初始化
+   * @param {Object} inviteCodeData - 邀请码数据，包含inviteCode和setId
    */
-  async init() {
+  async init(inviteCodeData) {
     if (this.isInitialized) {
       console.log('测试已经初始化过了');
       return;
     }
     
     try {
-      console.log('开始初始化纸折叠测试...');
+      console.log('开始初始化纸折叠测试...', inviteCodeData);
       
-      await this.loadQuestions();
+      await this.loadQuestions(inviteCodeData);
       this.setupEventListeners();
       this.loadAnswersFromStorage();
       
@@ -82,36 +84,74 @@ export class PaperFoldingTest {
 
   /**
    * 加载题目数据
+   * @param {Object} inviteCodeData - 邀请码数据，包含inviteCode和setId
    */
-  async loadQuestions() {
+  async loadQuestions(inviteCodeData) {
     try {
-      const response = await fetch(this.config.getDataPath());
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      if (!inviteCodeData) {
+        throw new Error('邀请码数据无效');
       }
       
-      const text = await response.text();
-      const lines = text.trim().split('\n');
-      
-      this.allQuestions = lines.map(line => {
-        try {
+      // 检查是否为常规模式
+      if (inviteCodeData.isRegularMode) {
+        // 常规模式：加载原有的600题题库
+        const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const text = await response.text();
+        const lines = text.trim().split('\n');
+        
+        this.allQuestions = lines.map(line => {
           const question = JSON.parse(line);
           // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
           if (question.image) {
             question.image_path = this.config.getImageBasePath() + question.image;
           }
           return question;
-        } catch (e) {
-          console.warn('解析题目数据失败:', line);
-          return null;
+        });
+        
+        console.log(`常规模式：加载了完整题库，共 ${this.allQuestions.length} 道题目`);
+      } else {
+        // 邀请码模式：加载特定题目集
+        if (!inviteCodeData.setId) {
+          throw new Error('邀请码数据无效：缺少setId');
         }
-      }).filter(q => q !== null);
-      
-      console.log(`加载了 ${this.allQuestions.length} 道题目`);
+        
+        // 加载所有题目集数据
+        const response = await fetch('../task1/all_question_sets.json');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const allQuestionSets = await response.json();
+        
+        // 根据setId找到对应的题目集
+        const targetQuestionSet = allQuestionSets.find(set => set.setId === inviteCodeData.setId);
+        if (!targetQuestionSet) {
+          throw new Error(`找不到setId为${inviteCodeData.setId}的题目集`);
+        }
+        
+        // 转换题目数据格式
+        this.allQuestions = targetQuestionSet.questions.map(question => {
+          // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
+          if (question.image) {
+            question.image_path = this.config.getImageBasePath() + question.image;
+          }
+          return question;
+        });
+        
+        console.log(`邀请码模式：加载了题目集${inviteCodeData.setId}，共 ${this.allQuestions.length} 道题目`);
+      }
       
       if (this.allQuestions.length === 0) {
-        throw new Error('没有找到有效的题目数据');
+        throw new Error('题目数据为空');
       }
+      
+      // 保存当前使用的邀请码信息
+      this.currentInviteCodeData = inviteCodeData;
+      
     } catch (error) {
       console.error('加载题目失败:', error);
       throw error;
@@ -204,12 +244,22 @@ export class PaperFoldingTest {
     
     if (downloadBtn) {
       downloadBtn.addEventListener('click', () => {
+        // 检查是否为邀请码模式（非常规模式），如果是则拦截
+        if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
+          alert('当前模式下该功能不可用');
+          return;
+        }
         this.downloader.downloadQuestionImage(this.currentQuestionIndex);
       });
     }
     
     if (downloadAllBtn) {
       downloadAllBtn.addEventListener('click', () => {
+        // 检查是否为邀请码模式（非常规模式），如果是则拦截
+        if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
+          alert('当前模式下该功能不可用');
+          return;
+        }
         this.downloader.downloadAllQuestions(
           this.filter.getFilteredQuestions(),
           this.filter.getCurrentFilter(),
@@ -381,6 +431,12 @@ export class PaperFoldingTest {
    * 一键随机选择选项
    */
   quickSelectOption() {
+    // 检查是否为邀请码模式（非常规模式），如果是则拦截
+    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
+      alert('当前模式下该功能不可用');
+      return;
+    }
+    
     const filteredQuestions = this.filter.getFilteredQuestions();
     if (filteredQuestions.length === 0) return;
     
@@ -927,6 +983,12 @@ export class PaperFoldingTest {
    * 重新生成题目
    */
   regenerateQuestions() {
+    // 检查是否为邀请码模式（非常规模式），如果是则拦截
+    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
+      alert('当前模式下该功能不可用');
+      return;
+    }
+    
     const hasAnswers = Object.keys(this.userAnswers).length > 0;
     if (hasAnswers) {
       const confirmed = confirm('重新生成将清除当前答案，确定要继续吗？');
@@ -1016,9 +1078,15 @@ export class PaperFoldingTest {
   }
 
   /**
-   * AI分析（占位符）
+   * AI分析
    */
   analyzeWithAI() {
+    // 检查是否为邀请码模式（非常规模式），如果是则拦截
+    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
+      alert('当前模式下该功能不可用');
+      return;
+    }
+    
     alert('AI分析功能开发中...');
   }
 

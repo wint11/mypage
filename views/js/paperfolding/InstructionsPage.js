@@ -8,6 +8,7 @@ export class InstructionsPage {
     this.currentCount = this.countdownTime;
     this.countdownTimer = null;
     this.onConfirmCallback = null;
+    this.inviteCodes = []; // 存储邀请码数据
     
     this.init();
   }
@@ -15,9 +16,54 @@ export class InstructionsPage {
   /**
    * 初始化答题须知页面
    */
-  init() {
+  async init() {
+    await this.loadInviteCodes();
     this.setupEventListeners();
     this.startCountdown();
+  }
+
+  /**
+   * 加载邀请码数据
+   */
+  async loadInviteCodes() {
+    try {
+      const response = await fetch('data/invite_codes.jsonl');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const text = await response.text();
+      const lines = text.trim().split('\n');
+      
+      this.inviteCodes = lines.map(line => {
+        try {
+          return JSON.parse(line);
+        } catch (e) {
+          console.error('解析邀请码数据失败:', line, e);
+          return null;
+        }
+      }).filter(item => item !== null);
+      
+      console.log('邀请码数据加载成功:', this.inviteCodes.length, '个邀请码');
+    } catch (error) {
+      console.error('加载邀请码数据失败:', error);
+      this.inviteCodes = [];
+    }
+  }
+
+  /**
+   * 验证邀请码
+   * @param {string} inviteCode - 用户输入的邀请码
+   * @returns {Object|null} 如果验证成功返回邀请码对象，否则返回null
+   */
+  validateInviteCode(inviteCode) {
+    if (!inviteCode || !inviteCode.trim()) {
+      return null;
+    }
+    
+    const trimmedCode = inviteCode.trim();
+    
+    return this.inviteCodes.find(item => item.inviteCode === trimmedCode) || null;
   }
 
   /**
@@ -28,6 +74,22 @@ export class InstructionsPage {
     if (confirmBtn) {
       confirmBtn.addEventListener('click', () => {
         if (!confirmBtn.disabled) {
+          this.handleConfirm();
+        }
+      });
+    }
+    
+    // 邀请码输入框事件监听
+    const inviteCodeInput = document.getElementById('inviteCodeInput');
+    if (inviteCodeInput) {
+      // 输入时清除错误提示
+      inviteCodeInput.addEventListener('input', () => {
+        this.clearInviteCodeError();
+      });
+      
+      // 回车键确认
+      inviteCodeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !confirmBtn.disabled) {
           this.handleConfirm();
         }
       });
@@ -77,7 +139,26 @@ export class InstructionsPage {
    * 处理确认按钮点击
    */
   handleConfirm() {
-    console.log('用户确认答题须知');
+    // 获取邀请码输入框的值
+    const inviteCodeInput = document.getElementById('inviteCodeInput');
+    if (!inviteCodeInput) {
+      console.error('找不到邀请码输入框');
+      return;
+    }
+    
+    const inviteCode = inviteCodeInput.value;
+    const validatedCode = this.validateInviteCode(inviteCode);
+    
+    if (!validatedCode) {
+      // 邀请码验证失败，显示错误提示
+      this.showInviteCodeError('邀请码错误，请检查后重新输入');
+      return;
+    }
+    
+    console.log('邀请码验证成功:', validatedCode);
+    
+    // 清除可能存在的错误提示
+    this.clearInviteCodeError();
     
     // 隐藏答题须知页面
     this.hide();
@@ -85,9 +166,59 @@ export class InstructionsPage {
     // 显示主要内容
     this.showMainContent();
     
-    // 执行回调函数
+    // 执行回调函数，传递验证成功的邀请码信息
     if (this.onConfirmCallback && typeof this.onConfirmCallback === 'function') {
-      this.onConfirmCallback();
+      this.onConfirmCallback(validatedCode);
+    }
+  }
+
+  /**
+   * 显示邀请码错误提示
+   * @param {string} message - 错误消息
+   */
+  showInviteCodeError(message) {
+    // 清除之前的错误提示
+    this.clearInviteCodeError();
+    
+    const inviteCodeSection = document.querySelector('.invite-code-section');
+    if (!inviteCodeSection) {
+      console.error('找不到邀请码区域');
+      return;
+    }
+    
+    // 创建错误提示元素
+    const errorElement = document.createElement('div');
+    errorElement.className = 'invite-code-error';
+    errorElement.textContent = message;
+    errorElement.style.color = '#dc3545';
+    errorElement.style.fontSize = '14px';
+    errorElement.style.marginTop = '5px';
+    
+    // 添加到邀请码区域
+    inviteCodeSection.appendChild(errorElement);
+    
+    // 给输入框添加错误样式
+    const inviteCodeInput = document.getElementById('inviteCodeInput');
+    if (inviteCodeInput) {
+      inviteCodeInput.style.borderColor = '#dc3545';
+      inviteCodeInput.focus();
+    }
+  }
+
+  /**
+   * 清除邀请码错误提示
+   */
+  clearInviteCodeError() {
+    // 移除错误提示元素
+    const errorElement = document.querySelector('.invite-code-error');
+    if (errorElement) {
+      errorElement.remove();
+    }
+    
+    // 恢复输入框样式
+    const inviteCodeInput = document.getElementById('inviteCodeInput');
+    if (inviteCodeInput) {
+      inviteCodeInput.style.borderColor = '';
     }
   }
 

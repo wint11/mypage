@@ -101,6 +101,41 @@ body {
   text-align: center;
 }
 
+.invite-code-section {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.invite-code-label {
+  display: block;
+  color: #34495e;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.invite-code-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #495057;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.invite-code-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.invite-code-input::placeholder {
+  color: #adb5bd;
+}
+
 .confirm-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
