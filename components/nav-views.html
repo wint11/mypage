@@ -1,0 +1,39 @@
+<!-- components/nav.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <img src="../favicon.ico" alt="启元慧学 LOGO" width="35" height="35" class="d-inline-block align-top me-2">
+      启元慧学
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="views/my-courses.html">我的课程</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="views/paperfolding.html">趣味游戏</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="views/explore.html">
+            探索发现
+            <span class="badge bg-primary ms-1">Beta</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="views/feedback.html">建议反馈</a>
+        </li>
+
+        <!-- 用户状态区域 -->
+        <ul class="navbar-nav" id="user-nav">
+          <!-- 动态内容由 JS 插入 -->
+        </ul>
+      </ul>
+    </div>
+  </div>
+</nav>

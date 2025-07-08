@@ -1,0 +1,28 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main  # 或 master，看你用哪个分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Sync files via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          password: ${{ secrets.ECS_PASS }}
+          port: 22
+          script: |
+            cd /xampp/htdocs/mindcore
+            git fetch --all
+            git reset --hard origin/main
+            git pull origin main
+            echo "✅ Deployment finished!"
