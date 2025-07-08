@@ -113,7 +113,7 @@ class AccuracyCalculator {
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
         const files = [
-            'claude-3-7-sonnet-thinking epoch1.txt',
+            'doubao-seed-1-6 epoch1.txt',
         ];
         
         console.log('开始分析实验数据...');

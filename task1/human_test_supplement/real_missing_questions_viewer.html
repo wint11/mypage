@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>真正缺失题目分析结果</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        .summary {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .summary-item {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .distribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .fold-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        .fold-title {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .shape-item {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: white;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .questions-list {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .question-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background-color: white;
+            border-radius: 4px;
+            border-left: 3px solid #27ae60;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #27ae60;
+            min-width: 30px;
+        }
+        .question-path {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+        .question-answer {
+            background-color: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .downloads {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .download-link {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 20px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .download-link:hover {
+            background-color: #219a52;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 20px;
+        }
+        .answer-distribution {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .answer-stat {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+        .answer-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .answer-count {
+            color: #e74c3c;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>真正缺失题目分析结果</h1>
+        
+        <div class="highlight">
+            <strong>重要说明：</strong>本次分析通过比较 task1_selected_algorithm2.jsonl（完整题库600题）与 task1_human_test 目录中的实际测试数据，识别出了真正缺失的30个题目。这些题目在完整题库中存在，但在人工测试中未被包含。
+        </div>
+        
+        <div class="summary">
+            <h2>分析概要</h2>
+            <div class="summary-item">总缺失题目：30题</div>
+            <div class="summary-item">占总题库比例：5%</div>
+            <div class="summary-item">分布特征：均匀分布</div>
+            <div class="summary-item">Set ID：17</div>
+        </div>
+        
+        <h2>按折叠次数和形状分布</h2>
+        <div class="distribution">
+            <div class="fold-section">
+                <div class="fold-title">fold_1（1次折叠）</div>
+                <div class="shape-item"><span>circle（圆形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Hexagon（六边形）</span><span>2题</span></div>
+                <div class="shape-item"><span>House（房屋形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Rectangle（矩形）</span><span>2题</span></div>
+                <div class="shape-item"><span>square（正方形）</span><span>2题</span></div>
+            </div>
+            
+            <div class="fold-section">
+                <div class="fold-title">fold_2（2次折叠）</div>
+                <div class="shape-item"><span>circle（圆形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Hexagon（六边形）</span><span>2题</span></div>
+                <div class="shape-item"><span>House（房屋形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Rectangle（矩形）</span><span>2题</span></div>
+                <div class="shape-item"><span>square（正方形）</span><span>2题</span></div>
+            </div>
+            
+            <div class="fold-section">
+                <div class="fold-title">fold_3（3次折叠）</div>
+                <div class="shape-item"><span>circle（圆形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Hexagon（六边形）</span><span>2题</span></div>
+                <div class="shape-item"><span>House（房屋形）</span><span>2题</span></div>
+                <div class="shape-item"><span>Rectangle（矩形）</span><span>2题</span></div>
+                <div class="shape-item"><span>square（正方形）</span><span>2题</span></div>
+            </div>
+        </div>
+        
+        <h2>答案分布统计</h2>
+        <div class="answer-distribution">
+            <div class="answer-stat">
+                <div class="answer-label">A</div>
+                <div class="answer-count">8题</div>
+            </div>
+            <div class="answer-stat">
+                <div class="answer-label">B</div>
+                <div class="answer-count">8题</div>
+            </div>
+            <div class="answer-stat">
+                <div class="answer-label">C</div>
+                <div class="answer-count">6题</div>
+            </div>
+            <div class="answer-stat">
+                <div class="answer-label">D</div>
+                <div class="answer-count">8题</div>
+            </div>
+        </div>
+        
+        <h2>完整缺失题目列表</h2>
+        <div class="questions-list">
+            <div class="question-item">
+                <span class="question-number">1.</span>
+                <span class="question-path">fold_1/Hexagon_007.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">2.</span>
+                <span class="question-path">fold_1/Hexagon_040.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">3.</span>
+                <span class="question-path">fold_1/House_018.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">4.</span>
+                <span class="question-path">fold_1/House_019.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">5.</span>
+                <span class="question-path">fold_1/Rectangle_006.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">6.</span>
+                <span class="question-path">fold_1/Rectangle_029.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">7.</span>
+                <span class="question-path">fold_1/circle_010.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">8.</span>
+                <span class="question-path">fold_1/circle_038.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">9.</span>
+                <span class="question-path">fold_1/square_017.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">10.</span>
+                <span class="question-path">fold_1/square_027.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">11.</span>
+                <span class="question-path">fold_2/Hexagon_015.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">12.</span>
+                <span class="question-path">fold_2/Hexagon_028.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">13.</span>
+                <span class="question-path">fold_2/House_017.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">14.</span>
+                <span class="question-path">fold_2/House_025.png</span>
+                <span class="question-answer">C</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">15.</span>
+                <span class="question-path">fold_2/Rectangle_007.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">16.</span>
+                <span class="question-path">fold_2/Rectangle_026.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">17.</span>
+                <span class="question-path">fold_2/circle_003.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">18.</span>
+                <span class="question-path">fold_2/circle_007.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">19.</span>
+                <span class="question-path">fold_2/square_033.png</span>
+                <span class="question-answer">C</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">20.</span>
+                <span class="question-path">fold_2/square_037.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">21.</span>
+                <span class="question-path">fold_3/Hexagon_021.png</span>
+                <span class="question-answer">B</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">22.</span>
+                <span class="question-path">fold_3/Hexagon_024.png</span>
+                <span class="question-answer">C</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">23.</span>
+                <span class="question-path">fold_3/House_012.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">24.</span>
+                <span class="question-path">fold_3/House_029.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">25.</span>
+                <span class="question-path">fold_3/Rectangle_017.png</span>
+                <span class="question-answer">A</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">26.</span>
+                <span class="question-path">fold_3/Rectangle_027.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">27.</span>
+                <span class="question-path">fold_3/circle_001.png</span>
+                <span class="question-answer">C</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">28.</span>
+                <span class="question-path">fold_3/circle_037.png</span>
+                <span class="question-answer">D</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">29.</span>
+                <span class="question-path">fold_3/square_002.png</span>
+                <span class="question-answer">C</span>
+            </div>
+            <div class="question-item">
+                <span class="question-number">30.</span>
+                <span class="question-path">fold_3/square_007.png</span>
+                <span class="question-answer">B</span>
+            </div>
+        </div>
+        
+        <h2>分析结论</h2>
+        <div class="highlight">
+            <p><strong>分布特征：</strong>30个缺失题目在各个类别中均匀分布，每个折叠次数（fold_1、fold_2、fold_3）各缺失10题，每种形状在每个折叠次数中各缺失2题。</p>
+            <p><strong>答案分布：</strong>A答案8题，B答案8题，C答案6题，D答案8题，分布相对均匀。</p>
+            <p><strong>质量评估：</strong>这种均匀的分布模式表明缺失可能是系统性的，而非随机遗漏，有助于保持测试的平衡性。</p>
+        </div>
+        
+        <div class="downloads">
+            <h2>下载相关文件</h2>
+            <a href="real_missing_questions_set17.json" class="download-link" download>下载JSON格式题目集</a>
+            <a href="real_missing_questions_report.txt" class="download-link" download>下载详细分析报告</a>
+            <a href="real_missing_questions.csv" class="download-link" download>下载CSV格式列表</a>
+            <a href="real_missing_questions_summary.json" class="download-link" download>下载JSON格式汇总</a>
+        </div>
+    </div>
+</body>
+</html>

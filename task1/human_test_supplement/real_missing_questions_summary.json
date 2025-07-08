@@ -1,0 +1,103 @@
+{
+  "total": 30,
+  "questions": [
+    "fold_1/Hexagon_007.png",
+    "fold_1/Hexagon_040.png",
+    "fold_1/House_018.png",
+    "fold_1/House_019.png",
+    "fold_1/Rectangle_006.png",
+    "fold_1/Rectangle_029.png",
+    "fold_1/circle_010.png",
+    "fold_1/circle_038.png",
+    "fold_1/square_017.png",
+    "fold_1/square_027.png",
+    "fold_2/Hexagon_015.png",
+    "fold_2/Hexagon_028.png",
+    "fold_2/House_017.png",
+    "fold_2/House_025.png",
+    "fold_2/Rectangle_007.png",
+    "fold_2/Rectangle_026.png",
+    "fold_2/circle_003.png",
+    "fold_2/circle_007.png",
+    "fold_2/square_033.png",
+    "fold_2/square_037.png",
+    "fold_3/Hexagon_021.png",
+    "fold_3/Hexagon_024.png",
+    "fold_3/House_012.png",
+    "fold_3/House_029.png",
+    "fold_3/Rectangle_017.png",
+    "fold_3/Rectangle_027.png",
+    "fold_3/circle_001.png",
+    "fold_3/circle_037.png",
+    "fold_3/square_002.png",
+    "fold_3/square_007.png"
+  ],
+  "byCategory": {
+    "fold_1": {
+      "circle": [
+        "fold_1/circle_010.png",
+        "fold_1/circle_038.png"
+      ],
+      "Hexagon": [
+        "fold_1/Hexagon_007.png",
+        "fold_1/Hexagon_040.png"
+      ],
+      "House": [
+        "fold_1/House_018.png",
+        "fold_1/House_019.png"
+      ],
+      "Rectangle": [
+        "fold_1/Rectangle_006.png",
+        "fold_1/Rectangle_029.png"
+      ],
+      "square": [
+        "fold_1/square_017.png",
+        "fold_1/square_027.png"
+      ]
+    },
+    "fold_2": {
+      "circle": [
+        "fold_2/circle_003.png",
+        "fold_2/circle_007.png"
+      ],
+      "Hexagon": [
+        "fold_2/Hexagon_015.png",
+        "fold_2/Hexagon_028.png"
+      ],
+      "House": [
+        "fold_2/House_017.png",
+        "fold_2/House_025.png"
+      ],
+      "Rectangle": [
+        "fold_2/Rectangle_007.png",
+        "fold_2/Rectangle_026.png"
+      ],
+      "square": [
+        "fold_2/square_033.png",
+        "fold_2/square_037.png"
+      ]
+    },
+    "fold_3": {
+      "circle": [
+        "fold_3/circle_001.png",
+        "fold_3/circle_037.png"
+      ],
+      "Hexagon": [
+        "fold_3/Hexagon_021.png",
+        "fold_3/Hexagon_024.png"
+      ],
+      "House": [
+        "fold_3/House_012.png",
+        "fold_3/House_029.png"
+      ],
+      "Rectangle": [
+        "fold_3/Rectangle_017.png",
+        "fold_3/Rectangle_027.png"
+      ],
+      "square": [
+        "fold_3/square_002.png",
+        "fold_3/square_007.png"
+      ]
+    }
+  }
+}

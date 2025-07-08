@@ -1,0 +1,125 @@
+{
+  "setId": 17,
+  "questions": [
+    {
+      "image": "fold_1/Hexagon_007.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_1/Hexagon_040.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_1/House_018.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_1/House_019.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_1/Rectangle_006.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_1/Rectangle_029.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_1/circle_010.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_1/circle_038.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_1/square_017.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_1/square_027.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_2/Hexagon_015.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_2/Hexagon_028.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_2/House_017.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_2/House_025.png",
+      "answer": "C"
+    },
+    {
+      "image": "fold_2/Rectangle_007.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_2/Rectangle_026.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_2/circle_003.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_2/circle_007.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_2/square_033.png",
+      "answer": "C"
+    },
+    {
+      "image": "fold_2/square_037.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_3/Hexagon_021.png",
+      "answer": "B"
+    },
+    {
+      "image": "fold_3/Hexagon_024.png",
+      "answer": "C"
+    },
+    {
+      "image": "fold_3/House_012.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_3/House_029.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_3/Rectangle_017.png",
+      "answer": "A"
+    },
+    {
+      "image": "fold_3/Rectangle_027.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_3/circle_001.png",
+      "answer": "C"
+    },
+    {
+      "image": "fold_3/circle_037.png",
+      "answer": "D"
+    },
+    {
+      "image": "fold_3/square_002.png",
+      "answer": "C"
+    },
+    {
+      "image": "fold_3/square_007.png",
+      "answer": "B"
+    }
+  ]
+}

@@ -1,0 +1,1340 @@
+{
+  "summary": {
+    "totalQuestions": 522,
+    "totalCorrect": 398,
+    "overallErrorRate": 23.75,
+    "totalParticipants": 20
+  },
+  "categoryErrorRates": {
+    "fold_1": {
+      "errorRate": 14.75,
+      "total": 122,
+      "correct": 104,
+      "wrong": 18
+    },
+    "fold_2": {
+      "errorRate": 19.5,
+      "total": 200,
+      "correct": 161,
+      "wrong": 39
+    },
+    "fold_3": {
+      "errorRate": 33.5,
+      "total": 200,
+      "correct": 133,
+      "wrong": 67
+    }
+  },
+  "shapeErrorRates": {
+    "circle": {
+      "errorRate": 20.83,
+      "total": 120,
+      "correct": 95,
+      "wrong": 25
+    },
+    "square": {
+      "errorRate": 22.61,
+      "total": 115,
+      "correct": 89,
+      "wrong": 26
+    },
+    "Rectangle": {
+      "errorRate": 22.34,
+      "total": 94,
+      "correct": 73,
+      "wrong": 21
+    },
+    "Hexagon": {
+      "errorRate": 28.24,
+      "total": 85,
+      "correct": 61,
+      "wrong": 24
+    },
+    "House": {
+      "errorRate": 25.93,
+      "total": 108,
+      "correct": 80,
+      "wrong": 28
+    }
+  },
+  "topWrongQuestions": [
+    {
+      "question": "fold_1/circle_013.png",
+      "errorCount": 1,
+      "correctAnswer": "D",
+      "wrongAnswers": [
+        "B"
+      ]
+    },
+    {
+      "question": "fold_1/circle_027.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_1/circle_028.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_1/circle_030.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/circle_033.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "A"
+      ]
+    },
+    {
+      "question": "fold_1/circle_035.png",
+      "errorCount": 1,
+      "correctAnswer": "A",
+      "wrongAnswers": [
+        "B"
+      ]
+    },
+    {
+      "question": "fold_1/Hexagon_006.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/Hexagon_028.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "A"
+      ]
+    },
+    {
+      "question": "fold_1/House_013.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/House_031.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "A"
+      ]
+    },
+    {
+      "question": "fold_1/Rectangle_021.png",
+      "errorCount": 1,
+      "correctAnswer": "D",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/square_008.png",
+      "errorCount": 1,
+      "correctAnswer": "D",
+      "wrongAnswers": [
+        "B"
+      ]
+    },
+    {
+      "question": "fold_1/square_010.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_1/square_014.png",
+      "errorCount": 1,
+      "correctAnswer": "A",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_1/square_018.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/square_021.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "A"
+      ]
+    },
+    {
+      "question": "fold_1/square_035.png",
+      "errorCount": 1,
+      "correctAnswer": "D",
+      "wrongAnswers": [
+        "C"
+      ]
+    },
+    {
+      "question": "fold_1/square_038.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_2/circle_001.png",
+      "errorCount": 1,
+      "correctAnswer": "C",
+      "wrongAnswers": [
+        "D"
+      ]
+    },
+    {
+      "question": "fold_2/circle_010.png",
+      "errorCount": 1,
+      "correctAnswer": "B",
+      "wrongAnswers": [
+        "C"
+      ]
+    }
+  ],
+  "allWrongQuestions": [
+    {
+      "participantId": "20",
+      "questionNum": "11",
+      "questionDesc": "fold_1/circle_013.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "11",
+      "questionNum": "25",
+      "questionDesc": "fold_1/circle_027.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "5",
+      "questionDesc": "fold_1/circle_028.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "6",
+      "questionNum": "2",
+      "questionDesc": "fold_1/circle_030.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "2",
+      "questionNum": "15",
+      "questionDesc": "fold_1/circle_033.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "20",
+      "questionDesc": "fold_1/circle_035.png",
+      "foldCount": "1",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "18",
+      "questionDesc": "fold_1/Hexagon_006.png",
+      "foldCount": "1",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "13",
+      "questionDesc": "fold_1/Hexagon_028.png",
+      "foldCount": "1",
+      "shape": "Hexagon",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "15",
+      "questionDesc": "fold_1/House_013.png",
+      "foldCount": "1",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "15",
+      "questionNum": "10",
+      "questionDesc": "fold_1/House_031.png",
+      "foldCount": "1",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "27",
+      "questionDesc": "fold_1/Rectangle_021.png",
+      "foldCount": "1",
+      "shape": "Rectangle",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "16",
+      "questionDesc": "fold_1/square_008.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "27",
+      "questionDesc": "fold_1/square_010.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "3",
+      "questionDesc": "fold_1/square_014.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "21",
+      "questionDesc": "fold_1/square_018.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "27",
+      "questionDesc": "fold_1/square_021.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "19",
+      "questionNum": "30",
+      "questionDesc": "fold_1/square_035.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "14",
+      "questionNum": "21",
+      "questionDesc": "fold_1/square_038.png",
+      "foldCount": "1",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "12",
+      "questionDesc": "fold_2/circle_001.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "25",
+      "questionDesc": "fold_2/circle_010.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "14",
+      "questionNum": "29",
+      "questionDesc": "fold_2/circle_012.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "15",
+      "questionNum": "22",
+      "questionDesc": "fold_2/circle_016.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "2",
+      "questionDesc": "fold_2/circle_019.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "7",
+      "questionNum": "5",
+      "questionDesc": "fold_2/circle_020.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "30",
+      "questionDesc": "fold_2/circle_021.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "6",
+      "questionNum": "12",
+      "questionDesc": "fold_2/circle_026.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "17",
+      "questionDesc": "fold_2/circle_030.png",
+      "foldCount": "2",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "2",
+      "questionDesc": "fold_2/Hexagon_002.png",
+      "foldCount": "2",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "26",
+      "questionDesc": "fold_2/Hexagon_004.png",
+      "foldCount": "2",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "10",
+      "questionDesc": "fold_2/Hexagon_022.png",
+      "foldCount": "2",
+      "shape": "Hexagon",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "21",
+      "questionDesc": "fold_2/Hexagon_026.png",
+      "foldCount": "2",
+      "shape": "Hexagon",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "14",
+      "questionDesc": "fold_2/Hexagon_035.png",
+      "foldCount": "2",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "15",
+      "questionNum": "17",
+      "questionDesc": "fold_2/House_001.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "19",
+      "questionNum": "18",
+      "questionDesc": "fold_2/House_006.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "7",
+      "questionDesc": "fold_2/House_008.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "19",
+      "questionDesc": "fold_2/House_009.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "10",
+      "questionNum": "4",
+      "questionDesc": "fold_2/House_010.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "15",
+      "questionDesc": "fold_2/House_015.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "7",
+      "questionDesc": "fold_2/House_016.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "21",
+      "questionNum": "43",
+      "questionDesc": "fold_2/House_017.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "16",
+      "questionDesc": "fold_2/House_019.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "21",
+      "questionDesc": "fold_2/House_021.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "1",
+      "questionDesc": "fold_2/House_027.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "3",
+      "questionDesc": "fold_2/House_039.png",
+      "foldCount": "2",
+      "shape": "House",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "3",
+      "questionDesc": "fold_2/Rectangle_006.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "21",
+      "questionNum": "45",
+      "questionDesc": "fold_2/Rectangle_007.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "15",
+      "questionNum": "5",
+      "questionDesc": "fold_2/Rectangle_010.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "23",
+      "questionDesc": "fold_2/Rectangle_014.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "14",
+      "questionDesc": "fold_2/Rectangle_015.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "13",
+      "questionDesc": "fold_2/Rectangle_025.png",
+      "foldCount": "2",
+      "shape": "Rectangle",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "25",
+      "questionDesc": "fold_2/square_005.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "20",
+      "questionDesc": "fold_2/square_007.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "5",
+      "questionDesc": "fold_2/square_009.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "10",
+      "questionDesc": "fold_2/square_015.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "15",
+      "questionDesc": "fold_2/square_028.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "18",
+      "questionDesc": "fold_2/square_034.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "21",
+      "questionNum": "50",
+      "questionDesc": "fold_2/square_037.png",
+      "foldCount": "2",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "14",
+      "questionNum": "2",
+      "questionDesc": "fold_3/circle_005.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "11",
+      "questionDesc": "fold_3/circle_012.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "2",
+      "questionNum": "26",
+      "questionDesc": "fold_3/circle_013.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "29",
+      "questionDesc": "fold_3/circle_017.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "8",
+      "questionDesc": "fold_3/circle_018.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "14",
+      "questionDesc": "fold_3/circle_024.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "13",
+      "questionDesc": "fold_3/circle_026.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "24",
+      "questionDesc": "fold_3/circle_031.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "11",
+      "questionNum": "29",
+      "questionDesc": "fold_3/circle_035.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "15",
+      "questionNum": "27",
+      "questionDesc": "fold_3/circle_039.png",
+      "foldCount": "3",
+      "shape": "circle",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "4",
+      "questionNum": "8",
+      "questionDesc": "fold_3/Hexagon_004.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "10",
+      "questionNum": "13",
+      "questionDesc": "fold_3/Hexagon_005.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "19",
+      "questionNum": "21",
+      "questionDesc": "fold_3/Hexagon_006.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "29",
+      "questionDesc": "fold_3/Hexagon_009.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "4",
+      "questionDesc": "fold_3/Hexagon_010.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "2",
+      "questionNum": "28",
+      "questionDesc": "fold_3/Hexagon_011.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "23",
+      "questionDesc": "fold_3/Hexagon_012.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "14",
+      "questionNum": "20",
+      "questionDesc": "fold_3/Hexagon_013.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "28",
+      "questionDesc": "fold_3/Hexagon_016.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "6",
+      "questionDesc": "fold_3/Hexagon_018.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "27",
+      "questionDesc": "fold_3/Hexagon_023.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "24",
+      "questionDesc": "fold_3/Hexagon_025.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "28",
+      "questionDesc": "fold_3/Hexagon_028.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "7",
+      "questionNum": "22",
+      "questionDesc": "fold_3/Hexagon_029.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "30",
+      "questionDesc": "fold_3/Hexagon_031.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "26",
+      "questionDesc": "fold_3/Hexagon_035.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "11",
+      "questionNum": "22",
+      "questionDesc": "fold_3/Hexagon_036.png",
+      "foldCount": "3",
+      "shape": "Hexagon",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "22",
+      "questionDesc": "fold_3/House_002.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "7",
+      "questionNum": "23",
+      "questionDesc": "fold_3/House_003.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "12",
+      "questionDesc": "fold_3/House_004.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "17",
+      "questionNum": "21",
+      "questionDesc": "fold_3/House_010.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "D",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "17",
+      "questionDesc": "fold_3/House_015.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "11",
+      "questionNum": "13",
+      "questionDesc": "fold_3/House_018.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "4",
+      "questionNum": "23",
+      "questionDesc": "fold_3/House_020.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "26",
+      "questionDesc": "fold_3/House_022.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "2",
+      "questionNum": "25",
+      "questionDesc": "fold_3/House_023.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "30",
+      "questionDesc": "fold_3/House_025.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "26",
+      "questionDesc": "fold_3/House_028.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "15",
+      "questionDesc": "fold_3/House_036.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "29",
+      "questionDesc": "fold_3/House_038.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "18",
+      "questionDesc": "fold_3/House_039.png",
+      "foldCount": "3",
+      "shape": "House",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "8",
+      "questionDesc": "fold_3/Rectangle_001.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "14",
+      "questionNum": "4",
+      "questionDesc": "fold_3/Rectangle_002.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "17",
+      "questionNum": "25",
+      "questionDesc": "fold_3/Rectangle_003.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "24",
+      "questionDesc": "fold_3/Rectangle_004.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "1",
+      "questionNum": "6",
+      "questionDesc": "fold_3/Rectangle_008.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "12",
+      "questionDesc": "fold_3/Rectangle_010.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "15",
+      "questionDesc": "fold_3/Rectangle_012.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "28",
+      "questionDesc": "fold_3/Rectangle_013.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "16",
+      "questionDesc": "fold_3/Rectangle_019.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "29",
+      "questionDesc": "fold_3/Rectangle_023.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "7",
+      "questionNum": "30",
+      "questionDesc": "fold_3/Rectangle_025.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "B",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "5",
+      "questionNum": "19",
+      "questionDesc": "fold_3/Rectangle_029.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "12",
+      "questionDesc": "fold_3/Rectangle_032.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "D",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "17",
+      "questionDesc": "fold_3/Rectangle_038.png",
+      "foldCount": "3",
+      "shape": "Rectangle",
+      "correctAnswer": "C",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "30",
+      "questionDesc": "fold_3/square_003.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "9",
+      "questionNum": "13",
+      "questionDesc": "fold_3/square_005.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "8",
+      "questionNum": "8",
+      "questionDesc": "fold_3/square_006.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "2",
+      "questionNum": "13",
+      "questionDesc": "fold_3/square_015.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "4",
+      "questionNum": "16",
+      "questionDesc": "fold_3/square_016.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "3",
+      "questionNum": "16",
+      "questionDesc": "fold_3/square_020.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "17",
+      "questionNum": "23",
+      "questionDesc": "fold_3/square_022.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "C"
+    },
+    {
+      "participantId": "16",
+      "questionNum": "12",
+      "questionDesc": "fold_3/square_026.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "C",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "19",
+      "questionNum": "20",
+      "questionDesc": "fold_3/square_029.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "B",
+      "userAnswer": "D"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "12",
+      "questionDesc": "fold_3/square_031.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "B",
+      "userAnswer": "A"
+    },
+    {
+      "participantId": "20",
+      "questionNum": "25",
+      "questionDesc": "fold_3/square_033.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "A",
+      "userAnswer": "B"
+    },
+    {
+      "participantId": "12",
+      "questionNum": "26",
+      "questionDesc": "fold_3/square_040.png",
+      "foldCount": "3",
+      "shape": "square",
+      "correctAnswer": "D",
+      "userAnswer": "C"
+    }
+  ]
+}
