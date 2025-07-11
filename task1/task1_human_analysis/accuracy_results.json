@@ -1,0 +1,728 @@
+{
+  "claude-3-7-sonnet-thinking epoch1.txt": {
+    "fold_1": {
+      "correct": 32,
+      "total": 122,
+      "accuracy": "26.23"
+    },
+    "fold_2": {
+      "correct": 55,
+      "total": 200,
+      "accuracy": "27.50"
+    },
+    "fold_3": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "others": {
+      "correct": 20,
+      "total": 78,
+      "accuracy": "25.64"
+    }
+  },
+  "claude-3-7-sonnet-thinking epoch2.txt": {
+    "fold_1": {
+      "correct": 29,
+      "total": 122,
+      "accuracy": "23.77"
+    },
+    "fold_2": {
+      "correct": 75,
+      "total": 200,
+      "accuracy": "37.50"
+    },
+    "fold_3": {
+      "correct": 66,
+      "total": 200,
+      "accuracy": "33.00"
+    },
+    "others": {
+      "correct": 24,
+      "total": 78,
+      "accuracy": "30.77"
+    }
+  },
+  "claude-3-7-sonnet-thinking epoch3.txt": {
+    "fold_1": {
+      "correct": 39,
+      "total": 122,
+      "accuracy": "31.97"
+    },
+    "fold_2": {
+      "correct": 66,
+      "total": 200,
+      "accuracy": "33.00"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 20,
+      "total": 78,
+      "accuracy": "25.64"
+    }
+  },
+  "doubao-seed-1-6 epoch1.txt": {
+    "fold_1": {
+      "correct": 39,
+      "total": 122,
+      "accuracy": "31.97"
+    },
+    "fold_2": {
+      "correct": 85,
+      "total": 200,
+      "accuracy": "42.50"
+    },
+    "fold_3": {
+      "correct": 88,
+      "total": 200,
+      "accuracy": "44.00"
+    },
+    "others": {
+      "correct": 28,
+      "total": 78,
+      "accuracy": "35.90"
+    }
+  },
+  "doubao-seed-1-6-flash-250615 epoch1.txt": {
+    "fold_1": {
+      "correct": 50,
+      "total": 122,
+      "accuracy": "40.98"
+    },
+    "fold_2": {
+      "correct": 91,
+      "total": 200,
+      "accuracy": "45.50"
+    },
+    "fold_3": {
+      "correct": 87,
+      "total": 200,
+      "accuracy": "43.50"
+    },
+    "others": {
+      "correct": 22,
+      "total": 78,
+      "accuracy": "28.21"
+    }
+  },
+  "doubao-seed-1-6-flash-250615 epoch2.txt": {
+    "fold_1": {
+      "correct": 51,
+      "total": 122,
+      "accuracy": "41.80"
+    },
+    "fold_2": {
+      "correct": 83,
+      "total": 200,
+      "accuracy": "41.50"
+    },
+    "fold_3": {
+      "correct": 82,
+      "total": 200,
+      "accuracy": "41.00"
+    },
+    "others": {
+      "correct": 25,
+      "total": 78,
+      "accuracy": "32.05"
+    }
+  },
+  "doubao-seed-1-6-flash-250615 epoch3.txt": {
+    "fold_1": {
+      "correct": 45,
+      "total": 122,
+      "accuracy": "36.89"
+    },
+    "fold_2": {
+      "correct": 82,
+      "total": 200,
+      "accuracy": "41.00"
+    },
+    "fold_3": {
+      "correct": 90,
+      "total": 200,
+      "accuracy": "45.00"
+    },
+    "others": {
+      "correct": 22,
+      "total": 78,
+      "accuracy": "28.21"
+    }
+  },
+  "gemini-2.5-flash epoch1.txt": {
+    "fold_1": {
+      "correct": 32,
+      "total": 122,
+      "accuracy": "26.23"
+    },
+    "fold_2": {
+      "correct": 63,
+      "total": 200,
+      "accuracy": "31.50"
+    },
+    "fold_3": {
+      "correct": 57,
+      "total": 200,
+      "accuracy": "28.50"
+    },
+    "others": {
+      "correct": 25,
+      "total": 78,
+      "accuracy": "32.05"
+    }
+  },
+  "gemini-2.5-flash epoch2.txt": {
+    "fold_1": {
+      "correct": 34,
+      "total": 122,
+      "accuracy": "27.87"
+    },
+    "fold_2": {
+      "correct": 68,
+      "total": 200,
+      "accuracy": "34.00"
+    },
+    "fold_3": {
+      "correct": 55,
+      "total": 200,
+      "accuracy": "27.50"
+    },
+    "others": {
+      "correct": 22,
+      "total": 78,
+      "accuracy": "28.21"
+    }
+  },
+  "gemini-2.5-flash epoch3.txt": {
+    "fold_1": {
+      "correct": 33,
+      "total": 122,
+      "accuracy": "27.05"
+    },
+    "fold_2": {
+      "correct": 63,
+      "total": 200,
+      "accuracy": "31.50"
+    },
+    "fold_3": {
+      "correct": 48,
+      "total": 200,
+      "accuracy": "24.00"
+    },
+    "others": {
+      "correct": 22,
+      "total": 78,
+      "accuracy": "28.21"
+    }
+  },
+  "GLM-4-plus epoch1.txt": {
+    "fold_1": {
+      "correct": 24,
+      "total": 122,
+      "accuracy": "19.67"
+    },
+    "fold_2": {
+      "correct": 49,
+      "total": 200,
+      "accuracy": "24.50"
+    },
+    "fold_3": {
+      "correct": 49,
+      "total": 200,
+      "accuracy": "24.50"
+    },
+    "others": {
+      "correct": 24,
+      "total": 78,
+      "accuracy": "30.77"
+    }
+  },
+  "GLM-4-plus epoch2.txt": {
+    "fold_1": {
+      "correct": 24,
+      "total": 122,
+      "accuracy": "19.67"
+    },
+    "fold_2": {
+      "correct": 49,
+      "total": 200,
+      "accuracy": "24.50"
+    },
+    "fold_3": {
+      "correct": 49,
+      "total": 200,
+      "accuracy": "24.50"
+    },
+    "others": {
+      "correct": 24,
+      "total": 78,
+      "accuracy": "30.77"
+    }
+  },
+  "GLM-4-plus epoch3.txt": {
+    "fold_1": {
+      "correct": 25,
+      "total": 122,
+      "accuracy": "20.49"
+    },
+    "fold_2": {
+      "correct": 50,
+      "total": 200,
+      "accuracy": "25.00"
+    },
+    "fold_3": {
+      "correct": 48,
+      "total": 200,
+      "accuracy": "24.00"
+    },
+    "others": {
+      "correct": 25,
+      "total": 78,
+      "accuracy": "32.05"
+    }
+  },
+  "GLM-4.1V-Thinking-Flash epoch1.txt": {
+    "fold_1": {
+      "correct": 42,
+      "total": 122,
+      "accuracy": "34.43"
+    },
+    "fold_2": {
+      "correct": 94,
+      "total": 200,
+      "accuracy": "47.00"
+    },
+    "fold_3": {
+      "correct": 89,
+      "total": 200,
+      "accuracy": "44.50"
+    },
+    "others": {
+      "correct": 19,
+      "total": 78,
+      "accuracy": "24.36"
+    }
+  },
+  "GLM-4.1V-Thinking-Flash epoch2.txt": {
+    "fold_1": {
+      "correct": 45,
+      "total": 122,
+      "accuracy": "36.89"
+    },
+    "fold_2": {
+      "correct": 93,
+      "total": 200,
+      "accuracy": "46.50"
+    },
+    "fold_3": {
+      "correct": 90,
+      "total": 200,
+      "accuracy": "45.00"
+    },
+    "others": {
+      "correct": 18,
+      "total": 78,
+      "accuracy": "23.08"
+    }
+  },
+  "GLM-4.1V-Thinking-Flash epoch3.txt": {
+    "fold_1": {
+      "correct": 46,
+      "total": 122,
+      "accuracy": "37.70"
+    },
+    "fold_2": {
+      "correct": 91,
+      "total": 200,
+      "accuracy": "45.50"
+    },
+    "fold_3": {
+      "correct": 96,
+      "total": 200,
+      "accuracy": "48.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  },
+  "GLM-Z1-Airx epoch1.txt": {
+    "fold_1": {
+      "correct": 21,
+      "total": 122,
+      "accuracy": "17.21"
+    },
+    "fold_2": {
+      "correct": 46,
+      "total": 200,
+      "accuracy": "23.00"
+    },
+    "fold_3": {
+      "correct": 45,
+      "total": 200,
+      "accuracy": "22.50"
+    },
+    "others": {
+      "correct": 23,
+      "total": 78,
+      "accuracy": "29.49"
+    }
+  },
+  "GLM-Z1-Airx epoch2.txt": {
+    "fold_1": {
+      "correct": 30,
+      "total": 122,
+      "accuracy": "24.59"
+    },
+    "fold_2": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "fold_3": {
+      "correct": 45,
+      "total": 200,
+      "accuracy": "22.50"
+    },
+    "others": {
+      "correct": 16,
+      "total": 78,
+      "accuracy": "20.51"
+    }
+  },
+  "GLM-Z1-Airx epoch3.txt": {
+    "fold_1": {
+      "correct": 29,
+      "total": 122,
+      "accuracy": "23.77"
+    },
+    "fold_2": {
+      "correct": 42,
+      "total": 200,
+      "accuracy": "21.00"
+    },
+    "fold_3": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  },
+  "GPT-4o epoch1.txt": {
+    "fold_1": {
+      "correct": 36,
+      "total": 122,
+      "accuracy": "29.51"
+    },
+    "fold_2": {
+      "correct": 58,
+      "total": 200,
+      "accuracy": "29.00"
+    },
+    "fold_3": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "others": {
+      "correct": 25,
+      "total": 78,
+      "accuracy": "32.05"
+    }
+  },
+  "GPT-4o epoch2.txt": {
+    "fold_1": {
+      "correct": 39,
+      "total": 122,
+      "accuracy": "31.97"
+    },
+    "fold_2": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "fold_3": {
+      "correct": 57,
+      "total": 200,
+      "accuracy": "28.50"
+    },
+    "others": {
+      "correct": 21,
+      "total": 78,
+      "accuracy": "26.92"
+    }
+  },
+  "GPT-4o epoch3.txt": {
+    "fold_1": {
+      "correct": 29,
+      "total": 122,
+      "accuracy": "23.77"
+    },
+    "fold_2": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "fold_3": {
+      "correct": 50,
+      "total": 200,
+      "accuracy": "25.00"
+    },
+    "others": {
+      "correct": 21,
+      "total": 78,
+      "accuracy": "26.92"
+    }
+  },
+  "GPT-4o-mini epoch1.txt": {
+    "fold_1": {
+      "correct": 26,
+      "total": 122,
+      "accuracy": "21.31"
+    },
+    "fold_2": {
+      "correct": 51,
+      "total": 200,
+      "accuracy": "25.50"
+    },
+    "fold_3": {
+      "correct": 50,
+      "total": 200,
+      "accuracy": "25.00"
+    },
+    "others": {
+      "correct": 19,
+      "total": 78,
+      "accuracy": "24.36"
+    }
+  },
+  "GPT-4o-mini epoch2.txt": {
+    "fold_1": {
+      "correct": 37,
+      "total": 122,
+      "accuracy": "30.33"
+    },
+    "fold_2": {
+      "correct": 58,
+      "total": 200,
+      "accuracy": "29.00"
+    },
+    "fold_3": {
+      "correct": 51,
+      "total": 200,
+      "accuracy": "25.50"
+    },
+    "others": {
+      "correct": 15,
+      "total": 78,
+      "accuracy": "19.23"
+    }
+  },
+  "GPT-4o-mini epoch3.txt": {
+    "fold_1": {
+      "correct": 34,
+      "total": 122,
+      "accuracy": "27.87"
+    },
+    "fold_2": {
+      "correct": 53,
+      "total": 200,
+      "accuracy": "26.50"
+    },
+    "fold_3": {
+      "correct": 58,
+      "total": 200,
+      "accuracy": "29.00"
+    },
+    "others": {
+      "correct": 14,
+      "total": 78,
+      "accuracy": "17.95"
+    }
+  },
+  "GPT-o4-mini epoch1.txt": {
+    "fold_1": {
+      "correct": 42,
+      "total": 122,
+      "accuracy": "34.43"
+    },
+    "fold_2": {
+      "correct": 71,
+      "total": 200,
+      "accuracy": "35.50"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 21,
+      "total": 78,
+      "accuracy": "26.92"
+    }
+  },
+  "qwen2-vl-72b-instruct epoch1.txt": {
+    "fold_1": {
+      "correct": 32,
+      "total": 122,
+      "accuracy": "26.23"
+    },
+    "fold_2": {
+      "correct": 52,
+      "total": 200,
+      "accuracy": "26.00"
+    },
+    "fold_3": {
+      "correct": 58,
+      "total": 200,
+      "accuracy": "29.00"
+    },
+    "others": {
+      "correct": 19,
+      "total": 78,
+      "accuracy": "24.36"
+    }
+  },
+  "qwen2-vl-72b-instruct epoch2.txt": {
+    "fold_1": {
+      "correct": 37,
+      "total": 122,
+      "accuracy": "30.33"
+    },
+    "fold_2": {
+      "correct": 85,
+      "total": 200,
+      "accuracy": "42.50"
+    },
+    "fold_3": {
+      "correct": 68,
+      "total": 200,
+      "accuracy": "34.00"
+    },
+    "others": {
+      "correct": 18,
+      "total": 78,
+      "accuracy": "23.08"
+    }
+  },
+  "qwen2-vl-72b-instruct epoch3.txt": {
+    "fold_1": {
+      "correct": 41,
+      "total": 122,
+      "accuracy": "33.61"
+    },
+    "fold_2": {
+      "correct": 78,
+      "total": 200,
+      "accuracy": "39.00"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 21,
+      "total": 78,
+      "accuracy": "26.92"
+    }
+  },
+  "qwen2.5-vl-72b-instruct epoch1.txt": {
+    "fold_1": {
+      "correct": 40,
+      "total": 122,
+      "accuracy": "32.79"
+    },
+    "fold_2": {
+      "correct": 70,
+      "total": 200,
+      "accuracy": "35.00"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  },
+  "qwen2.5-vl-72b-instruct epoch2.txt": {
+    "fold_1": {
+      "correct": 41,
+      "total": 122,
+      "accuracy": "33.61"
+    },
+    "fold_2": {
+      "correct": 70,
+      "total": 200,
+      "accuracy": "35.00"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  },
+  "qwen2.5-vl-72b-instruct epoch3.txt": {
+    "fold_1": {
+      "correct": 40,
+      "total": 122,
+      "accuracy": "32.79"
+    },
+    "fold_2": {
+      "correct": 69,
+      "total": 200,
+      "accuracy": "34.50"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  },
+  "qwen2.5-vl-72b-instruct epoch4.txt": {
+    "fold_1": {
+      "correct": 40,
+      "total": 122,
+      "accuracy": "32.79"
+    },
+    "fold_2": {
+      "correct": 70,
+      "total": 200,
+      "accuracy": "35.00"
+    },
+    "fold_3": {
+      "correct": 62,
+      "total": 200,
+      "accuracy": "31.00"
+    },
+    "others": {
+      "correct": 17,
+      "total": 78,
+      "accuracy": "21.79"
+    }
+  }
+}

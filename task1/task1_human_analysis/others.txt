@@ -1,0 +1,81 @@
+ fold_1/Hexagon_001.png
+ fold_1/Hexagon_002.png
+ fold_1/Hexagon_003.png
+ fold_1/Hexagon_004.png
+ fold_1/Hexagon_005.png
+ fold_1/Hexagon_007.png
+ fold_1/Hexagon_008.png
+ fold_1/Hexagon_009.png
+ fold_1/Hexagon_010.png
+ fold_1/Hexagon_012.png
+ fold_1/Hexagon_013.png
+ fold_1/Hexagon_014.png
+ fold_1/Hexagon_015.png
+ fold_1/Hexagon_017.png
+ fold_1/Hexagon_018.png
+ fold_1/Hexagon_019.png
+ fold_1/Hexagon_020.png
+ fold_1/Hexagon_021.png
+fold_1/Hexagon_022.png
+fold_1/Hexagon_024.png
+fold_1/Hexagon_025.png
+fold_1/Hexagon_026.png
+fold_1/Hexagon_027.png
+fold_1/Hexagon_029.png
+fold_1/Hexagon_030.png
+fold_1/Hexagon_031.png
+fold_1/Hexagon_030.png
+fold_1/Hexagon_032.png
+fold_1/Hexagon_033.png
+fold_1/Hexagon_034.png
+fold_1/Hexagon_035.png
+fold_1/Hexagon_036.png
+fold_1/Hexagon_037.png
+fold_1/Hexagon_038.png
+fold_1/Hexagon_039.png
+fold_1/Hexagon_040.png
+fold_1/House_009.png
+fold_1/House_011.png
+fold_1/House_014.png
+fold_1/House_017.png
+fold_1/House_019.png
+fold_1/House_020.png
+fold_1/House_021.png
+fold_1/House_022.png
+fold_1/House_024.png
+fold_1/House_025.png
+fold_1/House_027.png
+fold_1/House_038.png
+fold_1/Rectangle_003.png
+fold_1/Rectangle_004.png
+fold_1/Rectangle_005.png
+fold_1/Rectangle_008.png
+fold_1/Rectangle_011.png
+fold_1/Rectangle_012.png
+fold_1/Rectangle_013.png
+fold_1/Rectangle_014.png
+fold_1/Rectangle_015.png
+fold_1/Rectangle_017.png
+fold_1/Rectangle_018.png
+fold_1/Rectangle_019.png
+fold_1/Rectangle_020.png
+fold_1/Rectangle_022.png
+fold_1/Rectangle_023.png
+fold_1/Rectangle_025.png
+fold_1/Rectangle_027.png
+fold_1/Rectangle_029.png
+fold_1/Rectangle_030.png
+fold_1/Rectangle_031.png
+fold_1/Rectangle_033.png
+fold_1/Rectangle_034.png
+fold_1/Rectangle_035.png
+fold_1/Rectangle_036.png
+fold_1/Rectangle_037.png
+fold_1/Rectangle_038.png
+fold_1/square_005.png
+fold_1/square_006.png
+fold_1/square_019.png
+fold_1/square_039.png
+fold_1/square_040.png
+
+
