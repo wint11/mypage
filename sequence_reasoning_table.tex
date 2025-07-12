@@ -8,35 +8,37 @@
 \begin{document}
 
 
-\begin{table}[t]
+\begin{table}[b]
+% \setlength{\tabcolsep}{1mm} 
 \centering
-\caption{MLLM Performance on Sequence Reasoning}
-\label{tab:sequence_reasoning}
-\begin{tabular}{l|ccccc}
+\begin{tabular}{l|cccc}
 \toprule
-\multirow{2}{*}{\textbf{Models}} & \multicolumn{5}{c}{\textbf{sequence reasoning}} \\
- & \textbf{1-fold} & \textbf{2-fold} & \textbf{3-fold} & \textbf{others} & \textbf{overall} \\
+\multirow{2}{*}{\textbf{Models}} & \multicolumn{4}{c}{\textbf{Rules Induction Reasoning}} \\
+ & \textbf{1-Fold} & \textbf{2-Fold} & \textbf{Others} & \textbf{Overall} \\
 \midrule
-\rowcolor{yellow!20}\multicolumn{6}{l}{\textbf{\textit{Proprietary}}} \\
-Doubao1.6-Flash &\cellcolor{gray!30}\textbf{40.98} &45.50 &43.50 &28.21 &\cellcolor{gray!30}\textbf{41.67} \\
-Qwen2.5-VL-72B &33.61 &35.00 &31.00 &21.79 & 31.67\\
-Qwen2-VL-72B &30.33 &42.50 & 34.00&23.08 &34.67 \\
-GPT-4o-Mini &30.33 & 29.00& 25.50&19.23 &26.83 \\
-GPT-4o & 31.97&31.00 &28.50 & 26.92&29.83 \\
-Gemini-2.5-Flash &26.23 &31.5 & 28.50&\cellcolor{gray!30}\textbf{32.05} &29.5 \\
-GLM-4.1V-Flash & 37.70& \cellcolor{gray!30}\textbf{45.50}&\cellcolor{gray!30}\textbf{48.00} & 21.79&\cellcolor{gray!30}\textbf{41.67} \\
-Claude-3.7-Sonnet &31.97 &33.00 &31.00 & 25.64& 31.17\\
+\rowcolor{yellow!20}\multicolumn{5}{l}{\textbf{\textit{Proprietary}}} \\
+Doubao1.6-Flash &27.00 &28.00 &15.50 &23.50 \\
+GPT-4o-mini &28.00 &30.50&25.50 &28.00 \\
+GPT-4o & 29.50&29.50 & 21.00&26.67 \\
+o4-mini & \cellcolor{gray!30}44.50&34.00 & \cellcolor{gray!30}35.00&\cellcolor{gray!30}37.83 \\
+Gemini-2.5-Flash &29.00 &\cellcolor{gray!30}42.00 &24.50 &31.83 \\
+Sonnet-3.7-Thinking &40.00 &35.50 & 21.00& 32.17\\
 \midrule
-\rowcolor{yellow!20}\multicolumn{6}{l}{\textbf{\textit{Open-source}}} \\
-Qwen2.5-VL-7B &26.00 &27.50 & 24.50&24.00 & 25.5\\
-Pixtral-12B &25.00 & 26.00& 27.00& 24.00& 25.5\\
-Idefics3-8B-Llama3 &27.00 &26.00 &25.00 & 25.50&25.63 \\
-InternVL2.5-8B & 19.00& 20.00& 28.00&23.00 & 22.50\\
-MiniCPM-V-2.6 & 25.50& 25.50&17.00 & 19.00& 21.75\\
+\rowcolor{yellow!20}\multicolumn{5}{l}{\textbf{\textit{Open-source}}} \\
+GLM-4.1V-Flash & 26.50& 28.50& 21.00&25.33 \\
+Qwen2.5-VL-7B &26.00 &27.50 &24.00 & 25.50\\
+Qwen2.5-VL-72B &23.50 &27.00 &27.00 & 25.83\\
+Qwen2-VL-72B &24.50 &23.50 &21.00 &23.00 \\
+Pixtral-12B &22.13 & 26.50& 30.77& 25.50\\
+Idefics3-8B-Llama3 &31.97 &27.00 & 14.10&25.27 \\
+InternVL2.5-8B & 18.85& 20.00&19.23 & 21.52\\
+MiniCPM-V-2.6 & 24.59& 25.50& 17.95& 21.26\\
 \midrule
-Human&85.25&80.50&67.50&60.30&72.64\\
+Human&85.25&80.50&60.30&72.64\\
 \bottomrule
 \end{tabular}
+\caption{Evaluation on Rules Induction Reasoning.}
+\label{tab:rules induction}
 \end{table}
 
 \end{document}

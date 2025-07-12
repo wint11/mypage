@@ -113,7 +113,27 @@ class AccuracyCalculator {
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
         const files = [
-            'GPT-4o-mini epoch1_fixed.txt',
+            'GLM-4.1V-Thinking-Flash epoch1.txt',
+            'GLM-4.1V-Thinking-Flash epoch2.txt',
+            'GLM-4.1V-Thinking-Flash epoch3.txt',
+            'GPT-4o epoch1.txt',
+            'GPT-4o epoch2.txt',
+            'GPT-4o epoch3.txt',
+            'GPT-4o-mini epoch1.txt',
+            'GPT-4o-mini epoch2.txt',
+            'GPT-4o-mini epoch3.txt',
+            'GPT-o4-mini epoch1.txt',
+            'claude-3-7-sonnet epoch1.txt',
+            'doubao-seed-1-6-flash-250615 epoch1.txt',
+            'doubao-seed-1-6-flash-250615 epoch2.txt',
+            'doubao-seed-1-6-flash-250615 epoch3.txt',
+            'gemini-2.5-flash epoch1.txt',
+            'qwen2-vl-72b epoch1.txt',
+            'qwen2-vl-72b epoch2.txt',
+            'qwen2-vl-72b epoch3.txt',
+            'qwen2.5-vl-72b epoch1.txt',
+            'qwen2.5-vl-72b epoch2.txt',
+            'qwen2.5-vl-72b epoch3.txt'
         ];
         
         console.log('开始分析实验数据...');
