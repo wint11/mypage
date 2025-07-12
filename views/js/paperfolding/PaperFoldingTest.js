@@ -5,6 +5,7 @@ import { Downloader } from './Downloader.js';
 import { Filter } from './Filter.js';
 import { Task1Filter } from './task1Filter.js';
 import { Task2Filter } from './task2Filter.js';
+import { Task3Filter } from './task3Filter.js';
 import { RandomUtils } from './RandomUtils.js';
 import { InstructionsPage } from './InstructionsPage.js';
 
@@ -20,6 +21,7 @@ export class PaperFoldingTest {
     this.filter = new Filter();
     this.task1Filter = new Task1Filter();
     this.task2Filter = new Task2Filter();
+    this.task3Filter = new Task3Filter();
     this.instructionsPage = new InstructionsPage();
     
     this.allQuestions = [];
@@ -71,13 +73,17 @@ export class PaperFoldingTest {
       
       // 在邀请码模式下，强制清除筛选器缓存并重新初始化
       if (inviteCodeData) {
-        this.getCurrentFilter().clearStoredQuestions();
-        this.getCurrentFilter().baseQuestions = null;
+        if (this.currentTask !== 'task3') {
+          this.getCurrentFilter().clearStoredQuestions();
+          this.getCurrentFilter().baseQuestions = null;
+        }
         console.log('邀请码模式：已清除筛选器缓存，强制重新生成');
       }
       
-      // 初始化筛选器
-      this.getCurrentFilter().initializeFilter(this.allQuestions);
+      // 初始化筛选器（task3已在loadQuestions中初始化）
+      if (this.currentTask !== 'task3') {
+        this.getCurrentFilter().initializeFilter(this.allQuestions);
+      }
       
       // 确保UI按钮状态与当前任务保持一致
       this.syncTaskButtonState();
@@ -122,7 +128,13 @@ export class PaperFoldingTest {
       // 检查是否为常规模式
       if (inviteCodeData.isRegularMode) {
         // 常规模式：根据当前任务加载对应的题库
-        if (this.currentTask === 'task2') {
+        if (this.currentTask === 'task3') {
+          // 加载task3数据 - 直接使用task3Filter的初始化方法
+          await this.task3Filter.initializeFilter();
+          // 默认选择第一个题目集
+          this.task3Filter.selectQuestionSet(0);
+          this.allQuestions = this.task3Filter.getFilteredQuestions();
+        } else if (this.currentTask === 'task2') {
           // 加载task2数据
           await this.loadTask2Questions();
         } else {
@@ -158,9 +170,12 @@ export class PaperFoldingTest {
           localStorage.removeItem('paperfolding_questions_task1');
           // 清除task2题目缓存
           localStorage.removeItem('paperfolding_questions_task2');
+          // 清除task3题目缓存
+          localStorage.removeItem('paperfolding_task3_selection');
           // 清除答案缓存
           localStorage.removeItem('paperfolding_answers_task1');
           localStorage.removeItem('paperfolding_answers_task2');
+          localStorage.removeItem('paperfolding_answers_task3');
           console.log('已清除localStorage中的题目和答案缓存');
         } catch (error) {
           console.warn('清除localStorage缓存失败:', error);
@@ -168,7 +183,9 @@ export class PaperFoldingTest {
         
         // 根据当前任务确定题目集文件路径
         let questionSetsPath;
-        if (this.currentTask === 'task2') {
+        if (this.currentTask === 'task3') {
+          questionSetsPath = '../task3/all_question_sets.json';
+        } else if (this.currentTask === 'task2') {
           questionSetsPath = '../task2/all_question_sets.json';
         } else {
           questionSetsPath = '../task1/all_question_sets.json';
@@ -193,7 +210,10 @@ export class PaperFoldingTest {
           // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
           if (question.image) {
             // 根据当前任务设置正确的图片基础路径
-            if (this.currentTask === 'task2') {
+            if (this.currentTask === 'task3') {
+              // task3的图片路径
+              question.image_path = '../task3/task3_selected/' + question.image;
+            } else if (this.currentTask === 'task2') {
               // task2的图片路径需要根据实际情况调整
               question.image_path = '../task2/task2_selected/' + question.image;
             } else {
@@ -299,7 +319,9 @@ export class PaperFoldingTest {
    * 获取当前筛选器
    */
   getCurrentFilter() {
-    if (this.currentTask === 'task2') {
+    if (this.currentTask === 'task3') {
+      return this.task3Filter;
+    } else if (this.currentTask === 'task2') {
       return this.task2Filter;
     } else {
       return this.task1Filter;
@@ -322,9 +344,22 @@ export class PaperFoldingTest {
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(btn => {
       const filterType = btn.dataset.filter;
-      if (filterType === '5') {
-        // 任务二时将"5步折叠"改为"其它折叠"
-        if (this.currentTask === 'task2') {
+      if (filterType === '3') {
+        if (this.currentTask === 'task3') {
+          btn.textContent = '题目集1';
+        } else {
+          btn.textContent = '3步折叠';
+        }
+      } else if (filterType === '4') {
+        if (this.currentTask === 'task3') {
+          btn.textContent = '题目集2';
+        } else {
+          btn.textContent = '4步折叠';
+        }
+      } else if (filterType === '5') {
+        if (this.currentTask === 'task3') {
+          btn.textContent = '题目集3';
+        } else if (this.currentTask === 'task2') {
           btn.textContent = '其它折叠';
         } else {
           btn.textContent = '5步折叠';
@@ -363,12 +398,16 @@ export class PaperFoldingTest {
       await this.loadQuestions(this.currentInviteCodeData);
       
       // 在切换任务时，强制清除筛选器缓存并重新初始化
-      this.getCurrentFilter().clearStoredQuestions();
-      this.getCurrentFilter().baseQuestions = null;
-      console.log('任务切换：已清除筛选器缓存，强制重新生成');
-      
-      // 重新初始化筛选器
-      this.getCurrentFilter().initializeFilter(this.allQuestions);
+      if (this.currentTask !== 'task3') {
+        this.getCurrentFilter().clearStoredQuestions();
+        this.getCurrentFilter().baseQuestions = null;
+        console.log('任务切换：已清除筛选器缓存，强制重新生成');
+        
+        // 重新初始化筛选器
+        this.getCurrentFilter().initializeFilter(this.allQuestions);
+      } else {
+        console.log('任务切换到task3：题目已在loadQuestions中初始化');
+      }
       
       // 重新显示题目
       this.displayQuestion(0);
@@ -391,7 +430,13 @@ export class PaperFoldingTest {
         z-index: 10000;
         font-size: 14px;
       `;
-      statusDiv.textContent = `已切换到${task === 'task2' ? '任务贰' : '任务壹'}`;
+      let taskName = '任务壹';
+      if (task === 'task2') {
+        taskName = '任务贰';
+      } else if (task === 'task3') {
+        taskName = '任务叁';
+      }
+      statusDiv.textContent = `已切换到${taskName}`;
       document.body.appendChild(statusDiv);
       
       setTimeout(() => {
@@ -855,7 +900,12 @@ export class PaperFoldingTest {
         version: this.currentVersion,
         timestamp: Date.now()
       };
-      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      let answerKey = 'paperfolding_answers_task1';
+      if (this.currentTask === 'task2') {
+        answerKey = 'paperfolding_answers_task2';
+      } else if (this.currentTask === 'task3') {
+        answerKey = 'paperfolding_answers_task3';
+      }
       localStorage.setItem(answerKey, JSON.stringify(data));
     } catch (error) {
       console.error('保存答案失败:', error);
@@ -867,7 +917,12 @@ export class PaperFoldingTest {
    */
   loadAnswersFromStorage() {
     try {
-      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      let answerKey = 'paperfolding_answers_task1';
+      if (this.currentTask === 'task2') {
+        answerKey = 'paperfolding_answers_task2';
+      } else if (this.currentTask === 'task3') {
+        answerKey = 'paperfolding_answers_task3';
+      }
       const stored = localStorage.getItem(answerKey);
       if (stored) {
         const data = JSON.parse(stored);
@@ -888,7 +943,12 @@ export class PaperFoldingTest {
    */
   clearStoredAnswers() {
     try {
-      const answerKey = this.currentTask === 'task1' ? 'paperfolding_answers_task1' : 'paperfolding_answers_task2';
+      let answerKey = 'paperfolding_answers_task1';
+      if (this.currentTask === 'task2') {
+        answerKey = 'paperfolding_answers_task2';
+      } else if (this.currentTask === 'task3') {
+        answerKey = 'paperfolding_answers_task3';
+      }
       localStorage.removeItem(answerKey);
       console.log('已清除存储的答案');
     } catch (error) {
