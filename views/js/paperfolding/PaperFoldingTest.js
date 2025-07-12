@@ -27,9 +27,15 @@ export class PaperFoldingTest {
     this.userAnswers = {};
     this.startTime = null;
     this.currentVersion = 'A';
-    this.currentTask = 'task1'; // 当前任务
+    this.currentTask = 'task2'; // 当前任务，与HTML中默认激活的任务贰保持一致
     this.isInitialized = false;
     this.currentInviteCodeData = null; // 当前使用的邀请码数据
+    
+    // 缩放相关属性
+    this.zoomLevel = 1.0; // 当前缩放级别
+    this.minZoom = 0.5; // 最小缩放级别
+    this.maxZoom = 2.0; // 最大缩放级别
+    this.zoomStep = 0.1; // 缩放步长
     
     this.setupInstructionsPage();
   }
@@ -63,8 +69,21 @@ export class PaperFoldingTest {
       this.setupEventListeners();
       this.loadAnswersFromStorage();
       
+      // 在邀请码模式下，强制清除筛选器缓存并重新初始化
+      if (inviteCodeData) {
+        this.getCurrentFilter().clearStoredQuestions();
+        this.getCurrentFilter().baseQuestions = null;
+        console.log('邀请码模式：已清除筛选器缓存，强制重新生成');
+      }
+      
       // 初始化筛选器
       this.getCurrentFilter().initializeFilter(this.allQuestions);
+      
+      // 确保UI按钮状态与当前任务保持一致
+      this.syncTaskButtonState();
+      
+      // 更新筛选按钮文字
+      this.updateFilterButtonTexts();
       
       this.displayQuestion(0);
       this.updateProgress();
@@ -75,6 +94,9 @@ export class PaperFoldingTest {
       
       // 开始预加载
       this.preloadCurrentQuestion();
+      
+      // 初始化缩放按钮状态
+      this.updateZoomButtons();
       
       // 记录开始时间
       this.startTime = new Date();
@@ -144,8 +166,16 @@ export class PaperFoldingTest {
           console.warn('清除localStorage缓存失败:', error);
         }
         
-        // 加载所有题目集数据
-        const response = await fetch('../task1/all_question_sets.json');
+        // 根据当前任务确定题目集文件路径
+        let questionSetsPath;
+        if (this.currentTask === 'task2') {
+          questionSetsPath = '../task2/all_question_sets.json';
+        } else {
+          questionSetsPath = '../task1/all_question_sets.json';
+        }
+        
+        // 加载对应任务的题目集数据
+        const response = await fetch(questionSetsPath);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -162,7 +192,13 @@ export class PaperFoldingTest {
         this.allQuestions = targetQuestionSet.questions.map(question => {
           // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
           if (question.image) {
-            question.image_path = this.config.getImageBasePath() + question.image;
+            // 根据当前任务设置正确的图片基础路径
+            if (this.currentTask === 'task2') {
+              // task2的图片路径需要根据实际情况调整
+              question.image_path = '../task2/task2_selected/' + question.image;
+            } else {
+              question.image_path = this.config.getImageBasePath() + question.image;
+            }
           }
           return question;
         });
@@ -271,6 +307,34 @@ export class PaperFoldingTest {
   }
   
   /**
+   * 同步任务按钮状态
+   */
+  syncTaskButtonState() {
+    document.querySelectorAll('.version-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.version === this.currentTask);
+    });
+  }
+
+  /**
+   * 更新筛选按钮文字
+   */
+  updateFilterButtonTexts() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+      const filterType = btn.dataset.filter;
+      if (filterType === '5') {
+        // 任务二时将"5步折叠"改为"其它折叠"
+        if (this.currentTask === 'task2') {
+          btn.textContent = '其它折叠';
+        } else {
+          btn.textContent = '5步折叠';
+        }
+      }
+    });
+    console.log(`筛选按钮文字已更新为当前任务: ${this.currentTask}`);
+  }
+
+  /**
    * 切换任务
    */
   async switchTask(task) {
@@ -291,9 +355,17 @@ export class PaperFoldingTest {
       btn.classList.toggle('active', btn.dataset.version === task);
     });
     
+    // 更新筛选按钮文字
+    this.updateFilterButtonTexts();
+    
     // 重新加载题目数据
     try {
       await this.loadQuestions(this.currentInviteCodeData);
+      
+      // 在切换任务时，强制清除筛选器缓存并重新初始化
+      this.getCurrentFilter().clearStoredQuestions();
+      this.getCurrentFilter().baseQuestions = null;
+      console.log('任务切换：已清除筛选器缓存，强制重新生成');
       
       // 重新初始化筛选器
       this.getCurrentFilter().initializeFilter(this.allQuestions);
@@ -451,6 +523,18 @@ export class PaperFoldingTest {
         this.quickSelectOption();
       });
     }
+    
+    // 缩放控制按钮
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener('click', () => this.zoomIn());
+    }
+    
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener('click', () => this.zoomOut());
+    }
   }
 
   /**
@@ -532,6 +616,9 @@ export class PaperFoldingTest {
     // 预加载当前题目
     this.preloadCurrentQuestion();
     
+    // 更新缩放按钮状态
+    this.updateZoomButtons();
+    
     // 记录开始时间
     if (!this.startTime) {
       this.startTime = Date.now();
@@ -548,6 +635,8 @@ export class PaperFoldingTest {
       const cachedImage = this.imageCache.getCachedImage(imagePath);
       if (cachedImage) {
         stemImages.innerHTML = `<img src="${cachedImage}" alt="题目图片" style="max-width: 100%; height: auto;">`;
+        // 重新应用当前缩放级别
+        this.applyZoom();
       } else {
         // 显示加载状态
         stemImages.innerHTML = '<div class="loading-placeholder">加载中...</div>';
@@ -555,6 +644,8 @@ export class PaperFoldingTest {
         // 异步加载图片
         this.imageCache.preloadImage(imagePath).then((imageSrc) => {
           stemImages.innerHTML = `<img src="${imageSrc}" alt="题目图片" style="max-width: 100%; height: auto;">`;
+          // 重新应用当前缩放级别
+          this.applyZoom();
         }).catch(error => {
           console.error('加载图片失败:', error);
           stemImages.innerHTML = '<div class="error-placeholder">图片加载失败</div>';
@@ -1335,6 +1426,80 @@ export class PaperFoldingTest {
       console.error('下载Excel文件失败:', error);
       alert('下载失败，请稍后重试');
     }
+  }
+
+  /**
+   * 放大题干区域
+   */
+  zoomIn() {
+    if (this.zoomLevel < this.maxZoom) {
+      this.zoomLevel = Math.min(this.maxZoom, this.zoomLevel + this.zoomStep);
+      this.applyZoom();
+      this.updateZoomButtons();
+    }
+  }
+
+  /**
+   * 缩小题干区域
+   */
+  zoomOut() {
+    if (this.zoomLevel > this.minZoom) {
+      this.zoomLevel = Math.max(this.minZoom, this.zoomLevel - this.zoomStep);
+      this.applyZoom();
+      this.updateZoomButtons();
+    }
+  }
+
+  /**
+   * 应用缩放变换
+   */
+  applyZoom() {
+    const stemImages = document.querySelector('.stem-images img');
+    const stemContainer = document.querySelector('.stem-images');
+    
+    if (stemImages) {
+      stemImages.style.transform = `scale(${this.zoomLevel})`;
+      stemImages.style.transformOrigin = 'center';
+      console.log(`题目图片缩放级别: ${this.zoomLevel.toFixed(1)}`);
+    }
+    
+    // 动态控制横向滚动条
+    if (stemContainer) {
+      if (this.zoomLevel <= 1.0) {
+        // 缩放级别小于等于1.0时，移除横向滚动条
+        stemContainer.style.overflowX = 'hidden';
+      } else {
+        // 缩放级别大于1.0时，显示横向滚动条
+        stemContainer.style.overflowX = 'auto';
+      }
+    }
+  }
+
+  /**
+   * 更新缩放按钮状态
+   */
+  updateZoomButtons() {
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    
+    if (zoomInBtn) {
+      zoomInBtn.disabled = this.zoomLevel >= this.maxZoom;
+      zoomInBtn.title = this.zoomLevel >= this.maxZoom ? '已达到最大缩放' : `放大 (当前: ${(this.zoomLevel * 100).toFixed(0)}%)`;
+    }
+    
+    if (zoomOutBtn) {
+      zoomOutBtn.disabled = this.zoomLevel <= this.minZoom;
+      zoomOutBtn.title = this.zoomLevel <= this.minZoom ? '已达到最小缩放' : `缩小 (当前: ${(this.zoomLevel * 100).toFixed(0)}%)`;
+    }
+  }
+
+  /**
+   * 重置缩放级别
+   */
+  resetZoom() {
+    this.zoomLevel = 1.0;
+    this.applyZoom();
+    this.updateZoomButtons();
   }
 
   // 调试方法

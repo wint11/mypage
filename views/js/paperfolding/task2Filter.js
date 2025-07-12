@@ -29,9 +29,27 @@ export class Task2Filter {
     if (filterType === 'all') {
       this.filteredQuestions = [...this.baseQuestions];
     } else {
-      const steps = parseInt(filterType);
+      // 任务二的筛选逻辑：3步对应fold_1，4步对应fold_2，5步(其它)对应other
+      let targetFoldType;
+      if (filterType === '3') {
+        targetFoldType = 'fold_1';
+      } else if (filterType === '4') {
+        targetFoldType = 'fold_2';
+      } else if (filterType === '5') {
+        targetFoldType = 'other';
+      } else {
+        // 兼容旧的数字筛选
+        const steps = parseInt(filterType);
+        this.filteredQuestions = this.baseQuestions.filter(q => 
+          this.extractStepsFromPath(q.image_path) === steps
+        );
+        console.log(`任务二筛选结果: ${this.filteredQuestions.length} 题 (${filterType})`);
+        this.saveQuestionsToStorage();
+        return this.filteredQuestions;
+      }
+      
       this.filteredQuestions = this.baseQuestions.filter(q => 
-        this.extractStepsFromPath(q.image_path) === steps
+        this.extractFoldTypeFromPath(q.image_path) === targetFoldType
       );
     }
     
@@ -47,13 +65,36 @@ export class Task2Filter {
    * 从路径中提取步数（task2数据格式）
    */
   extractStepsFromPath(imagePath) {
-    // task2的文件名格式：circle-id_3_001.png
-    const fileName = imagePath.split('/').pop() || '';
-    const match = fileName.match(/_([345])_/);
-    if (match) {
-      return parseInt(match[1]);
+    // task2的文件路径格式：fold_1/circle_036.png、fold_2/circle_036.png 或 other/circle_036.png
+    if (imagePath.includes('fold_1/')) {
+      return 1; // 1步折叠
+    } else if (imagePath.includes('fold_2/')) {
+      return 2; // 2步折叠
+    } else if (imagePath.includes('other/')) {
+      return 3; // other类型，视为3步
     }
-    return 3; // 默认3步
+    return 1; // 默认1步
+  }
+
+  /**
+   * 从路径中提取fold类型（任务二新筛选逻辑）
+   */
+  extractFoldTypeFromPath(imagePath) {
+    // task2的文件路径格式：fold_1/circle_036.png、fold_2/circle_036.png 或 other/circle_036.png
+    if (imagePath.includes('fold_1/')) {
+      return 'fold_1';
+    } else if (imagePath.includes('fold_2/')) {
+      return 'fold_2';
+    } else if (imagePath.includes('other/')) {
+      return 'other';
+    }
+    // 兼容新的task2数据格式（基于steps字段）
+    if (imagePath.includes('circle-id_') && imagePath.includes('-fold_1-')) {
+      return 'fold_1';
+    } else if (imagePath.includes('circle-id_') && imagePath.includes('-fold_2-')) {
+      return 'fold_2';
+    }
+    return 'fold_1'; // 默认fold_1
   }
 
   /**
@@ -62,24 +103,24 @@ export class Task2Filter {
   generateBaseQuestions(allQuestions) {
     console.log('生成任务二基础题库');
     
-    // 按步数分组
-    const step3Questions = allQuestions.filter(q => this.extractStepsFromPath(q.image_path) === 3);
-    const step4Questions = allQuestions.filter(q => this.extractStepsFromPath(q.image_path) === 4);
-    const step5Questions = allQuestions.filter(q => this.extractStepsFromPath(q.image_path) === 5);
+    // 按fold类型分组
+    const fold1Questions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'fold_1');
+    const fold2Questions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'fold_2');
+    const otherQuestions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'other');
     
-    console.log(`任务二 - 3步题目数量: ${step3Questions.length}`);
-    console.log(`任务二 - 4步题目数量: ${step4Questions.length}`);
-    console.log(`任务二 - 5步题目数量: ${step5Questions.length}`);
+    console.log(`任务二 - fold_1题目数量: ${fold1Questions.length}`);
+    console.log(`任务二 - fold_2题目数量: ${fold2Questions.length}`);
+    console.log(`任务二 - other类型题目数量: ${otherQuestions.length}`);
     
-    // 从每种步数中选择题目，确保形状平衡
-    const selected3 = this.selectQuestionsWithShapeBalance(step3Questions, Math.min(10, step3Questions.length));
-    const selected4 = this.selectQuestionsWithShapeBalance(step4Questions, Math.min(10, step4Questions.length));
-    const selected5 = this.selectQuestionsWithShapeBalance(step5Questions, Math.min(10, step5Questions.length));
+    // 从每种fold类型中选择题目，确保形状平衡
+    const selectedFold1 = this.selectQuestionsWithShapeBalance(fold1Questions, Math.min(10, fold1Questions.length));
+    const selectedFold2 = this.selectQuestionsWithShapeBalance(fold2Questions, Math.min(10, fold2Questions.length));
+    const selectedOther = this.selectQuestionsWithShapeBalance(otherQuestions, Math.min(10, otherQuestions.length));
     
-    const baseQuestions = [...selected3, ...selected4, ...selected5];
+    const baseQuestions = [...selectedFold1, ...selectedFold2, ...selectedOther];
     
     console.log(`任务二基础题库生成完成: ${baseQuestions.length} 题`);
-    console.log(`3步: ${selected3.length} 题, 4步: ${selected4.length} 题, 5步: ${selected5.length} 题`);
+    console.log(`fold_1: ${selectedFold1.length} 题, fold_2: ${selectedFold2.length} 题, other: ${selectedOther.length} 题`);
     
     return baseQuestions;
   }
@@ -137,11 +178,18 @@ export class Task2Filter {
    * 从路径中提取形状（task2数据格式）
    */
   extractShapeFromPath(imagePath) {
-    // task2文件名格式：circle-id_3_001.png -> circle
+    // task2文件名格式：fold_1/circle_036.png -> circle
     const fileName = imagePath.split('/').pop() || '';
-    const match = fileName.match(/^([a-zA-Z]+)-/);
-    if (match) {
-      return match[1];
+    if (fileName.startsWith('circle_')) {
+      return 'circle';
+    } else if (fileName.startsWith('Hexagon_')) {
+      return 'Hexagon';
+    } else if (fileName.startsWith('House_')) {
+      return 'House';
+    } else if (fileName.startsWith('Rectangle_')) {
+      return 'Rectangle';
+    } else if (fileName.startsWith('square_')) {
+      return 'square';
     }
     return 'unknown';
   }
@@ -252,7 +300,18 @@ export class Task2Filter {
   updateFilterInfo() {
     const filterInfo = document.getElementById('filterInfo');
     if (filterInfo) {
-      const filterText = this.currentFilter === 'all' ? '全部题目' : `${this.currentFilter}步折叠`;
+      let filterText;
+      if (this.currentFilter === 'all') {
+        filterText = '全部题目';
+      } else if (this.currentFilter === '3') {
+        filterText = '3步折叠';
+      } else if (this.currentFilter === '4') {
+        filterText = '4步折叠';
+      } else if (this.currentFilter === '5') {
+        filterText = '其它折叠';
+      } else {
+        filterText = `${this.currentFilter}步折叠`;
+      }
       filterInfo.textContent = `当前筛选: ${filterText} (${this.filteredQuestions.length}题)`;
     }
   }

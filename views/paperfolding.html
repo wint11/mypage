@@ -23,7 +23,7 @@
           <ul>
             <li>本测试包含多道折纸题目，每题都有4个选项</li>
             <li>请根据题干中的折叠步骤，选择正确的最终结果</li>
-            <li>一共需要回答任务壹的30道题目，并可以随时跳转到指定题目</li>
+            <li>一共需要回答任务贰的30道题目，并可以随时跳转到指定题目</li>
             <li>请认真思考每一道题目，确保答案准确</li>
           </ul>
           <p class="instructions-note">请确认您已阅读并理解以上说明，然后输入邀请码点击确认。</p>
@@ -49,8 +49,8 @@
           <div class="version-controls">
             <div class="version-switch">
               <label class="switch-label">任务模式：</label>
-              <button class="version-btn active" data-version="task1">任务壹</button>
-              <button class="version-btn" data-version="task2">任务贰</button>
+              <button class="version-btn" data-version="task1" >任务壹</button>
+              <button class="version-btn active" data-version="task2">任务贰</button>
               <button class="version-btn" data-version="task3" disabled>任务叁</button>
               <button class="version-btn" data-version="task4" disabled>任务肆</button>
             </div>
@@ -85,8 +85,18 @@
         <!-- 题干区域 -->
         <div class="question-stem">
           <h3> </h3>
-          <div class="stem-images" id="stemImages">
-            <!-- 题干图片将在这里动态加载 -->
+          <div class="stem-images-container">
+            <div class="stem-images" id="stemImages">
+              <!-- 题干图片将在这里动态加载 -->
+            </div>
+            <div class="zoom-controls">
+              <button class="zoom-btn zoom-out" id="zoomOutBtn" title="缩小">
+                <i class="bi bi-dash"></i>
+              </button>
+              <button class="zoom-btn zoom-in" id="zoomInBtn" title="放大">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
           </div>
         </div>
 
