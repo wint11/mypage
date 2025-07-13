@@ -78,8 +78,8 @@ export class UIManager {
   /**
    * 恢复用户选择
    */
-  restoreUserSelection(questionIndex, userAnswers) {
-    const userAnswer = userAnswers[questionIndex];
+  restoreUserSelection(questionIndex, userAnswers, currentQuestion) {
+    const userAnswer = userAnswers[currentQuestion.id];
     
     // 清除所有选项的选中状态
     document.querySelectorAll('.option').forEach(option => {
@@ -96,18 +96,51 @@ export class UIManager {
   }
 
   /**
+   * 更新选项选择状态
+   */
+  updateOptionSelection(optionValue) {
+    // 清除所有选项的选中状态
+    document.querySelectorAll('.option').forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    // 设置当前选项为选中状态
+    const selectedOption = document.querySelector(`[data-option="${optionValue}"]`);
+    if (selectedOption) {
+      selectedOption.classList.add('selected');
+    }
+  }
+
+  /**
    * 更新导航按钮状态
    */
   updateNavigationButtons(currentIndex, totalQuestions) {
+    // 移动端按钮
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    // 桌面端按钮
+    const prevBtnDesktop = document.getElementById('prevBtnDesktop');
+    const nextBtnDesktop = document.getElementById('nextBtnDesktop');
     
+    const isFirstQuestion = currentIndex === 0;
+    const isLastQuestion = currentIndex === totalQuestions - 1;
+    
+    // 更新移动端按钮状态
     if (prevBtn) {
-      prevBtn.disabled = currentIndex === 0;
+      prevBtn.disabled = isFirstQuestion;
     }
     
     if (nextBtn) {
-      nextBtn.disabled = currentIndex === totalQuestions - 1;
+      nextBtn.disabled = isLastQuestion;
+    }
+    
+    // 更新桌面端按钮状态
+    if (prevBtnDesktop) {
+      prevBtnDesktop.disabled = isFirstQuestion;
+    }
+    
+    if (nextBtnDesktop) {
+      nextBtnDesktop.disabled = isLastQuestion;
     }
   }
 
@@ -136,20 +169,28 @@ export class UIManager {
     if (submitBtn) {
       const allAnswered = answeredCount === totalQuestions;
       
-      submitBtn.disabled = !allAnswered;
+      // 允许用户在回答至少一题后提交测试
+      submitBtn.disabled = answeredCount === 0;
       submitBtn.textContent = allAnswered ? 
         `提交测试 (${answeredCount}/${totalQuestions})` : 
-        `继续答题 (${answeredCount}/${totalQuestions})`;
+        `提交测试 (${answeredCount}/${totalQuestions})`;
     }
   }
 
   /**
-   * 同步任务按钮状态
+   * 同步任务按钮和下拉列表状态
    */
   syncTaskButtonState(currentTask) {
+    // 同步按钮状态（保持向后兼容）
     document.querySelectorAll('.version-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.version === currentTask);
     });
+    
+    // 同步下拉列表状态
+    const versionSelect = document.getElementById('versionSelect');
+    if (versionSelect) {
+      versionSelect.value = currentTask;
+    }
   }
 
   /**
@@ -157,30 +198,46 @@ export class UIManager {
    */
   updateFilterButtonTexts(currentTask) {
     const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-      const filterType = btn.dataset.filter;
-      if (filterType === '3') {
-        if (currentTask === 'task3') {
-          btn.textContent = '题目集1';
-        } else {
+    
+    if (currentTask === 'task1') {
+      filterButtons.forEach(btn => {
+        btn.style.display = 'inline-block';
+        const filterType = btn.dataset.filter;
+        if (filterType === 'all') {
+          btn.textContent = '全部题目';
+        } else if (filterType === '3') {
           btn.textContent = '3步折叠';
-        }
-      } else if (filterType === '4') {
-        if (currentTask === 'task3') {
-          btn.textContent = '题目集2';
-        } else {
+        } else if (filterType === '4') {
           btn.textContent = '4步折叠';
-        }
-      } else if (filterType === '5') {
-        if (currentTask === 'task3') {
-          btn.textContent = '题目集3';
-        } else if (currentTask === 'task2') {
-          btn.textContent = '其它折叠';
-        } else {
+        } else if (filterType === '5') {
           btn.textContent = '5步折叠';
         }
-      }
-    });
+      });
+    } else if (currentTask === 'task2') {
+      filterButtons.forEach(btn => {
+        btn.style.display = 'inline-block';
+        const filterType = btn.dataset.filter;
+        if (filterType === 'all') {
+          btn.textContent = '全部题目';
+        } else if (filterType === '3') {
+          btn.textContent = '3步折叠';
+        } else if (filterType === '4') {
+          btn.textContent = '4步折叠';
+        } else if (filterType === '5') {
+          btn.textContent = '其它折叠';
+        }
+      });
+    } else if (currentTask === 'task3') {
+      filterButtons.forEach(btn => {
+        const filterType = btn.dataset.filter;
+        if (filterType === 'all') {
+          btn.textContent = '全部题目';
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+    }
     console.log(`筛选按钮文字已更新为当前任务: ${currentTask}`);
   }
 
@@ -394,5 +451,30 @@ export class UIManager {
    */
   setCurrentQuestionIndex(index) {
     this.currentQuestionIndex = index;
+  }
+
+  /**
+   * 更新重新生成按钮状态
+   */
+  updateRegenerateButton(inviteCodeData) {
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    if (regenerateBtn) {
+      // 检查是否为邀请码模式（非常规模式）
+      const isInviteCodeMode = inviteCodeData && !inviteCodeData.isRegularMode;
+      
+      if (isInviteCodeMode) {
+        // 邀请码模式下禁用按钮并设置灰色样式
+        regenerateBtn.disabled = true;
+        regenerateBtn.style.opacity = '0.5';
+        regenerateBtn.style.cursor = 'not-allowed';
+        regenerateBtn.title = '邀请码模式下该功能不可用';
+      } else {
+        // 常规模式下恢复按钮正常状态
+        regenerateBtn.disabled = false;
+        regenerateBtn.style.opacity = '1';
+        regenerateBtn.style.cursor = 'pointer';
+        regenerateBtn.title = '';
+      }
+    }
   }
 }

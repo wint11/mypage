@@ -8,12 +8,26 @@ import { Task2Filter } from './task2Filter.js';
 import { Task3Filter } from './task3Filter.js';
 import { RandomUtils } from './RandomUtils.js';
 import { InstructionsPage } from './InstructionsPage.js';
+import { QuestionManager } from './QuestionManager.js';
+import { UIManager } from './UIManager.js';
+import { NavigationManager } from './NavigationManager.js';
+import { AnswerManager } from './AnswerManager.js';
+import { ZoomManager } from './ZoomManager.js';
+import { TestResultManager } from './TestResultManager.js';
+import { EventManager } from './EventManager.js';
+import { debugUtils, debug } from './DebugUtils.js';
+import { extensibilityManager, EVENT_HOOKS } from './ExtensibilityConfig.js';
+import { pluginLoader } from './PluginLoader.js';
 
 /**
  * 纸折叠测试主类
  */
 export class PaperFoldingTest {
   constructor() {
+    // 初始化调试工具
+    this.debugUtils = debugUtils;
+    debug.mark('PaperFoldingTest_constructor_start');
+    
     this.config = new Config();
     this.imageCache = new ImageCache(this.config);
     this.wenjuanxingUploader = new WenjuanxingUploader(this.config.getWenjuanxingConfig());
@@ -23,23 +37,24 @@ export class PaperFoldingTest {
     this.task2Filter = new Task2Filter();
     this.task3Filter = new Task3Filter();
     this.instructionsPage = new InstructionsPage();
-    
-    this.allQuestions = [];
-    this.currentQuestionIndex = 0;
-    this.userAnswers = {};
-    this.startTime = null;
-    this.currentVersion = 'A';
-    this.currentTask = 'task2'; // 当前任务，与HTML中默认激活的任务贰保持一致
+
+    // 初始化新的管理器
+    this.questionManager = new QuestionManager(this.config, this.task1Filter, this.task2Filter, this.task3Filter);
+    this.uiManager = new UIManager(this.imageCache);
+    this.navigationManager = new NavigationManager(this.imageCache);
+    this.answerManager = new AnswerManager(this.questionManager);
+    this.zoomManager = new ZoomManager();
+    this.testResultManager = new TestResultManager();
+    this.eventManager = new EventManager(this);
+
     this.isInitialized = false;
     this.currentInviteCodeData = null; // 当前使用的邀请码数据
-    
-    // 缩放相关属性
-    this.zoomLevel = 1.0; // 当前缩放级别
-    this.minZoom = 0.5; // 最小缩放级别
-    this.maxZoom = 2.0; // 最大缩放级别
-    this.zoomStep = 0.1; // 缩放步长
-    
+
     this.setupInstructionsPage();
+    
+    debug.mark('PaperFoldingTest_constructor_end');
+    debug.measure('PaperFoldingTest_constructor_start', 'PaperFoldingTest_constructor_end');
+    debug.log('PaperFoldingTest 构造函数完成');
   }
 
   /**
@@ -50,7 +65,7 @@ export class PaperFoldingTest {
     this.instructionsPage.setOnConfirmCallback((inviteCodeData) => {
       this.init(inviteCodeData);
     });
-    
+
     console.log('答题须知页面已设置');
   }
 
@@ -59,922 +74,255 @@ export class PaperFoldingTest {
    * @param {Object} inviteCodeData - 邀请码数据，包含inviteCode和setId
    */
   async init(inviteCodeData) {
+    debug.mark('PaperFoldingTest_init_start');
+    
     if (this.isInitialized) {
-      console.log('测试已经初始化过了');
+      debug.warn('测试已经初始化过了');
       return;
     }
-    
-    try {
-      console.log('开始初始化纸折叠测试...', inviteCodeData);
-      
-      await this.loadQuestions(inviteCodeData);
-      this.setupEventListeners();
-      this.loadAnswersFromStorage();
-      
-      // 在邀请码模式下，强制清除筛选器缓存并重新初始化
-      if (inviteCodeData) {
-        if (this.currentTask !== 'task3') {
-          this.getCurrentFilter().clearStoredQuestions();
-          this.getCurrentFilter().baseQuestions = null;
-        }
-        console.log('邀请码模式：已清除筛选器缓存，强制重新生成');
-      }
-      
-      // 初始化筛选器（task3已在loadQuestions中初始化）
-      if (this.currentTask !== 'task3') {
-        this.getCurrentFilter().initializeFilter(this.allQuestions);
-      }
-      
-      // 确保UI按钮状态与当前任务保持一致
-      this.syncTaskButtonState();
-      
-      // 更新筛选按钮文字
-      this.updateFilterButtonTexts();
-      
-      this.displayQuestion(0);
-      this.updateProgress();
-      this.updateNavigationButtons();
-      this.updateSubmitButton();
-      this.getCurrentFilter().updateFilterInfo();
-      this.getCurrentFilter().updateJumpInputMax();
-      
-      // 开始预加载
-      this.preloadCurrentQuestion();
-      
-      // 初始化缩放按钮状态
-      this.updateZoomButtons();
-      
-      // 记录开始时间
-      this.startTime = new Date();
-      
-      this.isInitialized = true;
-      console.log('纸折叠测试初始化完成');
-    } catch (error) {
-      console.error('初始化失败:', error);
-      this.showError('初始化失败: ' + error.message);
-    }
-  }
 
-  /**
-   * 加载题目数据
-   * @param {Object} inviteCodeData - 邀请码数据，包含inviteCode和setId
-   */
-  async loadQuestions(inviteCodeData) {
     try {
-      if (!inviteCodeData) {
-        throw new Error('邀请码数据无效');
-      }
-      
-      // 检查是否为常规模式
-      if (inviteCodeData.isRegularMode) {
-        // 常规模式：根据当前任务加载对应的题库
-        if (this.currentTask === 'task3') {
-          // 加载task3数据 - 直接使用task3Filter的初始化方法
-          await this.task3Filter.initializeFilter();
-          // 默认选择第一个题目集
-          this.task3Filter.selectQuestionSet(0);
-          this.allQuestions = this.task3Filter.getFilteredQuestions();
-        } else if (this.currentTask === 'task2') {
-          // 加载task2数据
-          await this.loadTask2Questions();
-        } else {
-          // 默认加载task1数据
-          const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          
-          const text = await response.text();
-          const lines = text.trim().split('\n');
-          
-          this.allQuestions = lines.map(line => {
-            const question = JSON.parse(line);
-            // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
-            if (question.image) {
-              question.image_path = this.config.getImageBasePath() + question.image;
-            }
-            return question;
-          });
-        }
-        
-        console.log(`常规模式：加载了${this.currentTask}题库，共 ${this.allQuestions.length} 道题目`);
-      } else {
-        // 邀请码模式：加载特定题目集
-        if (!inviteCodeData.setId) {
-          throw new Error('邀请码数据无效：缺少setId');
-        }
-        
-        // 清除localStorage中的相关缓存，确保使用新的题目集
-        try {
-          // 清除task1题目缓存
-          localStorage.removeItem('paperfolding_questions_task1');
-          // 清除task2题目缓存
-          localStorage.removeItem('paperfolding_questions_task2');
-          // 清除task3题目缓存
-          localStorage.removeItem('paperfolding_task3_selection');
-          // 清除答案缓存
-          localStorage.removeItem('paperfolding_answers_task1');
-          localStorage.removeItem('paperfolding_answers_task2');
-          localStorage.removeItem('paperfolding_answers_task3');
-          console.log('已清除localStorage中的题目和答案缓存');
-        } catch (error) {
-          console.warn('清除localStorage缓存失败:', error);
-        }
-        
-        // 根据当前任务确定题目集文件路径
-        let questionSetsPath;
-        if (this.currentTask === 'task3') {
-          questionSetsPath = '../task3/all_question_sets.json';
-        } else if (this.currentTask === 'task2') {
-          questionSetsPath = '../task2/all_question_sets.json';
-        } else {
-          questionSetsPath = '../task1/all_question_sets.json';
-        }
-        
-        // 加载对应任务的题目集数据
-        const response = await fetch(questionSetsPath);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const allQuestionSets = await response.json();
-        
-        // 根据setId找到对应的题目集
-        const targetQuestionSet = allQuestionSets.find(set => set.setId === inviteCodeData.setId);
-        if (!targetQuestionSet) {
-          throw new Error(`找不到setId为${inviteCodeData.setId}的题目集`);
-        }
-        
-        // 转换题目数据格式
-        this.allQuestions = targetQuestionSet.questions.map(question => {
-          // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
-          if (question.image) {
-            // 根据当前任务设置正确的图片基础路径
-            if (this.currentTask === 'task3') {
-              // task3的图片路径
-              question.image_path = '../task3/task3_selected/' + question.image;
-            } else if (this.currentTask === 'task2') {
-              // task2的图片路径需要根据实际情况调整
-              question.image_path = '../task2/task2_selected/' + question.image;
-            } else {
-              question.image_path = this.config.getImageBasePath() + question.image;
-            }
-          }
-          return question;
-        });
-        
-        console.log(`邀请码模式：加载了题目集${inviteCodeData.setId}，共 ${this.allQuestions.length} 道题目`);
-      }
-      
-      if (this.allQuestions.length === 0) {
-        throw new Error('题目数据为空');
-      }
-      
-      // 保存当前使用的邀请码信息
+      debug.log('开始初始化纸折叠测试...', inviteCodeData);
       this.currentInviteCodeData = inviteCodeData;
       
-    } catch (error) {
-      console.error('加载题目失败:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 加载task2题目数据
-   */
-  async loadTask2Questions() {
-    try {
-      // 基于实际文件命名模式构造题目数据
-      // 文件名格式: circle-id_X-fold_Y-sample_0-candidate_4-answ_Z.png
-      this.allQuestions = [];
+      // 初始化插件加载器
+       await pluginLoader.init();
       
-      // 根据实际文件列表构造题目
-      const knownFiles = [
-        // 1折题目 (fold_1)
-        { id: 0, fold: 1, answer: 'C' }, { id: 1, fold: 1, answer: 'C' }, { id: 2, fold: 1, answer: 'C' },
-        { id: 3, fold: 1, answer: 'A' }, { id: 4, fold: 1, answer: 'D' }, { id: 5, fold: 1, answer: 'B' },
-        { id: 6, fold: 1, answer: 'C' }, { id: 7, fold: 1, answer: 'A' }, { id: 8, fold: 1, answer: 'C' },
-        { id: 9, fold: 1, answer: 'A' }, { id: 10, fold: 1, answer: 'B' }, { id: 11, fold: 1, answer: 'C' },
-        { id: 12, fold: 1, answer: 'B' }, { id: 13, fold: 1, answer: 'B' }, { id: 14, fold: 1, answer: 'A' },
-        { id: 15, fold: 1, answer: 'A' }, { id: 16, fold: 1, answer: 'A' },
-        
-        // 2折题目 (fold_2)
-        { id: 17, fold: 2, answer: 'A' }, { id: 18, fold: 2, answer: 'C' }, { id: 19, fold: 2, answer: 'B' },
-        { id: 20, fold: 2, answer: 'D' }, { id: 21, fold: 2, answer: 'B' }, { id: 22, fold: 2, answer: 'A' },
-        { id: 23, fold: 2, answer: 'D' }, { id: 24, fold: 2, answer: 'D' }, { id: 25, fold: 2, answer: 'D' },
-        { id: 26, fold: 2, answer: 'A' }, { id: 27, fold: 2, answer: 'A' }, { id: 28, fold: 2, answer: 'D' },
-        { id: 29, fold: 2, answer: 'D' }, { id: 30, fold: 2, answer: 'B' }, { id: 31, fold: 2, answer: 'C' },
-        { id: 32, fold: 2, answer: 'A' }, { id: 33, fold: 2, answer: 'A' }
-      ];
-      
-      knownFiles.forEach(file => {
-        const imageName = `circle-id_${file.id}-fold_${file.fold}-sample_0-candidate_4-answ_${file.answer}.png`;
-        const imagePath = `../task2/test_images/${imageName}`;
-        
-        this.allQuestions.push({
-          image: imageName,
-          image_path: imagePath,
-          answer: file.answer,
-          steps: file.fold + 2, // fold_1 对应 3步, fold_2 对应 4步
-          shape: 'circle'
-        });
+      // 触发初始化前事件钩子
+      await extensibilityManager.triggerEvent(EVENT_HOOKS.beforeInit, {
+        inviteCodeData,
+        testInstance: this
       });
-      
-      console.log(`Task2数据加载完成: ${this.allQuestions.length} 题`);
-    } catch (error) {
-      console.error('加载task2数据失败:', error);
-      // 如果加载失败，创建一些示例数据
-      this.allQuestions = this.createTask2SampleData();
-    }
-  }
-  
-  /**
-   * 创建task2示例数据
-   */
-  createTask2SampleData() {
-    const sampleQuestions = [];
-    const shapes = ['circle', 'square', 'triangle'];
-    const steps = [3, 4, 5];
-    
-    for (let i = 1; i <= 30; i++) {
-      const shape = shapes[i % shapes.length];
-      const step = steps[i % steps.length];
-      const questionId = String(i).padStart(3, '0');
-      const imageName = `${shape}-id_${step}_${questionId}.png`;
-      
-      sampleQuestions.push({
-        image: imageName,
-        image_path: `../task2/test_images/${imageName}`,
-        answer: ['A', 'B', 'C', 'D'][i % 4],
-        steps: step,
-        shape: shape
-      });
-    }
-    
-    console.log(`创建task2示例数据: ${sampleQuestions.length} 题`);
-    return sampleQuestions;
-  }
-  
-  /**
-   * 获取当前筛选器
-   */
-  getCurrentFilter() {
-    if (this.currentTask === 'task3') {
-      return this.task3Filter;
-    } else if (this.currentTask === 'task2') {
-      return this.task2Filter;
-    } else {
-      return this.task1Filter;
-    }
-  }
-  
-  /**
-   * 同步任务按钮状态
-   */
-  syncTaskButtonState() {
-    document.querySelectorAll('.version-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.version === this.currentTask);
-    });
-  }
 
-  /**
-   * 更新筛选按钮文字
-   */
-  updateFilterButtonTexts() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-      const filterType = btn.dataset.filter;
-      if (filterType === '3') {
-        if (this.currentTask === 'task3') {
-          btn.textContent = '题目集1';
-        } else {
-          btn.textContent = '3步折叠';
-        }
-      } else if (filterType === '4') {
-        if (this.currentTask === 'task3') {
-          btn.textContent = '题目集2';
-        } else {
-          btn.textContent = '4步折叠';
-        }
-      } else if (filterType === '5') {
-        if (this.currentTask === 'task3') {
-          btn.textContent = '题目集3';
-        } else if (this.currentTask === 'task2') {
-          btn.textContent = '其它折叠';
-        } else {
-          btn.textContent = '5步折叠';
-        }
+      // 检查组件健康状态
+      const healthCheck = this.debugUtils.checkComponentHealth(this.questionManager, [
+        'loadQuestions', 'getCurrentTask', 'getCurrentFilter', 'getAllQuestions'
+      ]);
+      
+      if (!healthCheck.healthy) {
+        throw new Error(`QuestionManager 组件检查失败: ${healthCheck.issues.join(', ')}`);
       }
-    });
-    console.log(`筛选按钮文字已更新为当前任务: ${this.currentTask}`);
-  }
 
-  /**
-   * 切换任务
-   */
-  async switchTask(task) {
-    if (task === this.currentTask) return;
-    
-    const hasAnswers = Object.keys(this.userAnswers).length > 0;
-    if (hasAnswers) {
-      const confirmed = confirm('切换任务将清除当前答案，确定要继续吗？');
-      if (!confirmed) return;
-    }
-    
-    this.currentTask = task;
-    this.userAnswers = {};
-    this.currentQuestionIndex = 0;
-    
-    // 更新UI
-    document.querySelectorAll('.version-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.version === task);
-    });
-    
-    // 更新筛选按钮文字
-    this.updateFilterButtonTexts();
-    
-    // 重新加载题目数据
-    try {
-      await this.loadQuestions(this.currentInviteCodeData);
+      debug.mark('loadQuestions_start');
+      await this.questionManager.loadQuestions(inviteCodeData);
+      debug.mark('loadQuestions_end');
+      debug.measure('loadQuestions_start', 'loadQuestions_end');
       
-      // 在切换任务时，强制清除筛选器缓存并重新初始化
-      if (this.currentTask !== 'task3') {
-        this.getCurrentFilter().clearStoredQuestions();
-        this.getCurrentFilter().baseQuestions = null;
-        console.log('任务切换：已清除筛选器缓存，强制重新生成');
-        
-        // 重新初始化筛选器
-        this.getCurrentFilter().initializeFilter(this.allQuestions);
+      debug.mark('setupEventListeners_start');
+      this.eventManager.setupAllEventListeners();
+      debug.mark('setupEventListeners_end');
+      debug.measure('setupEventListeners_start', 'setupEventListeners_end');
+      
+      this.answerManager.loadAnswersFromStorage(this.questionManager.getCurrentTask());
+
+      // 在邀请码模式下，强制清除筛选器缓存并重新初始化
+      if (inviteCodeData) {
+        if (this.questionManager.getCurrentTask() !== 'task3') {
+          this.questionManager.getCurrentFilter().clearStoredQuestions();
+          this.questionManager.getCurrentFilter().baseQuestions = null;
+        }
+        debug.log('邀请码模式：已清除筛选器缓存，强制重新生成');
+      }
+
+      // 初始化筛选器
+      debug.mark('initializeFilter_start');
+      if (this.questionManager.getCurrentTask() === 'task3') {
+        // task3的initializeFilter已在loadQuestions中调用，但需要确保完成
+        const filteredQuestions = this.questionManager.getCurrentFilter().getFilteredQuestions();
+        if (!filteredQuestions || filteredQuestions.length === 0) {
+          // 如果仍然没有题目，手动调用initializeFilter
+          await this.questionManager.getCurrentFilter().initializeFilter();
+        }
       } else {
-        console.log('任务切换到task3：题目已在loadQuestions中初始化');
+        this.questionManager.getCurrentFilter().initializeFilter(this.questionManager.getAllQuestions());
       }
-      
-      // 重新显示题目
-      this.displayQuestion(0);
-      this.updateProgress();
-      this.updateNavigationButtons();
-      this.updateSubmitButton();
-      this.getCurrentFilter().updateFilterInfo();
-      this.getCurrentFilter().updateJumpInputMax();
-      
-      // 显示状态消息
-      const statusDiv = document.createElement('div');
-      statusDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #007bff;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 6px;
-        z-index: 10000;
-        font-size: 14px;
-      `;
-      let taskName = '任务壹';
-      if (task === 'task2') {
-        taskName = '任务贰';
-      } else if (task === 'task3') {
-        taskName = '任务叁';
+      debug.mark('initializeFilter_end');
+      debug.measure('initializeFilter_start', 'initializeFilter_end');
+
+      // 确保UI按钮状态与当前任务保持一致
+      this.uiManager.syncTaskButtonState(this.questionManager.getCurrentTask());
+
+      // 更新筛选按钮文字
+      this.uiManager.updateFilterButtonTexts(this.questionManager.getCurrentTask());
+
+      // 初始化UI显示
+      debug.mark('initializeUI_start');
+      this.initializeUI();
+      debug.mark('initializeUI_end');
+      debug.measure('initializeUI_start', 'initializeUI_end');
+
+      // 设置开始时间（如果还没有的话）
+      if (!this.answerManager.getStartTime()) {
+        this.answerManager.setStartTime(Date.now());
+        console.log('初始化时设置开始时间');
       }
-      statusDiv.textContent = `已切换到${taskName}`;
-      document.body.appendChild(statusDiv);
+
+      this.isInitialized = true;
       
-      setTimeout(() => {
-        if (statusDiv.parentNode) {
-          statusDiv.parentNode.removeChild(statusDiv);
-        }
-      }, 3000);
+      debug.mark('PaperFoldingTest_init_end');
+      debug.measure('PaperFoldingTest_init_start', 'PaperFoldingTest_init_end');
+      debug.log('纸折叠测试初始化完成');
+      
+      // 记录初始化状态
+      const initState = {
+        initialized: true, 
+        task: this.questionManager.getCurrentTask(),
+        questionCount: this.questionManager.getAllQuestions().length,
+        filteredCount: this.questionManager.getFilteredQuestions().length
+      };
+      
+      this.debugUtils.logStateChange('PaperFoldingTest', 
+        { initialized: false }, 
+        initState, 
+        'init_complete'
+      );
+      
+      // 触发初始化后事件钩子
+      await extensibilityManager.triggerEvent(EVENT_HOOKS.afterInit, {
+        testInstance: this,
+        initState
+      });
       
     } catch (error) {
-      console.error('切换任务失败:', error);
-      alert('切换任务失败，请重试');
-    }
-  }
-
-  /**
-   * 设置事件监听器
-   */
-  setupEventListeners() {
-    // AI分析按钮
-    const aiBtn = document.getElementById('aiAnalysisBtn');
-    if (aiBtn) {
-      aiBtn.addEventListener('click', () => this.analyzeWithAI());
-    }
-
-    // 重新生成按钮
-    const regenerateBtn = document.getElementById('regenerateBtn');
-    if (regenerateBtn) {
-      regenerateBtn.addEventListener('click', () => this.regenerateQuestions());
-    }
-
-    // 选项点击事件
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.option')) {
-        const option = e.target.closest('.option');
-        const optionValue = option.dataset.option;
-        this.selectOption(optionValue);
-      }
-    });
-
-    // 键盘导航
-    document.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT') return;
+      debug.mark('PaperFoldingTest_init_end');
+      this.debugUtils.logError('初始化失败', error, {
+        inviteCodeData,
+        isInitialized: this.isInitialized,
+        currentTask: this.questionManager?.getCurrentTask()
+      });
       
-      switch(e.key) {
-        case 'ArrowLeft':
-          e.preventDefault();
-          this.previousQuestion();
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          this.nextQuestion();
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-          e.preventDefault();
-          this.selectOption(e.key);
-          break;
-      }
-    });
-
-    // 导航按钮
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const jumpBtn = document.getElementById('jumpBtn');
-    
-    if (prevBtn) prevBtn.addEventListener('click', () => this.previousQuestion());
-    if (nextBtn) nextBtn.addEventListener('click', () => this.nextQuestion());
-    if (jumpBtn) jumpBtn.addEventListener('click', () => this.jumpToQuestion());
-
-    // 筛选按钮
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const filterType = e.target.dataset.filter;
-        this.applyFilter(filterType);
-      });
-    });
-
-    // 任务切换
-    document.querySelectorAll('.version-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const task = e.target.dataset.version;
-        this.switchTask(task);
-      });
-    });
-
-    // 提交按钮
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-      submitBtn.addEventListener('click', () => this.submitTest());
-    }
-
-    // 下载按钮
-    const downloadBtn = document.getElementById('downloadBtn');
-    const downloadAllBtn = document.getElementById('downloadAllBtn');
-    
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => {
-        // 检查是否为邀请码模式（非常规模式），如果是则拦截
-        if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
-          alert('当前模式下该功能不可用');
-          return;
-        }
-        this.downloader.downloadQuestionImage(this.currentQuestionIndex);
-      });
-    }
-    
-    if (downloadAllBtn) {
-      downloadAllBtn.addEventListener('click', () => {
-        // 检查是否为邀请码模式（非常规模式），如果是则拦截
-        if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
-          alert('当前模式下该功能不可用');
-          return;
-        }
-        this.downloader.downloadAllQuestions(
-          this.getCurrentFilter().getFilteredQuestions(),
-          this.getCurrentFilter().getCurrentFilter(),
-          (index) => this.displayQuestion(index)
-        );
-      });
-    }
-    
-    // 一键选择按钮
-    const quickSelectBtn = document.getElementById('quickSelectBtn');
-    if (quickSelectBtn) {
-      quickSelectBtn.addEventListener('click', () => {
-        this.quickSelectOption();
-      });
-    }
-    
-    // 缩放控制按钮
-    const zoomInBtn = document.getElementById('zoomInBtn');
-    const zoomOutBtn = document.getElementById('zoomOutBtn');
-    
-    if (zoomInBtn) {
-      zoomInBtn.addEventListener('click', () => this.zoomIn());
-    }
-    
-    if (zoomOutBtn) {
-      zoomOutBtn.addEventListener('click', () => this.zoomOut());
+      console.error('初始化失败:', error);
+      this.uiManager.showError('初始化失败: ' + error.message);
+      throw error; // 重新抛出错误以便上层处理
     }
   }
 
   /**
-   * 预加载当前题目
+   * 初始化UI显示
    */
-  preloadCurrentQuestion() {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    if (filteredQuestions.length === 0) return;
-    
-    const currentQuestion = filteredQuestions[this.currentQuestionIndex];
-    if (currentQuestion) {
-      this.imageCache.preloadImage(currentQuestion.image_path);
-    }
-    
-    // 预加载相邻题目
-    this.preloadAdjacentQuestions();
-  }
+  initializeUI() {
+    const filteredQuestions = this.questionManager.getFilteredQuestions();
+    const currentIndex = 0;
 
-  /**
-   * 预加载指定范围的题目
-   */
-  preloadRange(startIndex, endIndex) {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    const imagesToPreload = [];
-    
-    for (let i = startIndex; i <= endIndex; i++) {
-      if (i >= 0 && i < filteredQuestions.length) {
-        imagesToPreload.push(filteredQuestions[i].image_path);
-      }
-    }
-    
-    this.imageCache.preloadImages(imagesToPreload);
-  }
+    // 设置当前题目索引
+    this.navigationManager.setCurrentQuestionIndex(currentIndex);
 
-  /**
-   * 预加载相邻题目
-   */
-  preloadAdjacentQuestions() {
-    const preloadRange = 2;
-    const startIndex = Math.max(0, this.currentQuestionIndex - preloadRange);
-    const endIndex = Math.min(
-      this.getCurrentFilter().getFilteredQuestions().length - 1,
-      this.currentQuestionIndex + preloadRange
+    // 显示第一题
+    if (filteredQuestions.length > 0) {
+      const question = filteredQuestions[currentIndex];
+      this.uiManager.displayQuestion(currentIndex, question, filteredQuestions);
+      this.uiManager.restoreUserSelection(currentIndex, this.answerManager.getUserAnswers(), question);
+    }
+
+    // 更新UI状态
+    this.uiManager.updateProgress(
+      currentIndex,
+      filteredQuestions.length,
+      this.answerManager.getAnsweredCount()
+    );
+    this.uiManager.updateNavigationButtons(currentIndex, filteredQuestions.length);
+    this.uiManager.updateSubmitButton(
+      this.answerManager.getAnsweredCount(),
+      filteredQuestions.length
     );
     
-    this.preloadRange(startIndex, endIndex);
-  }
-
-  /**
-   * 显示题目
-   */
-  displayQuestion(index) {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    if (index < 0 || index >= filteredQuestions.length) return;
-    
-    this.currentQuestionIndex = index;
-    const question = filteredQuestions[index];
-    
-    // 更新题目编号
-    const questionNumber = document.getElementById('questionNumber');
-    if (questionNumber) {
-      questionNumber.textContent = `第 ${index + 1} 题`;
+    // 更新筛选按钮的高亮状态
+    const currentFilter = this.questionManager.getCurrentFilter();
+    if (currentFilter && currentFilter.currentFilter) {
+      this.uiManager.updateFilterButtonState(currentFilter.currentFilter);
     }
     
-    // 显示题目图片
-    this.displayQuestionImage(question.image_path);
+    // 更新重新生成按钮状态（根据邀请码模式）
+    this.uiManager.updateRegenerateButton(this.currentInviteCodeData);
     
-    // 显示选项区域
-    this.showOptionArea();
-    
-    // 恢复用户选择
-    this.restoreUserSelection(index);
-    
-    // 更新UI
-    this.updateProgress();
-    this.updateNavigationButtons();
-    this.updateSubmitButton();
-    
-    // 预加载当前题目
-    this.preloadCurrentQuestion();
-    
-    // 更新缩放按钮状态
-    this.updateZoomButtons();
-    
-    // 记录开始时间
-    if (!this.startTime) {
-      this.startTime = Date.now();
-    }
+    this.questionManager.getCurrentFilter().updateFilterInfo();
+    this.questionManager.getCurrentFilter().updateJumpInputMax();
+
+    // 开始预加载
+    this.navigationManager.preloadCurrentQuestion(filteredQuestions);
+
+    // 初始化缩放按钮状态
+    this.zoomManager.updateZoomButtons();
   }
 
   /**
-   * 显示题目图片
+   * 处理选项选择
    */
-  displayQuestionImage(imagePath) {
-    const stemImages = document.querySelector('.stem-images');
-    if (stemImages) {
-      // 检查缓存
-      const cachedImage = this.imageCache.getCachedImage(imagePath);
-      if (cachedImage) {
-        stemImages.innerHTML = `<img src="${cachedImage}" alt="题目图片" style="max-width: 100%; height: auto;">`;
-        // 重新应用当前缩放级别
-        this.applyZoom();
-      } else {
-        // 显示加载状态
-        stemImages.innerHTML = '<div class="loading-placeholder">加载中...</div>';
-        
-        // 异步加载图片
-        this.imageCache.preloadImage(imagePath).then((imageSrc) => {
-          stemImages.innerHTML = `<img src="${imageSrc}" alt="题目图片" style="max-width: 100%; height: auto;">`;
-          // 重新应用当前缩放级别
-          this.applyZoom();
-        }).catch(error => {
-          console.error('加载图片失败:', error);
-          stemImages.innerHTML = '<div class="error-placeholder">图片加载失败</div>';
-        });
-      }
-    }
-  }
+  async handleSelectOption(optionValue) {
+    const currentIndex = this.navigationManager.getCurrentQuestionIndex();
+    const questions = this.questionManager.getFilteredQuestions();
+    const currentQuestion = questions[currentIndex];
 
-  /**
-   * 显示选项区域
-   */
-  showOptionArea() {
-    const optionsContainer = document.querySelector('.options-container');
-    if (optionsContainer) {
-      optionsContainer.style.display = 'flex';
-      
-      // 清空选项图片并确保选项标签可见
-      const optionImages = optionsContainer.querySelectorAll('img');
-      optionImages.forEach(img => {
-        img.src = '';
-        img.style.display = 'none';
-      });
-      
-      // 确保选项标签可见
-      const optionLabels = optionsContainer.querySelectorAll('.option-label');
-      optionLabels.forEach(label => {
-        label.style.display = 'block';
-      });
-    }
-  }
-
-  /**
-   * 选择选项
-   */
-  selectOption(optionValue) {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    if (this.currentQuestionIndex >= filteredQuestions.length) return;
-    
-    this.userAnswers[this.currentQuestionIndex] = optionValue;
-    this.saveAnswersToStorage();
-    
-    // 更新UI显示
-    this.restoreUserSelection(this.currentQuestionIndex);
-    this.updateSubmitButton();
-    
-    console.log(`题目 ${this.currentQuestionIndex + 1} 选择了选项: ${optionValue}`);
-  }
-
-  /**
-   * 一键随机选择选项
-   */
-  quickSelectOption() {
-    // 检查是否为邀请码模式（非常规模式），如果是则拦截
-    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
-      alert('当前模式下该功能不可用');
+    if (!currentQuestion) {
+      console.error('当前题目不存在');
       return;
     }
     
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    if (filteredQuestions.length === 0) return;
+    // 触发选择答案前事件钩子
+    const beforeSelectData = {
+      questionId: currentQuestion.id,
+      questionIndex: currentIndex,
+      optionValue,
+      previousAnswer: this.answerManager.getUserAnswers()[currentQuestion.id]
+    };
     
-    // 为所有题目随机选择答案
-    const options = ['A', 'B', 'C', 'D'];
-    let selectedCount = 0;
-    
-    for (let i = 0; i < filteredQuestions.length; i++) {
-      // 如果该题目还没有答案，则随机选择一个
-      if (!this.userAnswers[i]) {
-        const randomIndex = Math.floor(Math.random() * options.length);
-        const selectedOption = options[randomIndex];
-        this.userAnswers[i] = selectedOption;
-        selectedCount++;
-      }
-    }
-    
-    // 保存答案到本地存储
-    this.saveAnswersToStorage();
-    
-    // 更新当前题目的UI显示
-    this.restoreUserSelection(this.currentQuestionIndex);
-    this.updateSubmitButton();
-    
-    // 显示提示信息
-    this.showQuickSelectAllFeedback(selectedCount, filteredQuestions.length);
-  }
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.beforeAnswerSelect, beforeSelectData);
 
-  /**
-   * 显示一键选择反馈
-   */
-  showQuickSelectFeedback(selectedOption) {
-    const feedbackDiv = document.createElement('div');
-    feedbackDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      z-index: 10000;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-      animation: slideInRight 0.3s ease;
-    `;
-    feedbackDiv.innerHTML = `<i class="bi bi-lightning-fill"></i> 已随机选择选项 ${selectedOption}`;
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideInRight {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(feedbackDiv);
-    
-    // 3秒后自动移除
-    setTimeout(() => {
-      if (feedbackDiv.parentNode) {
-        feedbackDiv.style.animation = 'slideInRight 0.3s ease reverse';
-        setTimeout(() => {
-          feedbackDiv.remove();
-          style.remove();
-        }, 300);
-      }
-    }, 3000);
-  }
+    this.answerManager.selectOption(optionValue, currentQuestion.id);
 
-  /**
-   * 显示一键选择全部题目的反馈
-   */
-  showQuickSelectAllFeedback(selectedCount, totalCount) {
-    const feedbackDiv = document.createElement('div');
-    feedbackDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 8px;
-      z-index: 10000;
-      font-size: 16px;
-      font-weight: 600;
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-      animation: slideInRight 0.4s ease;
-      border-left: 4px solid #fff;
-    `;
-    
-    let message;
-    if (selectedCount === 0) {
-      message = `<i class="bi bi-check-circle-fill"></i> 所有 ${totalCount} 道题已完成！`;
-    } else {
-      message = `<i class="bi bi-lightning-fill"></i> 已为 ${selectedCount} 道题随机选择答案<br><small style="opacity: 0.9;">总共 ${totalCount} 道题</small>`;
-    }
-    
-    feedbackDiv.innerHTML = message;
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideInRight {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(feedbackDiv);
-    
-    // 4秒后自动移除
-    setTimeout(() => {
-      if (feedbackDiv.parentNode) {
-        feedbackDiv.style.animation = 'slideInRight 0.4s ease reverse';
-        setTimeout(() => {
-          feedbackDiv.remove();
-          style.remove();
-        }, 400);
-      }
-    }, 4000);
-  }
+    // 立即更新选项UI状态
+    this.uiManager.updateOptionSelection(optionValue);
 
-  /**
-   * 保存答案到本地存储
-   */
-  saveAnswersToStorage() {
-    try {
-      const data = {
-        answers: this.userAnswers,
-        currentIndex: this.currentQuestionIndex,
-        startTime: this.startTime,
-        version: this.currentVersion,
-        timestamp: Date.now()
-      };
-      let answerKey = 'paperfolding_answers_task1';
-      if (this.currentTask === 'task2') {
-        answerKey = 'paperfolding_answers_task2';
-      } else if (this.currentTask === 'task3') {
-        answerKey = 'paperfolding_answers_task3';
-      }
-      localStorage.setItem(answerKey, JSON.stringify(data));
-    } catch (error) {
-      console.error('保存答案失败:', error);
-    }
-  }
-
-  /**
-   * 从本地存储加载答案
-   */
-  loadAnswersFromStorage() {
-    try {
-      let answerKey = 'paperfolding_answers_task1';
-      if (this.currentTask === 'task2') {
-        answerKey = 'paperfolding_answers_task2';
-      } else if (this.currentTask === 'task3') {
-        answerKey = 'paperfolding_answers_task3';
-      }
-      const stored = localStorage.getItem(answerKey);
-      if (stored) {
-        const data = JSON.parse(stored);
-        this.userAnswers = data.answers || {};
-        this.currentQuestionIndex = data.currentIndex || 0;
-        this.startTime = data.startTime || Date.now();
-        this.currentVersion = data.version || 'A';
-        console.log('从本地存储加载答案');
-      }
-    } catch (error) {
-      console.error('加载答案失败:', error);
-      this.clearStoredAnswers();
-    }
-  }
-
-  /**
-   * 清除存储的答案
-   */
-  clearStoredAnswers() {
-    try {
-      let answerKey = 'paperfolding_answers_task1';
-      if (this.currentTask === 'task2') {
-        answerKey = 'paperfolding_answers_task2';
-      } else if (this.currentTask === 'task3') {
-        answerKey = 'paperfolding_answers_task3';
-      }
-      localStorage.removeItem(answerKey);
-      console.log('已清除存储的答案');
-    } catch (error) {
-      console.error('清除答案失败:', error);
-    }
-  }
-
-  /**
-   * 恢复用户选择
-   */
-  restoreUserSelection(questionIndex) {
-    const userAnswer = this.userAnswers[questionIndex];
+    // 更新UI状态
+    this.uiManager.updateSubmitButton(
+      this.answerManager.getAnsweredCount(),
+      this.questionManager.getFilteredQuestions().length
+    );
+    this.uiManager.updateProgress(
+      currentIndex,
+      this.questionManager.getFilteredQuestions().length,
+      this.answerManager.getAnsweredCount()
+    );
     
-    // 清除所有选项的选中状态
-    document.querySelectorAll('.option').forEach(option => {
-      option.classList.remove('selected');
+    // 触发选择答案后事件钩子
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.afterAnswerSelect, {
+      ...beforeSelectData,
+      newAnswer: optionValue,
+      timestamp: new Date().toISOString()
     });
-    
-    // 如果有用户答案，恢复选中状态
-    if (userAnswer) {
-      const selectedOption = document.querySelector(`[data-option="${userAnswer}"]`);
-      if (selectedOption) {
-        selectedOption.classList.add('selected');
-      }
-    }
   }
+
+  /**
+   * 处理题目显示
+   */
+  handleDisplayQuestion(index) {
+    const filteredQuestions = this.questionManager.getFilteredQuestions();
+    if (index < 0 || index >= filteredQuestions.length) return;
+
+    this.navigationManager.setCurrentQuestionIndex(index);
+    const question = filteredQuestions[index];
+
+    // 显示题目
+    this.uiManager.displayQuestion(index, question, filteredQuestions);
+    this.uiManager.restoreUserSelection(index, this.answerManager.getUserAnswers(), question);
+
+    // 更新UI状态
+    this.uiManager.updateProgress(
+      index,
+      filteredQuestions.length,
+      this.answerManager.getAnsweredCount()
+    );
+    this.uiManager.updateNavigationButtons(index, filteredQuestions.length);
+    this.uiManager.updateSubmitButton(
+      this.answerManager.getAnsweredCount(),
+      filteredQuestions.length
+    );
+
+    // 预加载相邻题目
+    this.navigationManager.preloadAdjacentQuestions(filteredQuestions);
+  }
+
+
 
   /**
    * 清除反馈信息
@@ -988,587 +336,165 @@ export class PaperFoldingTest {
   }
 
   /**
-   * 上一题
+   * 应用筛选器
+   * @param {string} filterType - 筛选器类型
    */
-  previousQuestion() {
-    if (this.currentQuestionIndex > 0) {
-      this.displayQuestion(this.currentQuestionIndex - 1);
-    }
-  }
-
-  /**
-   * 下一题
-   */
-  nextQuestion() {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    if (this.currentQuestionIndex < filteredQuestions.length - 1) {
-      this.displayQuestion(this.currentQuestionIndex + 1);
-    }
-  }
-
-  /**
-   * 跳转到指定题目
-   */
-  jumpToQuestion() {
-    const jumpInput = document.getElementById('jumpInput');
-    if (jumpInput) {
-      const targetIndex = parseInt(jumpInput.value) - 1;
-      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-      
-      if (targetIndex >= 0 && targetIndex < filteredQuestions.length) {
-        this.displayQuestion(targetIndex);
-        jumpInput.value = '';
-      } else {
-        alert(`请输入 1 到 ${filteredQuestions.length} 之间的数字`);
-      }
-    }
-  }
-
-  /**
-   * 切换版本
-   */
-  switchVersion(version) {
-    if (version === this.currentVersion) return;
+  async applyFilter(filterType) {
+    debug.mark('applyFilter_start');
+    debug.log('应用筛选器:', filterType);
     
-    const hasAnswers = Object.keys(this.userAnswers).length > 0;
-    if (hasAnswers) {
-      const confirmed = confirm('切换版本将清除当前答案，确定要继续吗？');
-      if (!confirmed) return;
-    }
+    const beforeCount = this.questionManager.getFilteredQuestions().length;
     
-    this.currentVersion = version;
-    this.userAnswers = {};
-    this.currentQuestionIndex = 0;
-    
-    // 更新UI
-    document.querySelectorAll('.version-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.version === version);
+    // 触发筛选前事件钩子
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.beforeFilterApply, {
+      filterType,
+      currentCount: beforeCount,
+      currentTask: this.questionManager.getCurrentTask()
     });
     
-    // 重新筛选题目
-     this.getCurrentFilter().applyFilter();
+    this.questionManager.getCurrentFilter().applyFilter(this.questionManager.getAllQuestions(), filterType);
     
-    this.displayQuestion(0);
-    this.updateProgress();
-    this.updateNavigationButtons();
-    this.updateSubmitButton();
-    this.getCurrentFilter().updateFilterInfo();
-    this.getCurrentFilter().updateJumpInputMax();
+    const afterCount = this.questionManager.getFilteredQuestions().length;
     
-    // 显示状态消息
-    const statusDiv = document.createElement('div');
-    statusDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #007bff;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      z-index: 10000;
-      font-size: 14px;
-    `;
-    statusDiv.textContent = `已切换到版本 ${version}`;
-    document.body.appendChild(statusDiv);
+    // 更新筛选按钮的高亮状态
+    this.uiManager.updateFilterButtonState(filterType);
     
-    setTimeout(() => {
-      if (statusDiv.parentNode) {
-        statusDiv.parentNode.removeChild(statusDiv);
-      }
-    }, 3000);
+    this.debugUtils.logStateChange('Filter', 
+      { type: 'previous', count: beforeCount }, 
+      { type: filterType, count: afterCount }, 
+      'filter_applied'
+    );
+    
+    this.handleDisplayQuestion(0);
+    
+    // 触发筛选后事件钩子
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.afterFilterApply, {
+      filterType,
+      beforeCount,
+      afterCount,
+      filteredQuestions: this.questionManager.getFilteredQuestions()
+    });
+    
+    debug.mark('applyFilter_end');
+    debug.measure('applyFilter_start', 'applyFilter_end');
+    debug.log(`筛选完成: ${beforeCount} -> ${afterCount} 题目`);
   }
 
   /**
-   * 更新导航按钮状态
+   * 切换任务
    */
-  updateNavigationButtons() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    
-    if (prevBtn) {
-      prevBtn.disabled = this.currentQuestionIndex === 0;
-    }
-    
-    if (nextBtn) {
-      nextBtn.disabled = this.currentQuestionIndex === filteredQuestions.length - 1;
-    }
-  }
-
-  /**
-   * 更新进度显示
-   */
-  updateProgress() {
-    const progressText = document.getElementById('progressText');
-    const progressBar = document.getElementById('progressBar');
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    
-    if (progressText) {
-      progressText.textContent = `${this.currentQuestionIndex + 1} / ${filteredQuestions.length}`;
-    }
-    
-    if (progressBar) {
-      const percentage = ((this.currentQuestionIndex + 1) / filteredQuestions.length) * 100;
-      progressBar.style.width = `${percentage}%`;
-    }
-  }
-
-  /**
-   * 更新提交按钮状态
-   */
-  updateSubmitButton() {
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-      const answeredCount = Object.keys(this.userAnswers).length;
-      const allAnswered = answeredCount === filteredQuestions.length;
+  async switchTask(task) {
+    try {
+      console.log(`开始切换任务到: ${task}`);
       
-      submitBtn.disabled = !allAnswered;
-      submitBtn.textContent = allAnswered ? 
-        `提交测试 (${answeredCount}/${filteredQuestions.length})` : 
-        `继续答题 (${answeredCount}/${filteredQuestions.length})`;
+      // 先更新按钮状态，避免用户重复点击
+      this.uiManager.syncTaskButtonState(task);
+      
+      // 在切换任务前，先保存当前任务的答案到localStorage
+      const previousTask = this.questionManager.getCurrentTask();
+      if (previousTask !== task) {
+        this.answerManager.saveAnswersToStorage(previousTask);
+        console.log(`已保存 ${previousTask} 的答案数据`);
+      }
+      
+      const success = await this.questionManager.switchTask(task, () => this.initializeUI());
+      if (success) {
+        
+        // 清除当前答案管理器中的答案（内存中的）
+        this.answerManager.clearAllAnswers();
+        
+        // 加载新task对应的答案（从localStorage）
+        const hasStoredData = this.answerManager.loadAnswersFromStorage(task);
+        
+        // 如果没有存储的数据或者没有开始时间，设置新的开始时间
+        if (!hasStoredData || !this.answerManager.getStartTime()) {
+          this.answerManager.setStartTime(Date.now());
+          console.log(`为任务 ${task} 设置新的开始时间`);
+        }
+        
+        // 更新筛选按钮文字
+        this.uiManager.updateFilterButtonTexts(task);
+        
+        // 重置筛选器状态为"全部题目"
+        this.uiManager.updateFilterButtonState('all');
+        
+        // 重置到第一题
+        this.navigationManager.setCurrentQuestionIndex(0);
+        
+        // 清除之前的答案选择状态
+        document.querySelectorAll('.option').forEach(option => {
+          option.classList.remove('selected');
+        });
+        
+        // 如果切换到task3，自动执行重新生成题目
+        if (task === 'task3') {
+          console.log('切换到task3，自动重新生成题目');
+          this.questionManager.regenerateQuestions(() => this.initializeUI());
+        } else {
+          // 重新初始化UI
+          this.initializeUI();
+        }
+        
+        console.log(`任务切换成功: ${task}，已加载对应的答案数据`);
+      } else {
+        console.log(`任务切换取消或失败: ${task}`);
+      }
+    } catch (error) {
+      console.error('任务切换失败:', error);
+      alert('任务切换失败，请重试');
+      
+      // 恢复之前的按钮状态
+      this.uiManager.syncTaskButtonState(this.questionManager.getCurrentTask());
     }
   }
 
   /**
    * 提交测试
    */
-  submitTest() {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    const answeredCount = Object.keys(this.userAnswers).length;
+  async submitTest() {
+    debug.mark('submitTest_start');
+    debug.log('开始提交测试');
     
-    if (answeredCount < filteredQuestions.length) {
-      alert(`还有 ${filteredQuestions.length - answeredCount} 道题未完成，请继续答题。`);
-      return;
-    }
-    
-    // 计算结果
-    const results = this.getTestResults();
-    
-    // 显示结果
-    this.showTestResults(results);
-    
-    // 上传到问卷星 (已禁用)
-    // this.wenjuanxingUploader.uploadToWenjuanxing(results);
-    
-    // 清除存储的答案
-    this.clearStoredAnswers();
-  }
-
-  /**
-   * 显示测试结果
-   */
-  showTestResults(results) {
-    // 禁用所有选项
-    document.querySelectorAll('.option').forEach(option => {
-      option.style.pointerEvents = 'none';
-      option.style.opacity = '0.6';
-    });
-    
-    // 显示正确答案
-    this.showCorrectAnswers();
-    
-    // 创建结果模态框
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    `;
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    `;
-    
-    modalContent.innerHTML = `
-      <div style="position: relative;">
-        <button id="closeResultBtn" style="position: absolute; top: -10px; right: -10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;" title="关闭">
-          ×
-        </button>
-        <h2 style="color: #28a745; margin-bottom: 20px;">
-          <i class="bi bi-check-circle-fill"></i> 测试完成！
-        </h2>
-        <div style="font-size: 18px; margin-bottom: 15px;">
-          <strong>准确率: ${results.accuracy}%</strong>
-        </div>
-        <div style="margin-bottom: 20px; color: #666;">
-          总题数: ${results.totalQuestions} 题<br>
-          正确: ${results.correctAnswers} 题<br>
-          用时: ${results.timeSpent}
-        </div>
-        <div style="text-align: center;">
-          <button id="downloadExcelBtn" class="btn btn-outline-success">
-            <i class="bi bi-download"></i> 下载答题数据
-          </button>
-        </div>
-      </div>
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    // 绑定关闭事件
-    document.getElementById('closeResultBtn').addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
-    
-    // 绑定下载Excel事件
-    document.getElementById('downloadExcelBtn').addEventListener('click', () => {
-      this.downloadAnswerDataAsExcel(results);
-    });
-    
-    // 点击模态框背景也可以关闭
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal);
-      }
-    });
-  }
-
-  /**
-   * 显示正确答案
-   */
-  showCorrectAnswers() {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    
-    filteredQuestions.forEach((question, index) => {
-      const userAnswer = this.userAnswers[index];
-      const correctAnswer = question.answer;
-      
-      // 这里需要根据实际的UI结构来显示正确答案
-      // 由于这是图片题目，可能需要在图片上标注或在其他地方显示
-      console.log(`题目 ${index + 1}: 用户答案=${userAnswer}, 正确答案=${correctAnswer}`);
-    });
-  }
-
-  /**
-   * 显示错误信息
-   */
-  showError(message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #dc3545;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 6px;
-      z-index: 10000;
-      max-width: 400px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    errorDiv.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${message}`;
-    document.body.appendChild(errorDiv);
-    
-    setTimeout(() => {
-      if (errorDiv.parentNode) {
-        errorDiv.parentNode.removeChild(errorDiv);
-      }
-    }, 5000);
-  }
-
-  /**
-   * 应用筛选
-   */
-  applyFilter(filterType) {
-    // 更新筛选按钮状态
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.filter === filterType);
-    });
-    
-    // 应用筛选
-    this.getCurrentFilter().applyFilter(this.allQuestions, filterType);
-    
-    // 重置到第一题
-    this.currentQuestionIndex = 0;
-    this.displayQuestion(0);
-    
-    // 更新UI
-    this.updateProgress();
-    this.updateNavigationButtons();
-    this.updateSubmitButton();
-    this.getCurrentFilter().updateFilterInfo();
-    this.getCurrentFilter().updateJumpInputMax();
-    
-    // 开始预加载
-    this.preloadCurrentQuestion();
-  }
-
-  /**
-   * 重新生成题目
-   */
-  regenerateQuestions() {
-    // 检查是否为邀请码模式（非常规模式），如果是则拦截
-    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
-      alert('当前模式下该功能不可用');
-      return;
-    }
-    
-    const hasAnswers = Object.keys(this.userAnswers).length > 0;
-    if (hasAnswers) {
-      const confirmed = confirm('重新生成将清除当前答案，确定要继续吗？');
-      if (!confirmed) return;
-    }
-    
-    // 清除所有数据
-    this.userAnswers = {};
-    this.currentQuestionIndex = 0;
-    this.startTime = null;
-    
-    // 清除存储
-    this.clearStoredAnswers();
-    
-    // 重新生成题目
-    this.getCurrentFilter().regenerateQuestions(this.allQuestions, this.getCurrentFilter().getCurrentFilter());
-    
-    // 重置UI
-    this.displayQuestion(0);
-    this.updateProgress();
-    this.updateNavigationButtons();
-    this.updateSubmitButton();
-    this.getCurrentFilter().updateFilterInfo();
-    this.getCurrentFilter().updateJumpInputMax();
-    
-    // 重新开始预加载
-    this.preloadCurrentQuestion();
-    
-    // 显示成功提示
-    this.getCurrentFilter().showRegenerateSuccess();
-  }
-
-  /**
-   * 获取测试结果
-   */
-  getTestResults() {
-    const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-    let correctCount = 0;
-    const results = [];
-    
-    filteredQuestions.forEach((question, index) => {
-      const userAnswer = this.userAnswers[index];
-      const correctAnswer = question.answer;
-      const isCorrect = userAnswer === correctAnswer;
-      
-      if (isCorrect) {
-        correctCount++;
-      }
-      
-      results.push({
-        questionNumber: index + 1,
-        userAnswer: userAnswer || '未答',
-        correctAnswer: correctAnswer,
-        isCorrect: isCorrect
-      });
-    });
-    
-    const accuracy = Math.round((correctCount / filteredQuestions.length) * 100);
-    const timeSpent = this.startTime ? this.formatTime(Date.now() - this.startTime) : '未知';
-    
-    return {
-      totalQuestions: filteredQuestions.length,
-      correctAnswers: correctCount,
-      accuracy: accuracy,
-      timeSpent: timeSpent,
-      answers: this.userAnswers,
-      version: this.currentVersion,
-      filter: this.getCurrentFilter().getCurrentFilter(),
-      seed: this.getCurrentFilter().getCurrentSeed(),
-      results: results
+    const testData = {
+      answers: this.answerManager.getUserAnswers(),
+      questions: this.questionManager.getFilteredQuestions(),
+      startTime: this.answerManager.getStartTime(),
+      task: this.questionManager.getCurrentTask(),
+      version: this.answerManager.getCurrentVersion(),
+      answeredCount: this.answerManager.getAnsweredCount(),
+      totalQuestions: this.questionManager.getFilteredQuestions().length
     };
-  }
-
-  /**
-   * 格式化时间
-   */
-  formatTime(milliseconds) {
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
     
-    if (minutes > 0) {
-      return `${minutes}分${remainingSeconds}秒`;
-    } else {
-      return `${remainingSeconds}秒`;
-    }
-  }
-
-  /**
-   * AI分析
-   */
-  analyzeWithAI() {
-    // 检查是否为邀请码模式（非常规模式），如果是则拦截
-    if (this.currentInviteCodeData && !this.currentInviteCodeData.isRegularMode) {
-      alert('当前模式下该功能不可用');
-      return;
-    }
+    debug.log('提交数据:', testData);
     
-    alert('AI分析功能开发中...');
-  }
-
-  /**
-   * 下载答题数据为Excel文件
-   */
-  downloadAnswerDataAsExcel(results) {
-    try {
-      const filteredQuestions = this.getCurrentFilter().getFilteredQuestions();
-      
-      // 创建CSV数据（Excel可以打开CSV文件）
-      let csvContent = '\uFEFF'; // BOM for UTF-8
-      csvContent += '题目编号,题目描述,正确答案,用户答案,答题结果\n';
-      
-      filteredQuestions.forEach((question, index) => {
-        const userAnswer = this.userAnswers[index] || '未答';
-        const correctAnswer = question.answer;
-        const isCorrect = userAnswer === correctAnswer ? '正确' : '错误';
-        const questionDesc = question.image || `第${index + 1}题`;
-        
-        // 转义CSV中的特殊字符
-        const escapeCsvField = (field) => {
-          if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
-            return '"' + field.replace(/"/g, '""') + '"';
-          }
-          return field;
-        };
-        
-        csvContent += `${escapeCsvField(index + 1)},${escapeCsvField(questionDesc)},${escapeCsvField(correctAnswer)},${escapeCsvField(userAnswer)},${escapeCsvField(isCorrect)}\n`;
-      });
-      
-      // 添加汇总信息
-      csvContent += '\n汇总信息\n';
-      csvContent += `总题数,${results.totalQuestions}\n`;
-      csvContent += `正确题数,${results.correctAnswers}\n`;
-      csvContent += `准确率,${results.accuracy}%\n`;
-      csvContent += `用时,${results.timeSpent}\n`;
-      csvContent += `测试版本,${this.currentVersion}\n`;
-      csvContent += `测试时间,${new Date().toLocaleString()}\n`;
-      
-      // 创建下载链接
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `纸折叠测试答题数据_${new Date().toISOString().slice(0, 10)}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // 显示下载成功提示
-      const downloadBtn = document.getElementById('downloadExcelBtn');
-      if (downloadBtn) {
-        const originalText = downloadBtn.innerHTML;
-        downloadBtn.innerHTML = '<i class="bi bi-check"></i> 下载成功';
-        downloadBtn.style.background = '#28a745';
-        downloadBtn.style.color = 'white';
-        setTimeout(() => {
-          downloadBtn.innerHTML = originalText;
-          downloadBtn.style.background = '';
-          downloadBtn.style.color = '';
-        }, 2000);
-      }
-      
-    } catch (error) {
-      console.error('下载Excel文件失败:', error);
-      alert('下载失败，请稍后重试');
-    }
-  }
-
-  /**
-   * 放大题干区域
-   */
-  zoomIn() {
-    if (this.zoomLevel < this.maxZoom) {
-      this.zoomLevel = Math.min(this.maxZoom, this.zoomLevel + this.zoomStep);
-      this.applyZoom();
-      this.updateZoomButtons();
-    }
-  }
-
-  /**
-   * 缩小题干区域
-   */
-  zoomOut() {
-    if (this.zoomLevel > this.minZoom) {
-      this.zoomLevel = Math.max(this.minZoom, this.zoomLevel - this.zoomStep);
-      this.applyZoom();
-      this.updateZoomButtons();
-    }
-  }
-
-  /**
-   * 应用缩放变换
-   */
-  applyZoom() {
-    const stemImages = document.querySelector('.stem-images img');
-    const stemContainer = document.querySelector('.stem-images');
+    // 触发提交前事件钩子
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.beforeSubmit, {
+      testData,
+      testInstance: this
+    });
     
-    if (stemImages) {
-      stemImages.style.transform = `scale(${this.zoomLevel})`;
-      stemImages.style.transformOrigin = 'center';
-      console.log(`题目图片缩放级别: ${this.zoomLevel.toFixed(1)}`);
-    }
+    this.debugUtils.logStateChange('Test', 
+      { status: 'in_progress' }, 
+      { status: 'submitting', ...testData }, 
+      'test_submit'
+    );
     
-    // 动态控制横向滚动条
-    if (stemContainer) {
-      if (this.zoomLevel <= 1.0) {
-        // 缩放级别小于等于1.0时，移除横向滚动条
-        stemContainer.style.overflowX = 'hidden';
-      } else {
-        // 缩放级别大于1.0时，显示横向滚动条
-        stemContainer.style.overflowX = 'auto';
-      }
-    }
-  }
-
-  /**
-   * 更新缩放按钮状态
-   */
-  updateZoomButtons() {
-    const zoomInBtn = document.getElementById('zoomInBtn');
-    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    this.testResultManager.submitTest(
+      testData.answers,
+      testData.questions,
+      testData.startTime,
+      testData.task,
+      testData.version
+    );
     
-    if (zoomInBtn) {
-      zoomInBtn.disabled = this.zoomLevel >= this.maxZoom;
-      zoomInBtn.title = this.zoomLevel >= this.maxZoom ? '已达到最大缩放' : `放大 (当前: ${(this.zoomLevel * 100).toFixed(0)}%)`;
-    }
+    // 触发提交后事件钩子
+    await extensibilityManager.triggerEvent(EVENT_HOOKS.afterSubmit, {
+      testData,
+      submitTime: new Date().toISOString()
+    });
     
-    if (zoomOutBtn) {
-      zoomOutBtn.disabled = this.zoomLevel <= this.minZoom;
-      zoomOutBtn.title = this.zoomLevel <= this.minZoom ? '已达到最小缩放' : `缩小 (当前: ${(this.zoomLevel * 100).toFixed(0)}%)`;
-    }
-  }
-
-  /**
-   * 重置缩放级别
-   */
-  resetZoom() {
-    this.zoomLevel = 1.0;
-    this.applyZoom();
-    this.updateZoomButtons();
-  }
-
-  // 调试方法
-  checkCacheStatus() {
-    return this.imageCache.getCacheStatus();
-  }
-
-  clearImageCache() {
-    this.imageCache.clearCache();
-    console.log('图片缓存已清除');
+    debug.mark('submitTest_end');
+    debug.measure('submitTest_start', 'submitTest_end');
+    debug.log('测试提交完成');
   }
 }

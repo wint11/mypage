@@ -49,7 +49,7 @@ export class Task2Filter {
       }
       
       this.filteredQuestions = this.baseQuestions.filter(q => 
-        this.extractFoldTypeFromPath(q.image_path) === targetFoldType
+        this.getFoldTypeFromQuestion(q) === targetFoldType
       );
     }
     
@@ -74,6 +74,19 @@ export class Task2Filter {
       return 3; // other类型，视为3步
     }
     return 1; // 默认1步
+  }
+
+  /**
+   * 从题目对象中获取fold类型
+   */
+  getFoldTypeFromQuestion(question) {
+    // 优先使用题目对象中的foldType属性
+    if (question.foldType) {
+      return question.foldType;
+    }
+    
+    // 兼容旧数据，从路径中提取
+    return this.extractFoldTypeFromPath(question.image_path);
   }
 
   /**
@@ -104,9 +117,9 @@ export class Task2Filter {
     console.log('生成任务二基础题库');
     
     // 按fold类型分组
-    const fold1Questions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'fold_1');
-    const fold2Questions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'fold_2');
-    const otherQuestions = allQuestions.filter(q => this.extractFoldTypeFromPath(q.image_path) === 'other');
+    const fold1Questions = allQuestions.filter(q => this.getFoldTypeFromQuestion(q) === 'fold_1');
+    const fold2Questions = allQuestions.filter(q => this.getFoldTypeFromQuestion(q) === 'fold_2');
+    const otherQuestions = allQuestions.filter(q => this.getFoldTypeFromQuestion(q) === 'other');
     
     console.log(`任务二 - fold_1题目数量: ${fold1Questions.length}`);
     console.log(`任务二 - fold_2题目数量: ${fold2Questions.length}`);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能监控仪表板 - 启元慧学</title>
+    <title>智能监控仪表板</title>
     <!-- Bootstrap CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -247,9 +247,59 @@
         </div>
     </div>
     
+    <!-- 浮动AI助手按钮 -->
+    <div id="aiAssistantBtn" class="ai-assistant-btn" onclick="window.location.href='prediction.html'">
+        <i class="fas fa-robot"></i>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="../js/bootstrap.bundle.min.js"></script>
     <!-- 自定义脚本 -->
     <script src="js/dashboard.js"></script>
+    
+    <!-- 浮动按钮样式和功能 -->
+    <style>
+        .ai-assistant-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            color: white;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        .ai-assistant-btn:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .ai-assistant-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.8);
+            }
+            100% {
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            }
+        }
+    </style>
 </body>
 </html>

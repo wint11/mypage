@@ -173,6 +173,242 @@ const courseMap = {
 
 ---
 
+## 🔧 扩展性设计
+
+系统采用模块化设计，支持多种扩展方式：
+
+### 1. 添加新课程
+
+**方法一：使用配置文件（推荐）**
+```javascript
+// 在 js/course-config.js 中添加新课程
+const courseMap = {
+  "course1": "../courses/gaodengshuxue.html",
+  "course2": "../courses/xianxingdaishu.html",
+  "course3": "../courses/gailvlun.html",
+  "course4": "../courses/lisuan.html",
+  "course5": "../courses/fubian.html",
+  "course6": "../courses/weifenfangcheng.html",
+  "course7": "../courses/new-course.html" // 新增课程
+};
+```
+
+**方法二：直接修改HTML**
+1. 在 `courses/` 目录中创建新课程页面
+2. 在 `views/my-courses.html` 中添加课程卡片
+3. 配置相应的数据文件和样式
+
+### 2. 添加新功能模块
+
+**创建新模块：**
+```bash
+# 创建模块目录结构
+mkdir new-module
+cd new-module
+mkdir css js html data
+touch README.md
+```
+
+**模块配置：**
+```javascript
+// 在相应的组件加载器中注册
+const moduleConfig = {
+  name: '新模块',
+  path: './new-module/',
+  dependencies: ['bootstrap', 'jquery'],
+  autoLoad: true
+};
+```
+
+### 3. 自定义主题
+
+**创建主题文件：**
+```css
+/* css/themes/custom-theme.css */
+:root {
+  --primary-color: #your-color;
+  --secondary-color: #your-secondary;
+  --background-color: #your-background;
+}
+```
+
+**应用主题：**
+```javascript
+// 动态切换主题
+function applyTheme(themeName) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `./css/themes/${themeName}.css`;
+  document.head.appendChild(link);
+}
+```
+
+### 4. 插件系统
+
+**创建插件：**
+```javascript
+// plugins/CustomPlugin.js
+export default class CustomPlugin {
+  constructor(options = {}) {
+    this.options = options;
+  }
+  
+  async init() {
+    console.log('自定义插件初始化');
+    // 插件初始化逻辑
+  }
+  
+  // 插件功能实现
+}
+```
+
+**加载插件：**
+```javascript
+// 在主应用中加载插件
+import CustomPlugin from './plugins/CustomPlugin.js';
+
+const plugin = new CustomPlugin({
+  // 插件配置
+});
+await plugin.init();
+```
+
+---
+
+## 🐛 调试指南
+
+### 常见问题排查
+
+**1. 组件加载失败**
+```javascript
+// 检查组件路径是否正确
+console.log('组件路径:', componentPath);
+
+// 检查网络请求
+fetch(componentPath)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.text();
+  })
+  .catch(error => console.error('组件加载失败:', error));
+```
+
+**2. Firebase 连接问题**
+```javascript
+// 检查 Firebase 配置
+console.log('Firebase 配置:', firebaseConfig);
+
+// 测试连接
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log('用户已登录:', user.uid);
+  } else {
+    console.log('用户未登录');
+  }
+});
+```
+
+**3. 样式冲突**
+```css
+/* 使用开发者工具检查样式优先级 */
+.debug-styles {
+  border: 2px solid red !important;
+  background: yellow !important;
+}
+```
+
+### 性能优化
+
+**1. 懒加载实现**
+```javascript
+// 图片懒加载
+const imageObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      imageObserver.unobserve(img);
+    }
+  });
+});
+
+document.querySelectorAll('img[data-src]').forEach(img => {
+  imageObserver.observe(img);
+});
+```
+
+**2. 缓存策略**
+```javascript
+// 本地存储缓存
+class CacheManager {
+  static set(key, data, expiry = 3600000) { // 1小时
+    const item = {
+      data: data,
+      timestamp: Date.now(),
+      expiry: expiry
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  }
+  
+  static get(key) {
+    const item = JSON.parse(localStorage.getItem(key));
+    if (!item) return null;
+    
+    if (Date.now() - item.timestamp > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    
+    return item.data;
+  }
+}
+```
+
+### 开发工具
+
+**1. 日志系统**
+```javascript
+// utils/Logger.js
+class Logger {
+  static debug(message, data = null) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[DEBUG] ${message}`, data);
+    }
+  }
+  
+  static error(message, error = null) {
+    console.error(`[ERROR] ${message}`, error);
+    // 可以发送到错误监控服务
+  }
+}
+```
+
+**2. 测试工具**
+```javascript
+// 简单的单元测试框架
+class SimpleTest {
+  static assert(condition, message) {
+    if (!condition) {
+      throw new Error(`断言失败: ${message}`);
+    }
+    console.log(`✓ ${message}`);
+  }
+  
+  static async run(testName, testFunction) {
+    try {
+      await testFunction();
+      console.log(`✓ ${testName} 通过`);
+    } catch (error) {
+      console.error(`✗ ${testName} 失败:`, error.message);
+    }
+  }
+}
+```
+
+---
+
 ## 📝 授权 License
 
 本项目遵循 MIT 许可证开源，欢迎修改和扩展。

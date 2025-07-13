@@ -128,25 +128,48 @@ export class NavigationManager {
   /**
    * 设置导航按钮事件监听器
    */
-  setupNavigationButtons(filteredQuestions, onDisplayQuestion) {
+  setupNavigationButtons(getFilteredQuestions, onDisplayQuestion) {
+    // 移动端按钮
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    // 桌面端按钮
+    const prevBtnDesktop = document.getElementById('prevBtnDesktop');
+    const nextBtnDesktop = document.getElementById('nextBtnDesktop');
     const jumpBtn = document.getElementById('jumpBtn');
     
+    // 上一题按钮事件处理函数
+    const handlePrevious = () => {
+      const filteredQuestions = getFilteredQuestions();
+      this.previousQuestion(filteredQuestions, onDisplayQuestion);
+    };
+    
+    // 下一题按钮事件处理函数
+    const handleNext = () => {
+      const filteredQuestions = getFilteredQuestions();
+      this.nextQuestion(filteredQuestions, onDisplayQuestion);
+    };
+    
+    // 为移动端按钮添加事件监听器
     if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        this.previousQuestion(filteredQuestions, onDisplayQuestion);
-      });
+      prevBtn.addEventListener('click', handlePrevious);
     }
     
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        this.nextQuestion(filteredQuestions, onDisplayQuestion);
-      });
+      nextBtn.addEventListener('click', handleNext);
+    }
+    
+    // 为桌面端按钮添加事件监听器
+    if (prevBtnDesktop) {
+      prevBtnDesktop.addEventListener('click', handlePrevious);
+    }
+    
+    if (nextBtnDesktop) {
+      nextBtnDesktop.addEventListener('click', handleNext);
     }
     
     if (jumpBtn) {
       jumpBtn.addEventListener('click', () => {
+        const filteredQuestions = getFilteredQuestions();
         this.jumpToQuestion(filteredQuestions, onDisplayQuestion);
       });
     }

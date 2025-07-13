@@ -297,6 +297,32 @@ body {
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
+/* 桌面端下拉列表样式 */
+.version-select {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 2px solid #6c757d;
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: #495057;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  outline: none;
+}
+
+.version-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.version-select:hover {
+  border-color: #007bff;
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
 .filter-buttons {
   display: flex;
   gap: 8px;
@@ -1056,10 +1082,399 @@ body {
   color: #ffffff !important;
 }
 
-/* 响应式设计 */
+/* 桌面端隐藏移动端导航按钮容器 */
+.nav-buttons-container {
+  display: none;
+}
+
+/* 确保桌面端显示导航按钮 */
+.navigation-controls > .left-section {
+  display: flex;
+}
+
+/* 桌面端下一题按钮样式 */
+.desktop-next-btn {
+  display: inline-flex;
+  margin-left: 10px;
+}
+
+/* 响应式设计 - 移动端优化 */
 @media (max-width: 768px) {
+  /* 桌面端的left-section在移动端隐藏 */
+  .navigation-controls > .left-section {
+    display: none;
+  }
+  
+  /* 显示移动端导航按钮容器 */
+  .nav-buttons-container {
+    display: flex;
+  }
+  
+  /* 移动端隐藏桌面端下一题按钮 */
+  .desktop-next-btn {
+    display: none;
+  }
+  body {
+    font-size: 14px;
+  }
+  
   .main-content {
-    padding: 70px 5px 5px 5px;
+    padding: 60px 8px 8px 8px;
+    min-height: calc(100vh - 68px);
+  }
+  
+  .test-container {
+    padding: 12px;
+    border-radius: 12px;
+    max-height: none;
+  }
+  
+  .test-title {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  /* 筛选控件移动端优化 */
+  .filter-controls {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+  
+  .controls-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .version-controls {
+    order: 1;
+    text-align: center;
+  }
+  
+  .filter-section {
+    order: 2;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .filter-info {
+    order: 3;
+    margin-left: 0;
+    text-align: center;
+    margin-top: 8px;
+  }
+  
+  .filter-buttons {
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 60px;
+    border-radius: 6px;
+    flex: 0 0 auto;
+  }
+  
+  .version-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    margin: 0 4px;
+  }
+  
+  .version-select {
+    padding: 8px 12px;
+    font-size: 13px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #374151;
+    min-width: 120px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .version-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .version-select:hover {
+    border-color: #667eea;
+  }
+  
+  .regenerate-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  
+  .filter-info span {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  /* 题目内容移动端优化 */
+  .question-content {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .question-stem h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  
+  /* 题干图片容器优化 */
+  .stem-images-container {
+    margin-bottom: 20px;
+  }
+  
+  .stem-images {
+    max-height: 300px;
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .stem-images img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+  }
+  
+  .fold-arrow {
+    font-size: 20px;
+    min-width: 25px;
+    min-height: 25px;
+    margin: 8px 0;
+  }
+  
+  /* 缩放控制按钮移动端优化 */
+  .zoom-controls {
+    bottom: 8px;
+    right: 8px;
+  }
+  
+  .zoom-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  /* 题目图片移动端优化 */
+  .question-image {
+    min-height: 200px;
+    max-height: 300px;
+    border-radius: 6px;
+  }
+  
+  .question-image-container {
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  /* 选项区域移动端优化 */
+  .question-options h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  
+  .options-container {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .option {
+    padding: 8px;
+    border-radius: 8px;
+    min-width: 80px;
+    max-width: calc(50% - 4px);
+    flex: 0 1 auto;
+  }
+  
+  .option:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  }
+  
+  .option.selected {
+    transform: none;
+  }
+  
+  .option.selected::before {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    top: 4px;
+    right: 4px;
+  }
+  
+  .option img {
+    height: 60px;
+    border-radius: 4px;
+  }
+  
+  .option-label {
+    font-size: 1rem;
+    padding: 6px 0;
+    margin-top: 4px;
+  }
+  
+  /* 导航控制移动端优化 */
+  .navigation-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    margin-top: 15px;
+  }
+  
+  /* 创建导航按钮容器，让上一题和下一题在同一行 */
+  .nav-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+    order: 1;
+  }
+  
+  .nav-buttons-container .left-section {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .nav-next-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .center-section {
+    order: 2;
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .right-section {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .progress-info {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    max-width: 250px;
+    height: 8px;
+  }
+  
+  .jump-controls {
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .jump-input {
+    width: 60px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  
+  .jump-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .nav-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 120px;
+    border-radius: 8px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  /* AI按钮移动端优化 - 隐藏AI按钮 */
+  .ai-section {
+    display: none;
+  }
+  
+  /* 结果显示移动端优化 */
+  .results-container {
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .score-display {
+    font-size: 2rem;
+  }
+  
+  .grade-display {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+  }
+  
+  /* 答题须知页面移动端优化 */
+  .instructions-container {
+    padding: 20px;
+    margin: 10px;
+    max-width: none;
+  }
+  
+  .instructions-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .instructions-text p {
+    font-size: 14px;
+  }
+  
+  .instructions-text ul {
+    font-size: 13px;
+  }
+  
+  .invite-code-input {
+    font-size: 16px;
+    padding: 12px;
+  }
+  
+  .confirm-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* 小屏幕手机优化 (iPhone SE等) */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 55px 5px 5px 5px;
   }
   
   .test-container {
@@ -1067,75 +1482,36 @@ body {
   }
   
   .test-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .filter-controls {
     padding: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .filter-buttons {
-    gap: 6px;
-    justify-content: center;
   }
   
   .filter-btn {
-    padding: 4px 8px;
+    padding: 6px 8px;
     font-size: 11px;
     min-width: 50px;
   }
   
-  .filter-info {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .filter-info span {
+  .version-btn {
+    padding: 6px 10px;
     font-size: 11px;
   }
   
-
-
-  .question-content {
+  .stem-images {
+    max-height: 250px;
     padding: 8px;
   }
   
-  /* 移动端题目图片样式 */
-  .question-image {
-    min-height: 250px;
-    max-height: 400px;
-  }
-  
-  .question-image-container {
-    margin: 10px 0;
-    padding: 10px;
-  }
-  
   .stem-images img {
-    max-width: 280px;
-    max-height: 280px;
+    max-height: 150px;
   }
   
-  .option {
-    padding: 6px;
-  }
-  
-  .option:hover {
-    transform: none;
-  }
-  
-  .option.selected::before {
-    width: 18px;
-    height: 18px;
-    font-size: 14px;
-    top: 2px;
-    right: 4px;
-  }
-  
-  .fold-arrow {
-    font-size: 18px;
-    min-width: 20px;
+  .question-image {
+    min-height: 150px;
+    max-height: 250px;
   }
   
   .options-container {
@@ -1143,7 +1519,7 @@ body {
   }
   
   .option {
-    padding: 3px;
+    padding: 6px;
     min-width: 70px;
   }
   
@@ -1151,21 +1527,38 @@ body {
     height: 50px;
   }
   
-  .navigation-controls {
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 8px;
-    margin-top: 10px;
-  }
-  
-  .submit-btn {
-    margin-left: 0;
-    margin-top: 8px;
-    width: 100%;
+  .option-label {
+    font-size: 0.9rem;
   }
   
   .nav-btn {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 12px;
+    min-width: 100px;
+  }
+  
+  .nav-buttons-container .nav-btn {
+    min-width: 90px;
+    padding: 8px 12px;
+  }
+  
+  .submit-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .zoom-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  
+  .instructions-container {
+    padding: 15px;
+    margin: 5px;
+  }
+  
+  .instructions-title {
+    font-size: 1.3rem;
   }
 }

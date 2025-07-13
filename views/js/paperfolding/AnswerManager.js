@@ -3,20 +3,22 @@
  * 负责答案的选择、保存、加载和管理
  */
 export class AnswerManager {
-  constructor() {
+  constructor(questionManager = null) {
     this.userAnswers = {};
     this.startTime = null;
     this.currentVersion = 'A';
+    this.questionManager = questionManager;
   }
 
   /**
    * 选择选项
    */
-  selectOption(optionValue, questionIndex) {
-    this.userAnswers[questionIndex] = optionValue;
-    this.saveAnswersToStorage();
+  selectOption(optionValue, questionId) {
+    this.userAnswers[questionId] = optionValue;
+    const currentTask = this.questionManager ? this.questionManager.getCurrentTask() : 'task1';
+    this.saveAnswersToStorage(currentTask);
     
-    console.log(`题目 ${questionIndex + 1} 选择了选项: ${optionValue}`);
+    console.log(`题目 ${questionId} 选择了选项: ${optionValue}`);
     return true;
   }
 
@@ -39,17 +41,19 @@ export class AnswerManager {
     let selectedCount = 0;
     
     for (let i = 0; i < filteredQuestions.length; i++) {
+      const question = filteredQuestions[i];
       // 如果该题目还没有答案，则随机选择一个
-      if (!this.userAnswers[i]) {
+      if (!this.userAnswers[question.id]) {
         const randomIndex = Math.floor(Math.random() * options.length);
         const selectedOption = options[randomIndex];
-        this.userAnswers[i] = selectedOption;
+        this.userAnswers[question.id] = selectedOption;
         selectedCount++;
       }
     }
     
     // 保存答案到本地存储
-    this.saveAnswersToStorage();
+    const currentTask = this.questionManager ? this.questionManager.getCurrentTask() : 'task1';
+    this.saveAnswersToStorage(currentTask);
     
     return { selectedCount, totalCount: filteredQuestions.length };
   }
@@ -95,7 +99,7 @@ export class AnswerManager {
       if (stored) {
         const data = JSON.parse(stored);
         this.userAnswers = data.answers || {};
-        this.startTime = data.startTime || Date.now();
+        this.startTime = data.startTime || null; // 不自动设置开始时间
         this.currentVersion = data.version || 'A';
         console.log('从本地存储加载答案');
         return true;
@@ -104,6 +108,11 @@ export class AnswerManager {
       console.error('加载答案失败:', error);
       this.clearStoredAnswers(currentTask);
     }
+    
+    // 没有存储数据时，重置状态但不设置开始时间
+    this.userAnswers = {};
+    this.startTime = null;
+    this.currentVersion = 'A';
     return false;
   }
 
@@ -144,8 +153,8 @@ export class AnswerManager {
   /**
    * 获取指定题目的答案
    */
-  getAnswerForQuestion(questionIndex) {
-    return this.userAnswers[questionIndex];
+  getAnswerForQuestion(questionId) {
+    return this.userAnswers[questionId];
   }
 
   /**
@@ -208,16 +217,17 @@ export class AnswerManager {
   }
 
   /**
-   * 切换任务时清除答案
+   * 切换任务时的确认逻辑
+   * 注意：实际的答案清除和加载现在由PaperFoldingTest管理
    */
   switchTask() {
     const hasAnswers = Object.keys(this.userAnswers).length > 0;
     if (hasAnswers) {
-      const confirmed = confirm('切换任务将清除当前答案，确定要继续吗？');
+      const confirmed = confirm('切换任务将保存当前答案并加载新任务的答案，确定要继续吗？');
       if (!confirmed) return false;
     }
     
-    this.clearAllAnswers();
+    // 不再在这里清除答案，由PaperFoldingTest统一管理
     return true;
   }
 }
