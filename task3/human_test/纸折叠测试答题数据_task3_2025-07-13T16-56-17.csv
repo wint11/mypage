@@ -1,0 +1,43 @@
+﻿# 纸折叠测试结果报告
+# 任务: task3
+# 测试时间: 2025/7/14 00:40:12 - 2025/7/14 00:56:14
+# 总题数: 30
+# 已答题数: 30
+# 完成率: 100%
+# 正确题数: 25
+# 有标准答案题数: 30
+# 准确率: 83.33%
+# 总用时: 16分1秒
+# 平均用时: 0分32秒
+
+题目编号,题目描述,正确答案,用户答案,答题结果
+1,"/task3/task3_selected/fold/Hexagon_006.png",D,D,正确
+2,"/task3/task3_selected/fold/Hexagon_010.png",B,B,正确
+3,"/task3/task3_selected/fold/House_055.png",D,A,错误
+4,"/task3/task3_selected/fold/square_009.png",C,C,正确
+5,"/task3/task3_selected/fold/Hexagon_063.png",D,D,正确
+6,"/task3/task3_selected/fold/circle_018.png",B,B,正确
+7,"/task3/task3_selected/fold/circle_096.png",D,B,错误
+8,"/task3/task3_selected/fold/square_061.png",C,C,正确
+9,"/task3/task3_selected/fold/House_088.png",C,D,错误
+10,"/task3/task3_selected/fold/House_019.png",C,B,错误
+11,"/task3/task3_selected/fold/Rectangle_082.png",D,D,正确
+12,"/task3/task3_selected/fold/circle_063.png",B,B,正确
+13,"/task3/task3_selected/fold/square_101.png",D,D,正确
+14,"/task3/task3_selected/fold/Rectangle_029.png",B,B,正确
+15,"/task3/task3_selected/fold/Rectangle_085.png",B,B,正确
+16,"/task3/task3_selected/fold/Hexagon_044.png",C,C,正确
+17,"/task3/task3_selected/fold/House_072.png",A,A,正确
+18,"/task3/task3_selected/fold/House_047.png",C,C,正确
+19,"/task3/task3_selected/fold/Hexagon_029.png",D,D,正确
+20,"/task3/task3_selected/fold/circle_027.png",B,B,正确
+21,"/task3/task3_selected/fold/Rectangle_039.png",D,D,正确
+22,"/task3/task3_selected/fold/Rectangle_101.png",A,A,正确
+23,"/task3/task3_selected/fold/Hexagon_014.png",D,B,错误
+24,"/task3/task3_selected/fold/square_012.png",A,A,正确
+25,"/task3/task3_selected/fold/circle_066.png",B,B,正确
+26,"/task3/task3_selected/fold/Rectangle_071.png",D,D,正确
+27,"/task3/task3_selected/fold/circle_091.png",A,A,正确
+28,"/task3/task3_selected/fold/House_015.png",A,A,正确
+29,"/task3/task3_selected/fold/square_098.png",C,C,正确
+30,"/task3/task3_selected/fold/square_051.png",A,A,正确
