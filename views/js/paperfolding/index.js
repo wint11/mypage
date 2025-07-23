@@ -12,6 +12,8 @@ export { Downloader } from './Downloader.js';
 export { Filter } from './Filter.js';
 export { Task1Filter } from './task1Filter.js';
 export { Task2Filter } from './task2Filter.js';
+export { Task3Filter } from './task3Filter.js';
+export { Task4Filter } from './task4filter.js';
 export { RandomUtils } from './RandomUtils.js';
 export { InstructionsPage } from './InstructionsPage.js';
 export { PaperFoldingTest } from './PaperFoldingTest.js';

@@ -201,30 +201,40 @@ export class UIManager {
     
     if (currentTask === 'task1') {
       filterButtons.forEach(btn => {
-        btn.style.display = 'inline-block';
         const filterType = btn.dataset.filter;
         if (filterType === 'all') {
           btn.textContent = '全部题目';
+          btn.style.display = 'inline-block';
         } else if (filterType === '3') {
           btn.textContent = '3步折叠';
+          btn.style.display = 'inline-block';
         } else if (filterType === '4') {
           btn.textContent = '4步折叠';
+          btn.style.display = 'inline-block';
         } else if (filterType === '5') {
           btn.textContent = '5步折叠';
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
         }
       });
     } else if (currentTask === 'task2') {
       filterButtons.forEach(btn => {
-        btn.style.display = 'inline-block';
         const filterType = btn.dataset.filter;
         if (filterType === 'all') {
           btn.textContent = '全部题目';
+          btn.style.display = 'inline-block';
         } else if (filterType === '3') {
           btn.textContent = '3步折叠';
+          btn.style.display = 'inline-block';
         } else if (filterType === '4') {
           btn.textContent = '4步折叠';
+          btn.style.display = 'inline-block';
         } else if (filterType === '5') {
           btn.textContent = '其它折叠';
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
         }
       });
     } else if (currentTask === 'task3') {
@@ -233,6 +243,22 @@ export class UIManager {
         if (filterType === 'all') {
           btn.textContent = '全部题目';
           btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+    } else if (currentTask === 'task4') {
+      filterButtons.forEach(btn => {
+        const filterType = btn.dataset.filter;
+        if (filterType === 'all') {
+          btn.textContent = '全部题目';
+        //   btn.style.display = 'inline-block';
+        // } else if (filterType === 'easy') {
+        //   btn.textContent = '简单';
+        //   btn.style.display = 'inline-block';
+        // } else if (filterType === 'hard') {
+        //   btn.textContent = '困难';
+        //   btn.style.display = 'inline-block';
         } else {
           btn.style.display = 'none';
         }

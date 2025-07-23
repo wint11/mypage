@@ -33,6 +33,15 @@ export const TASK_CONFIGS = {
     timeLimit: null,
     allowRegenerate: false,
     supportedFilters: ['all', 'answered', 'unanswered']
+  },
+  task4: {
+    name: '任务四：2D到3D推理',
+    description: '2D到3D空间推理认知测试',
+    filterClass: 'Task4Filter',
+    defaultQuestionCount: 30,
+    timeLimit: null,
+    allowRegenerate: true,
+    supportedFilters: ['all', 'N', 'Y', 'easy', 'hard']
   }
 };
 

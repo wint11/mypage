@@ -1,0 +1,410 @@
+%File: anonymous-submission-latex-2026.tex
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage[submission]{aaai2026}  % DO NOT CHANGE THIS
+\usepackage{times}  % DO NOT CHANGE THIS
+\usepackage{helvet}  % DO NOT CHANGE THIS
+\usepackage{courier}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{subfig} 
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\frenchspacing  % DO NOT CHANGE THIS
+\setlength{\pdfpagewidth}{8.5in} % DO NOT CHANGE THIS
+\setlength{\pdfpageheight}{11in} % DO NOT CHANGE THIS
+%
+% These are recommended to typeset algorithms but not required. See the subsubsection on algorithms. Remove them if you don't have algorithms in your paper.
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+%
+% These are are recommended to typeset listings but not required. See the subsubsection on listing. Remove this block if you don't have listings in your paper.
+\usepackage{newfloat}
+\usepackage{listings}
+\DeclareCaptionStyle{ruled}{labelfont=normalfont,labelsep=colon,strut=off} % DO NOT CHANGE THIS
+\lstset{%
+	basicstyle={\footnotesize\ttfamily},% footnotesize acceptable for monospace
+	numbers=left,numberstyle=\footnotesize,xleftmargin=2em,% show line numbers, remove this entire line if you don't want the numbers.
+	aboveskip=0pt,belowskip=0pt,%
+	showstringspaces=false,tabsize=2,breaklines=true}
+\floatstyle{ruled}
+\newfloat{listing}{tb}{lst}{}
+\floatname{listing}{Listing}
+%
+% Keep the \pdfinfo as shown here. There's no need
+% for you to add the /Title and /Author tags.
+\pdfinfo{
+/TemplateVersion (2026.1)
+}
+
+% DISALLOWED PACKAGES
+% \usepackage{authblk} -- This package is specifically forbidden
+% \usepackage{balance} -- This package is specifically forbidden
+% \usepackage{color (if used in text)
+% \usepackage{CJK} -- This package is specifically forbidden
+% \usepackage{float} -- This package is specifically forbidden
+% \usepackage{flushend} -- This package is specifically forbidden
+% \usepackage{fontenc} -- This package is specifically forbidden
+% \usepackage{fullpage} -- This package is specifically forbidden
+% \usepackage{geometry} -- This package is specifically forbidden
+% \usepackage{grffile} -- This package is specifically forbidden
+% \usepackage{hyperref} -- This package is specifically forbidden
+% \usepackage{navigator} -- This package is specifically forbidden
+% (or any other package that embeds links such as navigator or hyperref)
+% \indentfirst} -- This package is specifically forbidden
+% \layout} -- This package is specifically forbidden
+% \multicol} -- This package is specifically forbidden
+% \nameref} -- This package is specifically forbidden
+% \usepackage{savetrees} -- This package is specifically forbidden
+% \usepackage{setspace} -- This package is specifically forbidden
+% \usepackage{stfloats} -- This package is specifically forbidden
+% \usepackage{tabu} -- This package is specifically forbidden
+% \usepackage{titlesec} -- This package is specifically forbidden
+% \usepackage{tocbibind} -- This package is specifically forbidden
+% \usepackage{ulem} -- This package is specifically forbidden
+% \usepackage{wrapfig} -- This package is specifically forbidden
+% DISALLOWED COMMANDS
+% \nocopyright -- Your paper will not be published if you use this command
+% \addtolength -- This command may not be used
+% \balance -- This command may not be used
+% \baselinestretch -- Your paper will not be published if you use this command
+% \clearpage -- No page breaks of any kind may be used for the final version of your paper
+% \columnsep -- This command may not be used
+% \newpage -- No page breaks of any kind may be used for the final version of your paper
+% \pagebreak -- No page breaks of any kind may be used for the final version of your paperr
+% \pagestyle -- This command may not be used
+% \tiny -- This is not an acceptable font size.
+% \vspace{- -- No negative value may be used in proximity of a caption, figure, table, section, subsection, subsubsection, or reference
+% \vskip{- -- No negative value may be used to alter spacing above or below a caption, figure, table, section, subsection, subsubsection, or reference
+
+\setcounter{secnumdepth}{0} %May be changed to 1 or 2 if section numbers are desired.
+
+% The file aaai2026.sty is the style file for AAAI Press
+% proceedings, working notes, and technical reports.
+%
+
+% Title
+
+% Your title must be in mixed case, not sentence case.
+% That means all verbs (including short verbs like be, is, using,and go),
+% nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
+% articles, conjunctions, and prepositions are lower case unless they
+% directly follow a colon or long dash
+\title{Paper Fold Puzzles: Can Multi-modal Large Language Models do Spatial Reasoning during Folding Operations?}
+\author{
+    %Authors
+    % All authors must be in the same font size and format.
+    Written by AAAI Press Staff\textsuperscript{\rm 1}\thanks{With help from the AAAI Publications Committee.}\\
+    AAAI Style Contributions by Pater Patel Schneider,
+    Sunil Issar,\\
+    J. Scott Penberthy,
+    George Ferguson,
+    Hans Guesgen,
+    Francisco Cruz\equalcontrib,
+    Marc Pujol-Gonzalez\equalcontrib
+}
+\affiliations{
+    %Afiliations
+    \textsuperscript{\rm 1}Association for the Advancement of Artificial Intelligence\\
+    % If you have multiple authors and multiple affiliations
+    % use superscripts in text and roman font to identify them.
+    % For example,
+
+    % Sunil Issar\textsuperscript{\rm 2},
+    % J. Scott Penberthy\textsuperscript{\rm 3},
+    % George Ferguson\textsuperscript{\rm 4},
+    % Hans Guesgen\textsuperscript{\rm 5}
+    % Note that the comma should be placed after the superscript
+
+    1101 Pennsylvania Ave, NW Suite 300\\
+    Washington, DC 20004 USA\\
+    % email address must be in roman text type, not monospace or sans serif
+    proceedings-questions@aaai.org
+%
+% See more examples next
+}
+
+%Example, Single Author, ->> remove \iffalse,\fi and place them surrounding AAAI title to use it
+\iffalse
+\title{My Publication Title --- Single Author}
+\author {
+    Author Name
+}
+\affiliations{
+    Affiliation\\
+    Affiliation Line 2\\
+    name@example.com
+}
+\fi
+
+\iffalse
+%Example, Multiple Authors, ->> remove \iffalse,\fi and place them surrounding AAAI title to use it
+\title{My Publication Title --- Multiple Authors}
+\author {
+    % Authors
+    First Author Name\textsuperscript{\rm 1},
+    Second Author Name\textsuperscript{\rm 2},
+    Third Author Name\textsuperscript{\rm 1}
+}
+\affiliations {
+    % Affiliations
+    \textsuperscript{\rm 1}Affiliation 1\\
+    \textsuperscript{\rm 2}Affiliation 2\\
+    firstAuthor@affiliation1.com, secondAuthor@affilation2.com, thirdAuthor@affiliation1.com
+}
+\fi
+
+
+% REMOVE THIS: bibentry
+% This is only needed to show inline citations in the guidelines document. You should not need it and can safely delete it.
+\usepackage{bibentry}
+% END REMOVE bibentry
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+AAAI creates proceedings, working notes, and technical reports directly from electronic source furnished by the authors. To ensure that all papers in the publication have a uniform appearance, authors must adhere to the following instructions.
+\end{abstract}
+
+% Uncomment the following to link to your code, datasets, an extended version or similar.
+% You must keep this block between (not within) the abstract and the main body of the paper.
+% \begin{links}
+%     \link{Code}{https://aaai.org/example/code}
+%     \link{Datasets}{https://aaai.org/example/datasets}
+%     \link{Extended version}{https://aaai.org/example/extended-version}
+% \end{links}
+
+\section{Introduction}
+This paper introduces a novel AVR dataset that extends beyond existing datasets such as RAVEN, MARVEL, LEGO, and iVISPAR. In addition to providing 2D abstract visual reasoning, the proposed dataset also enables reasoning across 2D and 3D representations. Moreover, it is grounded in a practical application context—paper folding.
+Based on a custom-designed paper folding simulation program that supports detailed step-by-step folding and cut-out operations, we introduce Paper Fold Puzzles, a benchmark specifically designed to evaluate the single-step and multi-step sequential reasoning, as well as forward and backward spatial reasoning capabilities of Multimodal Large Language Models (MLLMs). Paper Fold Puzzles comprises a diverse collection of over 3,000 carefully curated visual question–answer (VQA) pairs across 9 distinct tasks, organized into five main groups, as shown in Figure~\ref{fig1}. These five groups encompass fundamental evaluations of spatial reasoning skills, including tasks such as single-step and multi-step sequential reasoning, odd-one-out, reassembly, and inductive reasoning. Among them, odd-one-out and reassembly are designed to assess 2D-to-3D spatial reasoning, requiring models to mentally reconstruct or compare 3D structures based on 2D fold patterns. In contrast, the remaining tasks focus primarily on 2D spatial reasoning. Notably, the induction task targets backward reasoning, where models must infer folding rules or operations based on the final folded shape. We construct these tasks to enable a fine-grained and comprehensive evaluation of MLLMs’ capabilities in both spatial and sequential reasoning.
+
+\begin{figure*}[t]
+\centering
+\subfloat[Problem statistics in Paper Fold Puzzles]{%
+    \includegraphics[width=0.65\columnwidth]{figure1a}
+    \label{fig:1a}%
+}
+\hspace{0.05\columnwidth} 
+\subfloat[Data curation pipeline]{%
+    \includegraphics[width=0.65\columnwidth]{figure1b}
+    \label{fig:1b}%
+}
+\caption{Problem statistics and data curation in Paper Fold Puzzles.}
+\label{fig1}
+\end{figure*}
+In summary, Paper Fold Puzzles offers a thorough assessment of multi-modal large language models' (MLLMs) sequential reasoning and spatial comprehension abilities. The main contributions of our work are as follows:
+\begin{itemize}
+    \item \textbf{Evaluation for single-step and multi-step sequential reasoning.} Based on a step-by-step building process, Paper Fold Puzzles is the first benchmark explicitly designed to assess single-step and multi-step sequential reasoning. Each task in this benchmark requires reasoning about up to 3 folds and 4 cutout shapes.
+    \item \textbf{Evaluation of forward reasoning and backward spatial reasoning.} Our benchmark comprises a diverse array of tasks, including reasoning about outcomes from step-by-step paper folding procedures and inferring paper folding rules from final results. This facilitates a systematic evaluation of MLLMs' reasoning capabilities across different spatial and sequential thinking dimensions.
+    \item \textbf{Dataset Synthesis and Extensive Experiments.} We synthesized 3,000 puzzles, tested a wide range of state-of-the-art MLLMs, and compared their performance against human answers, providing insights into their strengths, weaknesses, and future improvement directions for AVR tasks and MLLM development.
+\end{itemize}
+
+\section{Related Work}
+
+\section{Paper Fold Puzzles}
+
+In this section, we present Paper Fold Puzzles, a diverse and comprehensive benchmark designed to rigorously evaluate the multi-step 2D and 3D spatial reasoning capabilities of Multimodal Large Language Models (MLLMs) in both forward and backward directions.
+
+Specifically, in the following paragraphs, we elaborate on the motivation behind the proposed benchmark and provide formal definitions for each task type. We then describe the dataset construction pipeline, including the simulation of folding operations, the automated generation of question–answer pairs, and the systematic control of task difficulty.
+\section{Task Definition}
+To thoroughly evaluate spatial reasoning in MLLMs, we define five categories of tasks.
+
+Task 1 (Single-Step Reasoning) focuses on single-step reasoning and is composed of four subtasks: 1-Fold, 2-Fold, 3-Fold, and Others, each representing a different level or type of folding complexity.
+
+The 1-Fold category consists of two-layer paper folding problems generated by a single folding operation, including horizontal, vertical, or diagonal folds, as well as their symmetric variants along parallel axes.
+
+The 2-Fold category comprises problems involving two sequential folding operations from the same set, resulting in folded structures with 2 to 4 layers.
+
+The 3-Fold category includes problems formed by three such folding operations, producing more complex configurations with 3 to 8 layers.
+
+The Others category contains a set of more challenging corner-folding problems selected from the 1-Fold set, such as two- to four-corner folds that still produce two-layer structures.
+
+Task 2 (Multi-Step Reasoning) is built upon the 3-Fold subset of Task 1 (Single-Step Reasoning), but reformulates the question type. Instead of predicting the final state, the task requires identifying a step that does not occur in the transition from the initial to the target state.
+
+Task 3 (Rules Induction) is designed as a reverse reasoning task based on the 1-Fold, 2-Fold, and Others subsets from Task 1. Instead of predicting the outcome of folding operations, this task presents a hollow-out pattern and requires humans or MLLMs to infer the folding steps that could have produced it. To control task difficulty, only one-step or two-step folding operations are used.
+
+\section{Dataset Curation}
+As shown in Figure~\ref{fig:1b}, the proposed data construction pipeline consists of three major components: data simulation, automatic generation of question–answer pairs, and task difficulty calibration. This modular framework facilitates scalable dataset generation while maintaining high accuracy and consistency across tasks.
+
+\section{Experiment}
+\subsection{Experimental Setting}
+\subsubsection{Model Selection}
+\subsubsection{Evaluation Metrics}
+
+\subsection{Main Results}
+We include evaluation results for our tasks and summarize key findings as follows.
+
+\noindent \textbf{Gap between Open-source and Proprietary Models.}
+
+In order to comprehensively evaluate the performance of open source multimodal large language models, we analyze them from four key aspects: task understanding ability, reasoning analysis ability, recognition accuracy, and output format specification. Each aspect shows a clear gap between the open-source model and the closed-source model.
+
+In terms of task understanding, open source models clearly fall short in understanding the core requirements of spatial reasoning tasks. These models often simply repeat the cue words without really understanding the underlying meaning of the task.
+
+In terms of reasoning analysis, the open source model often makes mistakes, such as misinterpreting the "fold" operation as a "cut" operation. They mainly focus on the quantitative relationship, but ignore the real meaning of folding. The reasoning process of these models relies on fuzzy positional relationships and simple numerical calculations, and lacks the methodical step-wise analysis (such as the first step, the second step, etc.) as that of closed source models, which shows that the understanding of task logic is not deep enough.
+
+In terms of visual recognition accuracy, the description of open source models is often vague, which affects their performance in fine object recognition tasks. For example, they tend to use general expressions like "two blue shapes" rather than identifying specific geometric features. In contrast, closed-source models are able to provide more precise descriptions such as "one hexagon and one pentagon", showing stronger visual understanding and description capabilities.
+
+In terms of output format specification, open source models often fail to output results in accordance with the specified format requirements, resulting in inconsistent and disorganized answers. This format irregularity further affects their reliability and utility in standardized evaluations. Closed-source models, on the other hand, are better at following output format requirements and are able to maintain consistency and normativity, which is essential for objective, repeatable performance evaluation.
+
+\noindent \textbf{Gap between Human and MLLMs.}
+
+Experimental results reveal that human participants achieved a test accuracy rate approximately 30\% higher than that of the best-performing multimodal large language models (MLLMs). Both human and MLLM performance demonstrate a gradient pattern, where accuracy rates decline progressively with increasing folding complexity and hollow pattern difficulty, indicating that these factors significantly impact reasoning performance across both cognitive systems.
+
+Through systematic analysis of the reasoning processes provided by MLLMs that generated explanatory responses, we identified fundamental differences in cognitive approaches between humans and artificial systems. MLLMs typically employ a rapid, element-focused analysis strategy, quickly identifying and cataloging discrete visual components such as "two squares and two triangles," while systematically examining quantitative attributes including object count, angular relationships, and size variations. In contrast, human participants demonstrate a more holistic perceptual approach, rapidly recognizing global patterns such as left-right symmetry without extensive decomposition of individual elements.
+
+While these reasoning approaches align in their systematic nature, MLLMs demonstrate significant limitations in making precise judgments during final answer selection. Specifically, when analyzing the step-by-step reasoning traces, we observed that the models struggle to accurately discern subtle variations and fail to reliably identify which option exhibits strict symmetry—distinctions that humans can readily perceive and differentiate through their intuitive pattern recognition capabilities.
+
+These findings highlight that while MLLMs can emulate systematic reasoning, they lack the intuitive pattern recognition and holistic perception that underpin human spatial cognition.
+
+\noindent \textbf{Challenges of Paper Fold Puzzles.}
+
+\subsection{Exploring Single-Step Reasoning}
+
+Table~\ref{tab:single_step_reasoning} presents a comprehensive evaluation of multimodal large language models (MLLMs) on sequence reasoning tasks across varying folding complexities. The results reveal a clear performance hierarchy, with proprietary models generally outperforming their open-source counterparts. Doubao1.6-Flash and GLM-4.1V-Flash achieve the highest overall performance at 41.67\%, followed by Qwen2.5-VL-72B-Instruct at 34.67\%.
+
+Regarding the impact of folding complexity, models generally exhibit a certain degree of performance degradation as the complexity increases from 1-fold to 3-fold tasks, though this trend is not universally consistent across all models. The ``others'' category, which encompasses more complex reasoning scenarios, presents additional challenges for most systems.
+
+Notably, considering that this is a four-option multiple-choice task and accounting for the inherent unpredictability of large language model outputs and potential data processing errors, models achieving accuracy rates around 25\% can be considered as having minimal reasoning capability, approximating random performance. This threshold provides important context for interpreting the practical significance of the reported performance metrics.
+
+The substantial gap between current MLLM capabilities and human performance (72.64\% overall) underscores the continued challenges in developing robust multimodal reasoning systems, particularly for complex sequential logic tasks.
+\begin{table}[b]
+\setlength{\tabcolsep}{1mm} 
+\centering
+\begin{tabular}{l|ccccc}
+\toprule
+\multirow{2}{*}{\textbf{Models}} & \multicolumn{5}{c}{\textbf{Single-Step Reasoning}} \\
+ & \textbf{1-Fold} & \textbf{2-Fold} & \textbf{3-Fold} & \textbf{Others} & \textbf{Overall} \\
+\midrule
+\rowcolor{yellow!20}\multicolumn{6}{l}{\textbf{\textit{Proprietary}}} \\
+Doubao1.6-Flash &\cellcolor{gray!30}40.98 &45.50 &43.50 &28.21 &\cellcolor{gray!30}41.67 \\
+GPT-4o-mini &30.33 & 29.00& 25.50&19.23 &26.83 \\
+GPT-4o & 31.97&31.00 &28.50 & 26.92&29.83 \\
+o4-mini & 34.43&35.50 &31.00 & 26.92&31.96 \\
+Gemini-2.5-Flash &26.23 &31.5 & 28.50&\cellcolor{gray!30}32.05 &29.5 \\
+Sonnet-3.7-Thinking &31.97 &33.00 &31.00 & 25.64& 31.17\\
+\midrule
+\rowcolor{yellow!20}\multicolumn{6}{l}{\textbf{\textit{Open-source}}} \\
+GLM-4.1V-Flash & 37.70& \cellcolor{gray!30}45.50&\cellcolor{gray!30}48.00 & 21.79&\cellcolor{gray!30}41.67 \\
+Qwen2.5-VL-7B &27.05 &26.50 & 19.00&16.67& 22.83\\
+Qwen2.5-VL-32B &28.69&31.5&29.00&24.36&29.17\\
+Qwen2.5-VL-72B &33.61 &35.00 &31.00 &21.79 & 31.67\\
+Qwen2-VL-72B &30.33 &42.50 & 34.00&23.08 &34.67 \\
+Emu3-Chat/Vision &24.59&25.50&28.50&28.21&26.70\\
+Pixtral-12B &22.13 & 26.50& 27.50& 30.77& 26.50\\
+Idefics3-8B-Llama3 &31.97 &27.00 &28.00 & 14.10&26.67\\
+InternVL2.5-8B & 18.85& 20.00& 28.00&19.23 &22.33\\
+MiniCPM-V-2.6 & 24.59& 25.50&17.00 & 17.95& 21.50\\
+llava-1.5-13b-hf &27.78&28.50&26.00&28.21&27.50\\
+DeepSeek-VL2-4.5B &24.59&26.50&25.00&28.21&25.83\\
+\midrule
+Human&85.25&80.50&67.50&60.30&72.64\\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Single-Step Sequence Reasoning.}
+\label{tab:single_step_reasoning}
+\end{table}
+
+
+\subsection{Exploring Multi-Step Reasoning}
+
+
+\begin{table}[b]
+\setlength{\tabcolsep}{1mm} 
+\centering
+\begin{tabular}{l|cccccc}
+\toprule
+\multirow{2}{*}{\textbf{Models}} & \multicolumn{6}{c}{\textbf{Multi-Step Reasoning}} \\
+ & \textbf{\#1} & \textbf{\#2} & \textbf{\#3} & \textbf{\#4} & \textbf{\#5} & \textbf{Overall} \\
+\midrule
+\rowcolor{yellow!20}\multicolumn{7}{l}{\textbf{\textit{Proprietary}}} \\
+Doubao1.6-Flash &24.17 &25.83 &31.67 &29.17 &27.50 &27.67 \\
+GPT-4o-mini &28.00 &30.50 &25.50 &28.00 &26.50 &27.70 \\
+GPT-4o & 25.83 &29.17 & 35.83 &24.17 &27.50 &28.50 \\
+o4-mini & \cellcolor{gray!30}40.83 &\cellcolor{gray!30}43.33 & 34.17 &\cellcolor{gray!30}33.33 &\cellcolor{gray!30}53.33&\cellcolor{gray!30}41.00 \\
+Gemini-2.5-Flash &33.33 &41.67 &\cellcolor{gray!30}36.67 &28.33 &29.17 &33.83 \\
+Sonnet-3.7-Thinking &39.17 &30.00 & 35.00 &28.33 &40.83 &34.67\\
+\midrule
+\rowcolor{yellow!20}\multicolumn{7}{l}{\textbf{\textit{Open-source}}} \\
+GLM-4.1V-Flash & 22.5 & 28.33 & 35.83 & 20.00 & 28.33 & 27.00 \\
+Qwen2.5-VL-7B &19.17 &23.33 &22.50& 20.83 &24.17 & 22.00\\
+Qwen2.5-VL-32B &28.33 &31.67 &14.17 & 27.50 &25.00 & 25.33\\
+Qwen2.5-VL-72B &21.67 &34.17 &26.67 &27.50 &19.17 & 25.83 \\
+Qwen2-VL-72B &21.67 &28.33 &34.17 &27.50 &18.33 & 26.00 \\
+Pixtral-12B &30.83 & 25.83& 30.83& 30.83 &33.33 & 30.33\\
+llava-1.5-13b-hf &20.00 &30.83 & 29.17&23.33 &28.33 & 26.33 \\
+InternVL2.5-8B & 18.33& 25.00&28.33 & 30.00 &28.33 &26.00\\
+MiniCPM-V-2.6 & 25.00& 25.83 &28.57& 27.50 &26.67 & 26.67\\
+deepseek-Vl2 &16.67&20.00&20.83&24.17&25.00&21.33\\
+Emu3-Chat/Vision &24.17&24.17&26.67&22.50&21.83&23.87\\
+\midrule
+Human&92.50&90.83&83.33&83.33&82.50&86.50\\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Rules Induction Reasoning. \#1 to \#5 correspond to different paper shapes: Circle, Hexagon, House, Rectangle, and Square, respectively.}
+\label{tab:rules induction}
+\end{table}
+
+
+\subsection{Exploring Rules Induction}
+
+
+\begin{table}[b]
+% \setlength{\tabcolsep}{1mm} 
+\centering
+\begin{tabular}{l|cccc}
+\toprule
+\multirow{2}{*}{\textbf{Models}} & \multicolumn{4}{c}{\textbf{Rules Induction Reasoning}} \\
+ & \textbf{1-Fold} & \textbf{2-Fold} & \textbf{Others} & \textbf{Overall} \\
+\midrule
+\rowcolor{yellow!20}\multicolumn{5}{l}{\textbf{\textit{Proprietary}}} \\
+Doubao1.6-Flash &27.00 &28.00 &15.50 &23.50 \\
+GPT-4o-mini &28.00 &30.50&25.50 &28.00 \\
+GPT-4o & 29.50&29.50 & 21.00&26.67 \\
+o4-mini & \cellcolor{gray!30}44.50&34.00 & \cellcolor{gray!30}35.00&\cellcolor{gray!30}37.83 \\
+Gemini-2.5-Flash &29.00 &\cellcolor{gray!30}42.00 &24.50 &31.83 \\
+Sonnet-3.7-Thinking &40.00 &35.50 & 21.00& 32.17\\
+\midrule
+\rowcolor{yellow!20}\multicolumn{5}{l}{\textbf{\textit{Open-source}}} \\
+GLM-4.1V-Flash & 26.50& 28.50& 21.00&25.33 \\
+Qwen2.5-VL-7B &23.00 &26.50 &17.50 & 22.33\\
+Qwen2.5-VL-32B &24.00&31.50&24.00&26.50\\
+Qwen2.5-VL-72B &23.50 &27.00 &27.00 & 25.83\\
+Qwen2-VL-72B &24.50 &23.50 &21.00 &23.00 \\
+Idefics3-8B-Llama3 &27.00 &28.50 & 21.00&25.50 \\
+InternVL2.5-8B & 15.50& 17.00&21.00 & 17.83\\
+MiniCPM-V-2.6 & 24.00& 22.00& 20.05& 22.02\\
+llava-1.5-13b-hf &26.50&21.00&32.50&26.67\\
+DeepSeek-VL2-4.5B & 16.00 &16.50 &21.50&18.00\\
+\midrule
+Human&92.00&79.00&92.00&87.67\\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Rules Induction Reasoning.}
+\label{tab:rules induction}
+\end{table}
+
+
+
+
+
+
+
+
+
+\subsection{Exploring Reassembling}
+\subsection{Exploring Unfolding}
+
+\subsection{Discussion}
+\subsection{Conclusion}
+
+\bibliography{aaai2026}
+
+\end{document}

@@ -1,0 +1,224 @@
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_0-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: A
+时间: 2025-07-23 00:36:58
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_1-answ_B.png
+Prompt类型: N类型
+正确答案: B
+预测答案: A
+时间: 2025-07-23 00:39:59
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_2-answ_D.png
+Prompt类型: N类型
+正确答案: D
+预测答案: C
+时间: 2025-07-23 00:40:56
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: C
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_3-answ_A.png
+Prompt类型: N类型
+正确答案: A
+预测答案: A
+时间: 2025-07-23 00:46:27
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_4-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: C
+时间: 2025-07-23 00:52:28
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer：C
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_5-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: D
+时间: 2025-07-23 00:56:27
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: D
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_6-answ_B.png
+Prompt类型: N类型
+正确答案: B
+预测答案: B
+时间: 2025-07-23 00:58:36
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer：B
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_7-answ_D.png
+Prompt类型: N类型
+正确答案: D
+预测答案: A
+时间: 2025-07-23 01:01:08
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_8-answ_B.png
+Prompt类型: N类型
+正确答案: B
+预测答案: None
+时间: 2025-07-23 01:02:50
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_9-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: B
+时间: 2025-07-23 01:05:00
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+The only net‐adjacencies that match C’s two neighbors (B and E) on the folded cube is option B.  
+Answer: B
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_10-answ_D.png
+Prompt类型: N类型
+正确答案: D
+预测答案: D
+时间: 2025-07-23 01:07:11
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: D
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_11-answ_A.png
+Prompt类型: N类型
+正确答案: A
+预测答案: C
+时间: 2025-07-23 01:12:28
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: C
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_12-answ_D.png
+Prompt类型: N类型
+正确答案: D
+预测答案: D
+时间: 2025-07-23 01:23:36
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+The only assembly that places the “spiky-star” circle (net A), the plain small-hexagon circle (net B), and the hexagon-frame face (net E) all in mutually consistent, fold-valid positions is choice D.  
+
+So the correct answer is D.
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_13-answ_B.png
+Prompt类型: N类型
+正确答案: B
+预测答案: A
+时间: 2025-07-23 01:30:07
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+The only cube whose three visible faces can be F4 (pentagon-X), F6 (circle-cross) and F5 (circle-prism) in mutually adjacent positions is choice A.  
+Answer: A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_14-answ_B.png
+Prompt类型: N类型
+正确答案: B
+预测答案: B
+时间: 2025-07-23 01:31:20
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: B
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_15-answ_A.png
+Prompt类型: N类型
+正确答案: A
+预测答案: C
+时间: 2025-07-23 01:33:48
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: C
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_16-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: C
+时间: 2025-07-23 01:37:12
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: C
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_17-answ_C.png
+Prompt类型: N类型
+正确答案: C
+预测答案: D
+时间: 2025-07-23 01:39:59
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: D
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_18-answ_A.png
+Prompt类型: N类型
+正确答案: A
+预测答案: A
+时间: 2025-07-23 01:41:53
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+A
+==================================================
+
+==================================================
+题目: _2DTo3D_N/easy/_2DimgType-Symmetric-sample_19-answ_A.png
+Prompt类型: N类型
+正确答案: A
+预测答案: C
+时间: 2025-07-23 01:46:08
+使用的Prompt: You are given a paper fold puzzle, which is an unfolded cube with different patterns on each face. Please select the correct option (marked as A, B, C or D) at the bottom, which matches the folded cube of this unfolded pattern. Answer：X
+大模型完整回复:
+Answer: C
+==================================================

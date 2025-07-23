@@ -75,6 +75,8 @@ export class AnswerManager {
         answerKey = 'paperfolding_answers_task2';
       } else if (currentTask === 'task3') {
         answerKey = 'paperfolding_answers_task3';
+      } else if (currentTask === 'task4') {
+        answerKey = 'paperfolding_answers_task4';
       }
       
       localStorage.setItem(answerKey, JSON.stringify(data));
@@ -93,6 +95,8 @@ export class AnswerManager {
         answerKey = 'paperfolding_answers_task2';
       } else if (currentTask === 'task3') {
         answerKey = 'paperfolding_answers_task3';
+      } else if (currentTask === 'task4') {
+        answerKey = 'paperfolding_answers_task4';
       }
       
       const stored = localStorage.getItem(answerKey);
@@ -126,6 +130,8 @@ export class AnswerManager {
         answerKey = 'paperfolding_answers_task2';
       } else if (currentTask === 'task3') {
         answerKey = 'paperfolding_answers_task3';
+      } else if (currentTask === 'task4') {
+        answerKey = 'paperfolding_answers_task4';
       }
       
       localStorage.removeItem(answerKey);
