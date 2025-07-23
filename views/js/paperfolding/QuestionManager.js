@@ -3,12 +3,13 @@
  * 负责题目数据的加载、切换和管理
  */
 export class QuestionManager {
-  constructor(config, task1Filter, task2Filter, task3Filter, task4Filter) {
+  constructor(config, task1Filter, task2Filter, task3Filter, task4Filter, task5Filter) {
     this.config = config;
     this.task1Filter = task1Filter;
     this.task2Filter = task2Filter;
     this.task3Filter = task3Filter;
     this.task4Filter = task4Filter;
+    this.task5Filter = task5Filter;
     this.allQuestions = [];
     this.currentTask = 'task1'; // 默认任务设置为task1，与HTML中的active按钮保持一致
     this.currentInviteCodeData = null;
@@ -27,7 +28,19 @@ export class QuestionManager {
       // 检查是否为常规模式
       if (inviteCodeData.isRegularMode) {
         // 常规模式：根据当前任务加载对应的题库
-        if (this.currentTask === 'task4') {
+        if (this.currentTask === 'task5') {
+          // 加载task5数据 - 直接使用task5Filter的初始化方法
+          const filteredQuestions = await this.task5Filter.initializeFilter();
+          // initializeFilter已经确保题目被正确加载，直接使用返回的结果
+          this.allQuestions = filteredQuestions || [];
+          console.log(`task5加载完成: ${this.allQuestions.length} 题`);
+          
+          // 如果仍然没有题目，尝试手动选择第一个题目集
+          if (this.allQuestions.length === 0) {
+            console.log('task5筛选器未返回题目，手动选择第一个题目集');
+            this.allQuestions = this.task5Filter.selectQuestionSet(0) || [];
+          }
+        } else if (this.currentTask === 'task4') {
           // 加载task4数据 - 直接使用task4Filter的初始化方法
           const filteredQuestions = await this.task4Filter.initializeFilter();
           // initializeFilter已经确保题目被正确加载，直接使用返回的结果
@@ -132,7 +145,9 @@ export class QuestionManager {
     
     // 根据当前任务确定题目集文件路径
     let questionSetsPath;
-    if (this.currentTask === 'task4') {
+    if (this.currentTask === 'task5') {
+      questionSetsPath = '../task5/all_question_sets.json';
+    } else if (this.currentTask === 'task4') {
       questionSetsPath = '../task4/all_question_sets.json';
     } else if (this.currentTask === 'task3') {
       questionSetsPath = '../task3/all_question_sets.json';
@@ -161,9 +176,12 @@ export class QuestionManager {
       // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
       if (question.image) {
           // 根据当前任务设置正确的图片基础路径
-          if (this.currentTask === 'task4') {
-            // task4的图片路径
-            question.image_path = './task4/task4_selected/' + question.image;
+          if (this.currentTask === 'task5') {
+            // task5的图片路径
+            question.image_path = '../task5/task5_selected/' + question.image;
+          } else if (this.currentTask === 'task4') {
+            // task4的图片路径 - 修复路径问题，使用相对路径
+            question.image_path = '../task4/task4_selected/' + question.image;
           } else if (this.currentTask === 'task3') {
             // task3的图片路径，数据文件中已包含fold/前缀
             question.image_path = '../task3/task3_selected/' + question.image;
@@ -183,8 +201,19 @@ export class QuestionManager {
     
     console.log(`邀请码模式：加载了题目集${inviteCodeData.setId}，共 ${this.allQuestions.length} 道题目`);
     
-    // 如果是task3或task4，需要将数据保存到localStorage并设置questionSets
-    if (this.currentTask === 'task3') {
+    // 如果是task3、task4或task5，需要将数据保存到localStorage并设置questionSets
+    if (this.currentTask === 'task5') {
+      const task5Filter = this.getCurrentFilter();
+      if (task5Filter) {
+        // 邀请码模式下，需要先初始化所有题目集，然后选择对应的题目集
+        await task5Filter.initializeFilter(this.allQuestions);
+        
+        // 在邀请码模式下，我们总是选择第一个题目集（索引0），但使用邀请码中的setId作为标识
+        // 这样可以确保题目ID中使用正确的setId，而不影响题目集的选择
+        task5Filter.selectQuestionSet(0);
+        console.log(`邀请码模式：已选择题目集1（索引0），使用setId=${inviteCodeData.setId}标识并保存到localStorage`);
+      }
+    } else if (this.currentTask === 'task3') {
       const task3Filter = this.getCurrentFilter();
       if (task3Filter) {
         // 邀请码模式下，需要先初始化所有题目集，然后选择对应的题目集
@@ -229,11 +258,15 @@ export class QuestionManager {
       // 清除task4题目缓存和选择缓存
       localStorage.removeItem('paperfolding_questions_task4');
       localStorage.removeItem('paperfolding_task4_selection');
+      // 清除task5题目缓存和选择缓存
+      localStorage.removeItem('paperfolding_questions_task5');
+      localStorage.removeItem('paperfolding_last_selection_task5');
       // 清除答案缓存
       localStorage.removeItem('paperfolding_answers_task1');
       localStorage.removeItem('paperfolding_answers_task2');
       localStorage.removeItem('paperfolding_answers_task3');
       localStorage.removeItem('paperfolding_answers_task4');
+      localStorage.removeItem('paperfolding_answers_task5');
       console.log('已清除localStorage中的题目和答案缓存');
     } catch (error) {
       console.warn('清除localStorage缓存失败:', error);
@@ -263,6 +296,11 @@ export class QuestionManager {
         localStorage.removeItem('paperfolding_task4_selection');
         localStorage.removeItem('paperfolding_answers_task4');
         console.log('已清除task4的localStorage缓存');
+      } else if (this.currentTask === 'task5') {
+        localStorage.removeItem('paperfolding_questions_task5');
+        localStorage.removeItem('paperfolding_last_selection_task5');
+        localStorage.removeItem('paperfolding_answers_task5');
+        console.log('已清除task5的localStorage缓存');
       }
     } catch (error) {
       console.warn('清除当前任务localStorage缓存失败:', error);
@@ -418,7 +456,9 @@ export class QuestionManager {
    * 获取当前筛选器
    */
   getCurrentFilter() {
-    if (this.currentTask === 'task4') {
+    if (this.currentTask === 'task5') {
+      return this.task5Filter;
+    } else if (this.currentTask === 'task4') {
       return this.task4Filter;
     } else if (this.currentTask === 'task3') {
       return this.task3Filter;
@@ -464,7 +504,9 @@ export class QuestionManager {
     try {
       // 根据当前任务确定题目集文件路径
       let questionSetsPath;
-      if (this.currentTask === 'task4') {
+      if (this.currentTask === 'task5') {
+        questionSetsPath = '../task5/all_question_sets.json';
+      } else if (this.currentTask === 'task4') {
         questionSetsPath = '../task4/all_question_sets.json';
       } else if (this.currentTask === 'task3') {
         questionSetsPath = '../task3/all_question_sets.json';
@@ -497,8 +539,10 @@ export class QuestionManager {
         // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
         if (question.image) {
           // 根据当前任务设置正确的图片基础路径
-          if (this.currentTask === 'task4') {
-            question.image_path = './task4/task4_selected/' + question.image;
+          if (this.currentTask === 'task5') {
+            question.image_path = '../task5/task5_selected/' + question.image;
+          } else if (this.currentTask === 'task4') {
+            question.image_path = '../task4/task4_selected/' + question.image;
           } else if (this.currentTask === 'task3') {
             question.image_path = '../task3/task3_selected/' + question.image;
           } else if (this.currentTask === 'task2') {

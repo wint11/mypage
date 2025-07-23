@@ -252,13 +252,29 @@ export class UIManager {
         const filterType = btn.dataset.filter;
         if (filterType === 'all') {
           btn.textContent = '全部题目';
-        //   btn.style.display = 'inline-block';
-        // } else if (filterType === 'easy') {
-        //   btn.textContent = '简单';
-        //   btn.style.display = 'inline-block';
-        // } else if (filterType === 'hard') {
-        //   btn.textContent = '困难';
-        //   btn.style.display = 'inline-block';
+          btn.style.display = 'inline-block';
+        } else if (filterType === 'easy') {
+          btn.textContent = '简单';
+          btn.style.display = 'inline-block';
+        } else if (filterType === 'hard') {
+          btn.textContent = '困难';
+          btn.style.display = 'inline-block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+    } else if (currentTask === 'task5') {
+      filterButtons.forEach(btn => {
+        const filterType = btn.dataset.filter;
+        if (filterType === 'all') {
+          btn.textContent = '全部题目';
+          btn.style.display = 'inline-block';
+        } else if (filterType === 'easy') {
+          btn.textContent = '简单';
+          btn.style.display = 'inline-block';
+        } else if (filterType === 'hard') {
+          btn.textContent = '困难';
+          btn.style.display = 'inline-block';
         } else {
           btn.style.display = 'none';
         }

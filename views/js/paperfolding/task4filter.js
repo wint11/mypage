@@ -46,8 +46,8 @@ export class Task4Filter {
    */
   async loadFromServer() {
     try {
-      // 加载题目集数据
-      const response = await fetch('/task4/all_question_sets.json');
+      // 加载题目集数据 - 修复路径问题，使用相对路径与task2、task3保持一致
+      const response = await fetch('../task4/all_question_sets.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -196,26 +196,36 @@ export class Task4Filter {
     }
     
     if (filterType === 'all') {
-      // 显示当前题目集的所有题目
-      return this.filteredQuestions;
+      // 显示当前题目集的所有题目 - 重新生成完整的题目列表
+      this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
+        image_path: '../task4/task4_selected/' + q.image,
+        answer: q.answer,
+        questionType: this.extractQuestionTypeFromPath(q.image),
+        difficulty: this.extractDifficultyFromPath(q.image),
+        id: `task4_set${actualSetId}_${index + 1}`
+      }));
     } else if (filterType === 'easy') {
-      // 只显示简单题目
-      this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
+      // 只显示简单题目 - 保持原始索引
+      const allQuestions = this.currentQuestionSet.map((q, index) => ({
         image_path: '../task4/task4_selected/' + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
-        id: `task4_set${actualSetId}_easy_${index + 1}`
-      })).filter(q => q.difficulty === 'easy');
+        id: `task4_set${actualSetId}_${index + 1}`,
+        originalIndex: index
+      }));
+      this.filteredQuestions = allQuestions.filter(q => q.difficulty === 'easy');
     } else if (filterType === 'hard') {
-      // 只显示困难题目
-      this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
+      // 只显示困难题目 - 保持原始索引
+      const allQuestions = this.currentQuestionSet.map((q, index) => ({
         image_path: '../task4/task4_selected/' + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
-        id: `task4_set${actualSetId}_hard_${index + 1}`
-      })).filter(q => q.difficulty === 'hard');
+        id: `task4_set${actualSetId}_${index + 1}`,
+        originalIndex: index
+      }));
+      this.filteredQuestions = allQuestions.filter(q => q.difficulty === 'hard');
     }
     
     console.log(`任务四筛选结果: ${this.filteredQuestions.length} 题 (${filterType})`);

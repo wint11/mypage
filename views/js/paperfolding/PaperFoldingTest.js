@@ -7,6 +7,7 @@ import { Task1Filter } from './task1Filter.js';
 import { Task2Filter } from './task2Filter.js';
 import { Task3Filter } from './task3Filter.js';
 import { Task4Filter } from './task4filter.js';
+import { Task5Filter } from './task5filter.js';
 import { RandomUtils } from './RandomUtils.js';
 import { InstructionsPage } from './InstructionsPage.js';
 import { QuestionManager } from './QuestionManager.js';
@@ -38,10 +39,11 @@ export class PaperFoldingTest {
     this.task2Filter = new Task2Filter();
     this.task3Filter = new Task3Filter();
     this.task4Filter = new Task4Filter();
+    this.task5Filter = new Task5Filter();
     this.instructionsPage = new InstructionsPage();
 
     // 初始化新的管理器
-    this.questionManager = new QuestionManager(this.config, this.task1Filter, this.task2Filter, this.task3Filter, this.task4Filter);
+    this.questionManager = new QuestionManager(this.config, this.task1Filter, this.task2Filter, this.task3Filter, this.task4Filter, this.task5Filter);
     this.uiManager = new UIManager(this.imageCache);
     this.navigationManager = new NavigationManager(this.imageCache);
     this.answerManager = new AnswerManager(this.questionManager);
