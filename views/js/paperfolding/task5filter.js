@@ -133,10 +133,10 @@ export class Task5Filter {
    * 从路径中提取题目类型
    */
   extractQuestionTypeFromPath(imagePath) {
-    if (imagePath.includes('_2DTo3D_N/')) {
-      return 'N'; // 折纸推理
-    } else if (imagePath.includes('_2DTo3D_Y/')) {
-      return 'Y'; // 3D投影推理
+    if (imagePath.includes('_3DTo2D_N/')) {
+      return 'N'; // 3D到2D推理
+    } else if (imagePath.includes('_3DTo2D_Y/')) {
+      return 'Y'; // 3D到2D投影推理
     }
     return 'unknown';
   }
