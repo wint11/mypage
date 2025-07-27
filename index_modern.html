@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="启元慧学 - 教育 AI 智能平台">
+  <title>启元慧学 - 教育 AI 智能平台</title>
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome 图标库 -->
+  <link href="css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #06b6d4;
+      --accent-light: #67e8f9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --text-gray: #64748b;
+      --bg-light: #ffffff;
+      --bg-dark: #0f172a;
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* 粒子背景效果 */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.1;
+      }
+      90% {
+        opacity: 0.1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 255, 255, 0.98) !important;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-dark) !important;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      animation: gradientShift 8s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% {
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
+          linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      }
+      50% {
+        background: 
+          radial-gradient(circle at 80% 20%, rgba(120, 119, 198, 0.4) 0%, transparent 50%),
+          radial-gradient(circle at 20% 80%, rgba(255, 119, 198, 0.4) 0%, transparent 50%),
+          radial-gradient(circle at 60% 60%, rgba(120, 219, 255, 0.4) 0%, transparent 50%),
+          linear-gradient(135deg, #764ba2 0%, #f093fb 50%, #667eea 100%);
+      }
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></linearGradient></defs><polygon points="100,100 300,50 500,150 200,250" fill="url(%23grad1)"/><polygon points="600,200 800,100 900,300 700,400" fill="url(%23grad1)"/><polygon points="200,600 400,500 600,700 300,800" fill="url(%23grad1)"/><polygon points="700,600 900,550 950,750 750,850" fill="url(%23grad1)"/></svg>') no-repeat center center;
+      background-size: cover;
+      opacity: 0.2;
+      animation: geometryFloat 15s ease-in-out infinite;
+    }
+
+    @keyframes geometryFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.2;
+      }
+      50% {
+        transform: translateY(-20px) rotate(5deg);
+        opacity: 0.3;
+      }
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 30%);
+      animation: sparkle 6s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.5s forwards;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.7s forwards;
+    }
+
+    .hero-buttons {
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.9s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 按钮样式 */
+    .btn-modern {
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary-modern {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary-modern:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+      color: white;
+    }
+
+    .btn-outline-modern {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-outline-modern:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    /* 功能卡片 */
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* 统计数据 */
+    .stats-section {
+      background: linear-gradient(135deg, var(--bg-dark), #1e293b);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    }
+
+    .stat-item {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* 应用场景卡片 */
+    .use-case-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .use-case-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .use-case-card:hover::before {
+      opacity: 0.05;
+    }
+
+    .use-case-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .use-case-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    /* 关于我们部分 */
+    .about-section {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      position: relative;
+    }
+
+    /* 页脚 */
+    .footer {
+      background: var(--bg-dark);
+      color: white;
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-content {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* 滚动动画 */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .scroll-animate.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem 1rem;
+      }
+      
+      .feature-card,
+      .use-case-card {
+        margin-bottom: 2rem;
+      }
+      
+      .stat-number {
+        font-size: 2rem;
+      }
+    }
+
+    /* 加载动画 */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 加载动画 -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- 粒子背景 -->
+  <div class="particles-container" id="particles"></div>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">启元慧学</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#home">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#features">功能</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#use-cases">应用</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">关于</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-primary-modern text-white px-4 ms-2" href="views/login.html">立即体验</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>重新定义教育的未来</h1>
+        <p class="lead mb-4">基于先进AI技术的智能教育平台，为每个学习者提供个性化的学习体验</p>
+        <div class="hero-buttons">
+          <a href="views/login.html" class="btn btn-primary-modern me-3">开始体验</a>
+          <a href="#features" class="btn btn-outline-modern">了解更多</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 统计数据 -->
+  <section class="stats-section py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item scroll-animate">
+            <div class="stat-number" data-count="10000">0</div>
+            <div class="stat-label">活跃用户</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item scroll-animate">
+            <div class="stat-number" data-count="500">0</div>
+            <div class="stat-label">合作学校</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item scroll-animate">
+            <div class="stat-number" data-count="1000000">0</div>
+            <div class="stat-label">学习时长(小时)</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item scroll-animate">
+            <div class="stat-number" data-count="98">0</div>
+            <div class="stat-label">满意度(%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心功能 -->
+  <section id="features" class="py-5">
+    <div class="container">
+      <div class="text-center mb-5 scroll-animate">
+        <h2 class="display-5 fw-bold mb-3">核心功能</h2>
+        <p class="lead text-muted">AI驱动的智能教育解决方案</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-card scroll-animate">
+            <div class="feature-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h5 class="fw-bold mb-3">智能教学助手</h5>
+            <p class="text-muted">辅助教师进行课程设计、作业批改、知识点讲解，提升教学效率和质量。</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-card scroll-animate">
+            <div class="feature-icon">
+              <i class="fas fa-route"></i>
+            </div>
+            <h5 class="fw-bold mb-3">个性化学习路径</h5>
+            <p class="text-muted">基于学生表现和学习习惯，智能推荐最适合的学习内容与节奏。</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-card scroll-animate">
+            <div class="feature-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h5 class="fw-bold mb-3">全天候答疑系统</h5>
+            <p class="text-muted">学生可以随时提问，AI即时响应提供详细解析和学习建议。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 应用场景 -->
+  <section id="use-cases" class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5 scroll-animate">
+        <h2 class="display-5 fw-bold mb-3">应用场景</h2>
+        <p class="lead text-muted">覆盖教育全流程的智能化解决方案</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="use-case-card scroll-animate">
+            <div class="use-case-icon">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h5 class="fw-bold mb-3">课堂教学支持</h5>
+            <p class="text-muted">老师在课堂中使用智能体实时生成问题，引导学生思考，提升课堂互动性和参与度。</p>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="use-case-card scroll-animate">
+            <div class="use-case-icon">
+              <i class="fas fa-book-reader"></i>
+            </div>
+            <h5 class="fw-bold mb-3">课后自主学习</h5>
+            <p class="text-muted">学生通过平台完成自适应练习，查漏补缺，巩固所学知识，提升学习效果。</p>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="use-case-card scroll-animate">
+            <div class="use-case-icon">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h5 class="fw-bold mb-3">作业自动批改</h5>
+            <p class="text-muted">系统自动识别主观题与客观题，提供准确评分与个性化反馈建议。</p>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="use-case-card scroll-animate">
+            <div class="use-case-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h5 class="fw-bold mb-3">家校沟通桥梁</h5>
+            <p class="text-muted">家长可通过平台了解孩子学习进度与薄弱环节，积极参与教育过程。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于我们 -->
+  <section id="about" class="about-section py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4">
+          <div class="scroll-animate">
+            <h2 class="display-5 fw-bold mb-4">关于启元慧学</h2>
+            <p class="lead mb-4">启元慧学基于启元智能体，致力于打造面向未来的教育 AI 平台。</p>
+            <p class="text-muted mb-4">我们融合先进的人工智能技术与现代教育理念，助力学校实现智能化转型，为每一位学生提供高效、有趣、可持续的个性化学习体验。</p>
+            <div class="d-flex align-items-center">
+              <div class="me-4">
+                <div class="fw-bold text-primary fs-4">AI驱动</div>
+                <small class="text-muted">先进技术</small>
+              </div>
+              <div class="me-4">
+                <div class="fw-bold text-primary fs-4">个性化</div>
+                <small class="text-muted">因材施教</small>
+              </div>
+              <div>
+                <div class="fw-bold text-primary fs-4">全覆盖</div>
+                <small class="text-muted">教育全流程</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="scroll-animate">
+            <div class="position-relative">
+              <div class="bg-primary rounded-4 p-4" style="transform: rotate(-5deg);">
+                <div class="bg-white rounded-3 p-4" style="transform: rotate(5deg);">
+                  <div class="text-center">
+                    <i class="fas fa-graduation-cap text-primary" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3 mb-2">智能教育</h4>
+                    <p class="text-muted mb-0">让每个学习者都能获得最适合的教育</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="row">
+          <div class="col-lg-4 mb-4">
+            <h5 class="fw-bold mb-3">启元慧学</h5>
+            <p class="text-muted">基于AI技术的智能教育平台，为教育创新提供强大动力。</p>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h6 class="fw-bold mb-3">产品</h6>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-muted text-decoration-none">智能教学</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">个性化学习</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">智能答疑</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h6 class="fw-bold mb-3">解决方案</h6>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-muted text-decoration-none">K12教育</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">高等教育</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">职业培训</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h6 class="fw-bold mb-3">支持</h6>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-muted text-decoration-none">帮助中心</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">联系我们</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">技术支持</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h6 class="fw-bold mb-3">关注我们</h6>
+            <div class="d-flex">
+              <a href="#" class="text-muted me-3"><i class="fab fa-weixin"></i></a>
+              <a href="#" class="text-muted me-3"><i class="fab fa-weibo"></i></a>
+              <a href="#" class="text-muted"><i class="fab fa-qq"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 启元慧学. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // 页面加载完成后隐藏加载动画
+    window.addEventListener('load', function() {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      setTimeout(() => {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+        }, 500);
+      }, 1000);
+    });
+
+    // 创建粒子效果
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 4 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 滚动动画
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.scroll-animate');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('animate');
+        }
+      });
+    }
+
+    // 数字计数动画
+    function animateCounters() {
+      const counters = document.querySelectorAll('.stat-number');
+      
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const increment = target / 100;
+        let current = 0;
+        
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          
+          if (target >= 1000000) {
+            counter.textContent = (current / 1000000).toFixed(1) + 'M';
+          } else if (target >= 1000) {
+            counter.textContent = (current / 1000).toFixed(0) + 'K';
+          } else {
+            counter.textContent = Math.floor(current);
+          }
+        }, 20);
+      });
+    }
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      animateOnScroll();
+      
+      // 监听滚动事件
+      window.addEventListener('scroll', animateOnScroll);
+      
+      // 当统计部分进入视口时开始计数动画
+      const statsSection = document.querySelector('.stats-section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounters();
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+      
+      if (statsSection) {
+        observer.observe(statsSection);
+      }
+    });
+
+    // 鼠标跟随效果
+    document.addEventListener('mousemove', function(e) {
+      const cursor = document.querySelector('.cursor');
+      if (!cursor) {
+        const newCursor = document.createElement('div');
+        newCursor.className = 'cursor';
+        newCursor.style.cssText = `
+          position: fixed;
+          width: 20px;
+          height: 20px;
+          background: linear-gradient(135deg, var(--primary), var(--accent));
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9999;
+          opacity: 0.3;
+          transition: transform 0.1s ease;
+        `;
+        document.body.appendChild(newCursor);
+      }
+      
+      const cursor2 = document.querySelector('.cursor');
+      cursor2.style.left = e.clientX - 10 + 'px';
+      cursor2.style.top = e.clientY - 10 + 'px';
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+﻿# 纸折叠测试结果报告
+# 任务: task5
+# 测试时间: 2025/7/24 11:54:44 - 2025/7/24 12:22:01
+# 总题数: 30
+# 已答题数: 30
+# 完成率: 100%
+# 正确题数: 23
+# 有标准答案题数: 30
+# 准确率: 76.67%
+# 总用时: 27分17秒
+# 平均用时: 0分54秒
+
+题目编号,题目描述,正确答案,用户答案,答题结果
+1,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_1-answ_C.png",C,A,错误
+2,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_41-answ_C.png",C,C,正确
+3,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_36-answ_D.png",D,D,正确
+4,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_68-answ_A.png",A,A,正确
+5,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_42-answ_C.png",C,C,正确
+6,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_149-answ_B.png",B,A,错误
+7,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_119-answ_B.png",B,A,错误
+8,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_65-answ_B.png",B,B,正确
+9,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_23-answ_C.png",C,A,错误
+10,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_27-answ_C.png",C,C,正确
+11,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_77-answ_D.png",D,D,正确
+12,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_86-answ_B.png",B,B,正确
+13,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_8-answ_A.png",A,A,正确
+14,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_28-answ_C.png",C,C,正确
+15,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_78-answ_D.png",D,D,正确
+16,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_20-answ_D.png",D,D,正确
+17,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_49-answ_C.png",C,B,错误
+18,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_125-answ_C.png",C,C,正确
+19,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_71-answ_C.png",C,C,正确
+20,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_121-answ_C.png",C,C,正确
+21,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_88-answ_A.png",A,A,正确
+22,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_114-answ_D.png",D,D,正确
+23,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_119-answ_B.png",B,B,正确
+24,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_42-answ_C.png",C,C,正确
+25,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_30-answ_C.png",C,C,正确
+26,"../task5/task5_selected/_3DTo2D_Y/easy/_2DimgType-Symmetric-sample_29-answ_B.png",B,B,正确
+27,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_50-answ_B.png",B,B,正确
+28,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_85-answ_C.png",C,B,错误
+29,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_71-answ_D.png",D,B,错误
+30,"../task5/task5_selected/_3DTo2D_Y/hard/_2DimgType-Symmetric-sample_18-answ_D.png",D,D,正确

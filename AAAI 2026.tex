@@ -268,13 +268,15 @@ These findings highlight that while MLLMs can emulate systematic reasoning, they
 
 \subsection{Exploring Single-Step Reasoning}
 
-Table~\ref{tab:single_step_reasoning} presents a comprehensive evaluation of multimodal large language models (MLLMs) on sequence reasoning tasks across varying folding complexities. The results reveal a clear performance hierarchy, with proprietary models generally outperforming their open-source counterparts. Doubao1.6-Flash and GLM-4.1V-Flash achieve the highest overall performance at 41.67\%, followed by Qwen2.5-VL-72B-Instruct at 34.67\%.
+Table~\ref{tab:single_step_reasoning} presents a comprehensive evaluation of multimodal large language models (MLLMs) on sequence reasoning tasks across varying folding complexities. The results reveal a clear performance hierarchy, with proprietary models generally outperforming their open-source counterparts. Doubao1.6-Flash and GLM-4.1V-Flash achieve the highest overall performance at 41.67\%, followed by Qwen2-VL-72B-Instruct at 34.67\%.
 
 Regarding the impact of folding complexity, models generally exhibit a certain degree of performance degradation as the complexity increases from 1-fold to 3-fold tasks, though this trend is not universally consistent across all models. The ``others'' category, which encompasses more complex reasoning scenarios, presents additional challenges for most systems.
 
-Notably, considering that this is a four-option multiple-choice task and accounting for the inherent unpredictability of large language model outputs and potential data processing errors, models achieving accuracy rates around 25\% can be considered as having minimal reasoning capability, approximating random performance. This threshold provides important context for interpreting the practical significance of the reported performance metrics.
+Through detailed analysis of model reasoning processes, we observe fundamental differences in how successful and unsuccessful models approach these spatial reasoning tasks. Models that answer correctly tend to focus on the transformation process itself—analyzing what changes occur from one step to the next (e.g., how the paper configuration evolves from image 1 to image 2). In contrast, models that provide incorrect answers typically focus on static image content, merely cataloging what elements are present in each individual image (e.g., identifying that image 1 contains certain shapes and image 2 contains other shapes) without understanding the underlying transformation logic.
 
-The substantial gap between current MLLM capabilities and human performance (72.64\% overall) underscores the continued challenges in developing robust multimodal reasoning systems, particularly for complex sequential logic tasks.
+Furthermore, the best-performing models, particularly GLM-4.1V-Flash, demonstrate sophisticated symmetry analysis capabilities, correctly identifying and reasoning about symmetric properties from a geometric perspective. Meanwhile, lower-performing models may mention symmetry in their reasoning but fail to apply this concept correctly to solve the problems, indicating a superficial rather than deep understanding of spatial relationships.
+
+
 \begin{table}[b]
 \setlength{\tabcolsep}{1mm} 
 \centering
