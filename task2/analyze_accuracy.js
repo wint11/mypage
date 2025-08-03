@@ -89,12 +89,18 @@ function parseCSVLines(lines) {
         // 清理描述字段（去除引号）
         description = description.replace(/"/g, '');
         
-        // 确定类别
+        // 确定类别 - 根据图片路径中的形状名称分类
         let category = 'other';
-        if (description.includes('fold_1')) {
-            category = 'fold_1';
-        } else if (description.includes('fold_2')) {
-            category = 'fold_2';
+        if (description.includes('circle_')) {
+            category = 'circle';
+        } else if (description.includes('Hexagon_')) {
+            category = 'hexagon';
+        } else if (description.includes('House_')) {
+            category = 'house';
+        } else if (description.includes('Rectangle_')) {
+            category = 'rectangle';
+        } else if (description.includes('square_')) {
+            category = 'square';
         }
         
         questions.push({
@@ -136,7 +142,7 @@ function parseXLSX(filePath) {
 
 // 分析准确率
 function analyzeAccuracy(allData) {
-    const categories = ['fold_1', 'fold_2', 'other'];
+    const categories = ['circle', 'hexagon', 'house', 'rectangle', 'square', 'other'];
     const results = {
         overall: { total: 0, correct: 0, accuracy: 0 },
         byCategory: {}

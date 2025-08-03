@@ -1,0 +1,152 @@
+% Table 1: Single-Step Reasoning
+\begin{table*}[t]
+\setlength{\tabcolsep}{1.2mm} 
+\centering
+\fontsize{9}{10.8}\selectfont
+\small
+\begin{tabular}{c|l|ccccc}
+\toprule
+& \multirow{2}{*}{\textbf{Models}} & \multicolumn{5}{c}{\textbf{Single-Step Reasoning}} \\
+& & \textbf{Circle} & \textbf{Hexagon} & \textbf{House} & \textbf{Rectangle} & \textbf{Square} \\
+\midrule
+\multirow{6}{*}{\rotatebox{90}{Closed-Source}} & 
+claude-3-7-sonnet-thinking & 27.50 & 30.83 & 34.17 & 33.33 & 35.83 \\
+& doubao-seed-1-6-flash-250615 & \cellcolor{gray!30}41.67 & \cellcolor{gray!30}42.50 & 37.50 & \cellcolor{gray!30}45.00 & 41.67 \\
+& gemini-2.5-flash & 25.00 & 29.17 & 29.17 & 30.83 & 35.00 \\
+& GPT-4o & 30.83 & 29.17 & 24.17 & 28.33 & 36.67 \\
+& GPT-4o-mini & 25.83 & 22.50 & 29.17 & 26.67 & 30.00 \\
+& GPT-o4-mini & 36.67 & 31.67 & 30.83 & 30.00 & 34.17 \\
+\midrule
+\multirow{10}{*}{\rotatebox{90}{Open-Source}} & 
+GLM-4.1V-Thinking-Flash & 41.67 & 38.33 & \cellcolor{gray!30}41.67 & 44.17 & \cellcolor{gray!30}42.50 \\
+& qwen2-vl-72b-instruct & 36.67 & 30.00 & 32.50 & 34.17 & 40.00 \\
+& qwen2.5-vl-72b-instruct & 32.50 & 27.50 & 29.17 & 30.83 & 38.33 \\
+& Emu3-8B & - & - & - & - & - \\
+& Pixtral-12B & - & - & - & - & - \\
+& Idefics3-8B & - & - & - & - & - \\
+& InternVL2.5-8B & - & - & - & - & - \\
+& MiniCPM-V2.6-8B & - & - & - & - & - \\
+& LLaVA-1.5-13B & - & - & - & - & - \\
+& DeepSeek-VL2-4.5B & - & - & - & - & - \\
+\midrule
+& Human & - & - & - & - & - \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Single-Step Reasoning. Light Gray indicates the best performance for each shape among all models.}
+\label{tab:single_step_reasoning}
+\end{table*}
+
+% Table 4: 3D Folding and 2D Unfolding
+\begin{table*}[t]
+\setlength{\tabcolsep}{1.0mm} 
+\centering
+\fontsize{9}{10.8}\selectfont
+\small
+\begin{tabular}{c|l|cc|cc|cc|cc}
+\toprule
+& \multirow{3}{*}{\textbf{Models}} & \multicolumn{4}{c|}{\textbf{3D Folding}} & \multicolumn{4}{c}{\textbf{2D Unfolding}} \\
+& & \multicolumn{2}{c|}{\textbf{Easy}} & \multicolumn{2}{c|}{\textbf{Hard}} & \multicolumn{2}{c|}{\textbf{Easy}} & \multicolumn{2}{c}{\textbf{Hard}} \\
+& & \textbf{Y} & \textbf{N} & \textbf{Y} & \textbf{N} & \textbf{Y} & \textbf{N} & \textbf{Y} & \textbf{N} \\
+\midrule
+\multirow{6}{*}{\rotatebox{90}{Closed-Source}} & 
+claude-3-7-sonnet-thinking & 28.67 & 24.00 & 28.67 & 26.67 & 32.67 & 20.00 & 22.00 & 24.00 \\
+& doubao-seed-1-6-flash-250615 & 26.67 & 30.00 & 23.33 & 26.67 & 18.67 & 23.33 & 25.33 & 26.67 \\
+& gemini-2.5-flash & 26.00 & 33.33 & 28.00 & 28.00 & 27.33 & 23.33 & 23.33 & 23.33 \\
+& GPT-4o & 26.00 & 29.33 & 20.67 & 30.00 & 20.00 & 28.00 & 18.67 & 30.00 \\
+& GPT-4o-mini & 28.00 & 25.33 & 25.33 & 22.67 & 27.33 & 22.67 & 18.67 & 30.00 \\
+& GPT-o4-mini & 30.67 & 30.67 & 30.67 & 29.33 & 26.67 & 24.00 & 32.00 & 34.00 \\
+\midrule
+\multirow{10}{*}{\rotatebox{90}{Open-Source}} & 
+GLM-4.1V-Thinking-Flash & 26.00 & 26.67 & 26.67 & 26.00 & 23.33 & 26.00 & 22.00 & 21.33 \\
+& qwen2-vl-72b-instruct & 20.67 & 22.00 & 16.67 & 25.33 & 22.67 & 26.00 & 19.33 & 20.67 \\
+& qwen2.5-vl-72b-instruct & 20.00 & 34.67 & 20.00 & 28.00 & 25.33 & 23.33 & 26.67 & 26.00 \\
+& Emu3-8B & - & - & - & - & - & - & - & - \\
+& Pixtral-12B & - & - & - & - & - & - & - & - \\
+& Idefics3-8B & - & - & - & - & - & - & - & - \\
+& InternVL2.5-8B & - & - & - & - & - & - & - & - \\
+& MiniCPM-V2.6-8B & - & - & - & - & - & - & - & - \\
+& LLaVA-1.5-13B & - & - & - & - & - & - & - & - \\
+& DeepSeek-VL2-4.5B & - & - & - & - & - & - & - & - \\
+\midrule
+& Human & - & - & - & - & - & - & - & - \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on 3D Folding and 2D Unfolding. Light Gray indicates the best performance for each difficulty level among all models.}
+\label{tab:3d_folding_2d_unfolding}
+\end{table*}
+
+% Table 2: Multi-Step Reasoning
+\begin{table*}[t]
+\setlength{\tabcolsep}{1.2mm} 
+\centering
+\fontsize{9}{10.8}\selectfont
+\small
+\begin{tabular}{c|l|ccccc}
+\toprule
+& \multirow{2}{*}{\textbf{Models}} & \multicolumn{5}{c}{\textbf{Multi-Step Reasoning}} \\
+& & \textbf{Circle} & \textbf{Hexagon} & \textbf{House} & \textbf{Rectangle} & \textbf{Square} \\
+\midrule
+\multirow{6}{*}{\rotatebox{90}{Closed-Source}} & 
+doubao-seed-flash & 24.17 & 25.83 & 31.67 & 29.17 & 27.50 \\
+& gemini-2.5-flash & 33.33 & \cellcolor{gray!30}41.67 & \cellcolor{gray!30}36.67 & 28.33 & 29.17 \\
+& GPT-4o & 25.83 & 29.17 & 35.83 & 24.17 & 27.50 \\
+& gpt-4o-mini & 20.83 & 31.67 & 30.00 & 33.33 & 27.50 \\
+& o4-mini & \cellcolor{gray!30}40.83 & 43.33 & 34.17 & \cellcolor{gray!30}33.33 & \cellcolor{gray!30}53.33 \\
+& Sonnet-3.7-thinking & 39.17 & 30.00 & 35.00 & 28.33 & 40.83 \\
+\midrule
+\multirow{10}{*}{\rotatebox{90}{Open-Source}} & 
+GLM-4.1V-Thinking-Flash & 22.50 & 28.33 & 35.83 & 20.00 & 28.33 \\
+& qwen2-vl-72b & 21.67 & 28.33 & 34.17 & 27.50 & 18.33 \\
+& qwen2.5-vl-72b & 21.67 & 34.17 & 26.67 & 27.50 & 19.17 \\
+& Emu3-8B & - & - & - & - & - \\
+& Pixtral-12B & - & - & - & - & - \\
+& Idefics3-8B & - & - & - & - & - \\
+& InternVL2.5-8B & - & - & - & - & - \\
+& MiniCPM-V2.6-8B & - & - & - & - & - \\
+& LLaVA-1.5-13B & - & - & - & - & - \\
+& DeepSeek-VL2-4.5B & - & - & - & - & - \\
+\midrule
+& Human & - & - & - & - & - \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Multi-Step Reasoning. Light Gray indicates the best performance for each shape among all models.}
+\label{tab:multi_step_reasoning}
+\end{table*}
+
+% Table 3: Inverse Reasoning
+\begin{table*}[t]
+\setlength{\tabcolsep}{1.2mm} 
+\centering
+\fontsize{9}{10.8}\selectfont
+\small
+\begin{tabular}{c|l|ccccc}
+\toprule
+& \multirow{2}{*}{\textbf{Models}} & \multicolumn{5}{c}{\textbf{Inverse Reasoning}} \\
+& & \textbf{Circle} & \textbf{Hexagon} & \textbf{House} & \textbf{Rectangle} & \textbf{Square} \\
+\midrule
+\multirow{6}{*}{\rotatebox{90}{Closed-Source}} & 
+claude-3-7-sonnet & 37.50 & 26.67 & 30.83 & 27.50 & 38.33 \\
+& doubao-seed-1-6-flash-250615 & 28.33 & 20.83 & 19.17 & 25.83 & 23.33 \\
+& gemini-2.5-flash & 40.83 & 33.33 & 30.83 & 31.67 & 22.50 \\
+& GPT-4o & 21.67 & 25.83 & 30.00 & 27.50 & 28.33 \\
+& GPT-4o-mini & 26.67 & 31.67 & 30.00 & 24.17 & 27.50 \\
+& GPT-o4-mini & \cellcolor{gray!30}45.00 & 30.00 & 26.67 & \cellcolor{gray!30}38.33 & \cellcolor{gray!30}49.17 \\
+\midrule
+\multirow{10}{*}{\rotatebox{90}{Open-Source}} & 
+GLM-4.1V-Thinking-Flash & 33.33 & 27.50 & 20.83 & 28.33 & 16.67 \\
+& qwen2-vl-72b & 18.33 & 21.67 & 26.67 & 25.83 & 22.50 \\
+& qwen2.5-vl-72b & 20.00 & 24.17 & \cellcolor{gray!30}35.83 & 26.67 & 22.50 \\
+& Emu3-8B & - & - & - & - & - \\
+& Pixtral-12B & - & - & - & - & - \\
+& Idefics3-8B & - & - & - & - & - \\
+& InternVL2.5-8B & - & - & - & - & - \\
+& MiniCPM-V2.6-8B & - & - & - & - & - \\
+& LLaVA-1.5-13B & - & - & - & - & - \\
+& DeepSeek-VL2-4.5B & - & - & - & - & - \\
+\midrule
+& Human & - & - & - & - & - \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation on Inverse Reasoning. Light Gray indicates the best performance for each shape among all models.}
+\label{tab:inverse_reasoning}
+\end{table*}

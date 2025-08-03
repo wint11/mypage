@@ -112,11 +112,25 @@ class AccuracyCalculator {
      */
     analyzeAll() {
         const dataDir = path.join(__dirname, 'experiment_data');
-        const files = [
-            'gemini-2.5-flash epoch3.txt',
-        ];
+        
+        // 自动读取experiment_data目录下的所有.txt文件
+        let files = [];
+        try {
+            files = fs.readdirSync(dataDir)
+                .filter(file => file.endsWith('.txt'))
+                .sort(); // 按文件名排序
+        } catch (error) {
+            console.error(`无法读取目录 ${dataDir}:`, error.message);
+            return;
+        }
+        
+        if (files.length === 0) {
+            console.log('未找到任何.txt文件');
+            return;
+        }
         
         console.log('开始分析实验数据...');
+        console.log(`找到 ${files.length} 个数据文件`);
         console.log('=' .repeat(60));
         
         let allQuestions = [];

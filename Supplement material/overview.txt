@@ -1,0 +1,194 @@
+分析文件夹: single-step reasoning
+  处理文件: claude-3-7-sonnet-thinking epoch2.txt
+    题目总数: 600
+    circle: 33/120 (27.50%)
+    hexagon: 37/120 (30.83%)
+    house: 41/120 (34.17%)
+    rectangle: 40/120 (33.33%)
+    square: 43/120 (35.83%)
+  处理文件: doubao-seed-1-6-flash-250615 epoch1.txt
+    题目总数: 600
+    circle: 50/120 (41.67%)
+    hexagon: 51/120 (42.50%)
+    house: 45/120 (37.50%)
+    rectangle: 54/120 (45.00%)
+    square: 50/120 (41.67%)
+  处理文件: gemini-2.5-flash epoch2.txt
+    题目总数: 600
+    circle: 30/120 (25.00%)
+    hexagon: 35/120 (29.17%)
+    house: 35/120 (29.17%)
+    rectangle: 37/120 (30.83%)
+    square: 42/120 (35.00%)
+  处理文件: GLM-4.1V-Thinking-Flash epoch3.txt
+    题目总数: 600
+    circle: 50/120 (41.67%)
+    hexagon: 46/120 (38.33%)
+    house: 50/120 (41.67%)
+    rectangle: 53/120 (44.17%)
+    square: 51/120 (42.50%)
+  处理文件: GPT-4o epoch2.txt
+    题目总数: 600
+    circle: 37/120 (30.83%)
+    hexagon: 35/120 (29.17%)
+    house: 29/120 (24.17%)
+    rectangle: 34/120 (28.33%)
+    square: 44/120 (36.67%)
+  处理文件: GPT-4o-mini epoch2.txt
+    题目总数: 600
+    circle: 31/120 (25.83%)
+    hexagon: 27/120 (22.50%)
+    house: 35/120 (29.17%)
+    rectangle: 32/120 (26.67%)
+    square: 36/120 (30.00%)
+  处理文件: GPT-o4-mini epoch1.txt
+    题目总数: 600
+    circle: 44/120 (36.67%)
+    hexagon: 38/120 (31.67%)
+    house: 37/120 (30.83%)
+    rectangle: 36/120 (30.00%)
+    square: 41/120 (34.17%)
+  处理文件: qwen2-vl-72b-instruct epoch2.txt
+    题目总数: 600
+    circle: 44/120 (36.67%)
+    hexagon: 36/120 (30.00%)
+    house: 39/120 (32.50%)
+    rectangle: 41/120 (34.17%)
+    square: 48/120 (40.00%)
+  处理文件: qwen2.5-vl-72b-instruct epoch2.txt
+    题目总数: 600
+    circle: 39/120 (32.50%)
+    hexagon: 33/120 (27.50%)
+    house: 35/120 (29.17%)
+    rectangle: 37/120 (30.83%)
+    square: 46/120 (38.33%)
+
+分析文件夹: multi-step reasoning
+  处理文件: doubao-seed-flash epoch2.txt
+    题目总数: 600
+    circle: 29/120 (24.17%)
+    hexagon: 31/120 (25.83%)
+    house: 38/120 (31.67%)
+    rectangle: 35/120 (29.17%)
+    square: 33/120 (27.50%)
+  处理文件: gemini-2.5-flash epoch1.txt
+    题目总数: 600
+    circle: 40/120 (33.33%)
+    hexagon: 50/120 (41.67%)
+    house: 44/120 (36.67%)
+    rectangle: 34/120 (28.33%)
+    square: 35/120 (29.17%)
+  处理文件: GLM-4.1V-Thinking-Flash epoch3.txt
+    题目总数: 600
+    circle: 27/120 (22.50%)
+    hexagon: 34/120 (28.33%)
+    house: 43/120 (35.83%)
+    rectangle: 24/120 (20.00%)
+    square: 34/120 (28.33%)
+  处理文件: GPT-4o epoch3.txt
+    题目总数: 600
+    circle: 31/120 (25.83%)
+    hexagon: 35/120 (29.17%)
+    house: 43/120 (35.83%)
+    rectangle: 29/120 (24.17%)
+    square: 33/120 (27.50%)
+  处理文件: gpt-4o-mini epoch1.txt
+    题目总数: 600
+    circle: 25/120 (20.83%)
+    hexagon: 38/120 (31.67%)
+    house: 36/120 (30.00%)
+    rectangle: 40/120 (33.33%)
+    square: 33/120 (27.50%)
+  处理文件: o4-mini epoch1.txt
+    题目总数: 600
+    circle: 49/120 (40.83%)
+    hexagon: 52/120 (43.33%)
+    house: 41/120 (34.17%)
+    rectangle: 40/120 (33.33%)
+    square: 64/120 (53.33%)
+  处理文件: qwen2-vl-72b epoch1.txt
+    题目总数: 600
+    circle: 26/120 (21.67%)
+    hexagon: 34/120 (28.33%)
+    house: 41/120 (34.17%)
+    rectangle: 33/120 (27.50%)
+    square: 22/120 (18.33%)
+  处理文件: qwen2.5-vl-72b epoch3.txt
+    题目总数: 600
+    circle: 26/120 (21.67%)
+    hexagon: 41/120 (34.17%)
+    house: 32/120 (26.67%)
+    rectangle: 33/120 (27.50%)
+    square: 23/120 (19.17%)
+  处理文件: Sonnet-3.7-thinking epoch1.txt
+    题目总数: 600
+    circle: 47/120 (39.17%)
+    hexagon: 36/120 (30.00%)
+    house: 42/120 (35.00%)
+    rectangle: 34/120 (28.33%)
+    square: 49/120 (40.83%)
+
+分析文件夹: Inverse Reasoning
+  处理文件: claude-3-7-sonnet epoch1.txt
+    题目总数: 600
+    circle: 45/120 (37.50%)
+    hexagon: 32/120 (26.67%)
+    house: 37/120 (30.83%)
+    rectangle: 33/120 (27.50%)
+    square: 46/120 (38.33%)
+  处理文件: doubao-seed-1-6-flash-250615 epoch3.txt
+    题目总数: 600
+    circle: 34/120 (28.33%)
+    hexagon: 25/120 (20.83%)
+    house: 23/120 (19.17%)
+    rectangle: 31/120 (25.83%)
+    square: 28/120 (23.33%)
+  处理文件: gemini-2.5-flash epoch1.txt
+    题目总数: 600
+    circle: 49/120 (40.83%)
+    hexagon: 40/120 (33.33%)
+    house: 37/120 (30.83%)
+    rectangle: 38/120 (31.67%)
+    square: 27/120 (22.50%)
+  处理文件: GLM-4.1V-Thinking-Flash epoch3.txt
+    题目总数: 600
+    circle: 40/120 (33.33%)
+    hexagon: 33/120 (27.50%)
+    house: 25/120 (20.83%)
+    rectangle: 34/120 (28.33%)
+    square: 20/120 (16.67%)
+  处理文件: GPT-4o epoch2.txt
+    题目总数: 600
+    circle: 26/120 (21.67%)
+    hexagon: 31/120 (25.83%)
+    house: 36/120 (30.00%)
+    rectangle: 33/120 (27.50%)
+    square: 34/120 (28.33%)
+  处理文件: GPT-4o-mini epoch3.txt
+    题目总数: 600
+    circle: 32/120 (26.67%)
+    hexagon: 38/120 (31.67%)
+    house: 36/120 (30.00%)
+    rectangle: 29/120 (24.17%)
+    square: 33/120 (27.50%)
+  处理文件: GPT-o4-mini epoch1.txt
+    题目总数: 600
+    circle: 54/120 (45.00%)
+    hexagon: 36/120 (30.00%)
+    house: 32/120 (26.67%)
+    rectangle: 46/120 (38.33%)
+    square: 59/120 (49.17%)
+  处理文件: qwen2-vl-72b epoch2.txt
+    题目总数: 600
+    circle: 22/120 (18.33%)
+    hexagon: 26/120 (21.67%)
+    house: 32/120 (26.67%)
+    rectangle: 31/120 (25.83%)
+    square: 27/120 (22.50%)
+  处理文件: qwen2.5-vl-72b epoch2.txt
+    题目总数: 600
+    circle: 24/120 (20.00%)
+    hexagon: 29/120 (24.17%)
+    house: 43/120 (35.83%)
+    rectangle: 32/120 (26.67%)
+    square: 27/120 (22.50%)

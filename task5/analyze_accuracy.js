@@ -97,6 +97,14 @@ function parseCSVLines(lines) {
             difficulty = 'hard';
         }
         
+        // 确定类型 - 根据路径中的Y/N标识分类
+        let promptType = 'unknown';
+        if (description.includes('_3DTo2D_Y') || description.includes('_2DTo3D_Y')) {
+            promptType = 'Y';
+        } else if (description.includes('_3DTo2D_N') || description.includes('_2DTo3D_N')) {
+            promptType = 'N';
+        }
+        
         // 确定类别 - 根据图片路径中的形状名称分类
         let category = 'other';
         if (description.includes('circle_')) {
@@ -118,7 +126,8 @@ function parseCSVLines(lines) {
             userAnswer,
             result: result.includes('正确'),
             category,
-            difficulty
+            difficulty,
+            promptType
         });
     }
     
@@ -153,10 +162,13 @@ function parseXLSX(filePath) {
 function analyzeAccuracy(allData) {
     const categories = ['circle', 'hexagon', 'house', 'rectangle', 'square'];
     const difficulties = ['easy', 'hard'];
+    const promptTypes = ['Y', 'N'];
     const results = {
         overall: { total: 0, correct: 0, accuracy: 0 },
         byDifficulty: {},
-        byCategory: {}
+        byCategory: {},
+        byPromptType: {},
+        byDifficultyAndPromptType: {}
     };
     
     // 初始化难度统计
@@ -167,6 +179,19 @@ function analyzeAccuracy(allData) {
     // 初始化类别统计
     categories.forEach(cat => {
         results.byCategory[cat] = { total: 0, correct: 0, accuracy: 0 };
+    });
+    
+    // 初始化Prompt类型统计
+    promptTypes.forEach(type => {
+        results.byPromptType[type] = { total: 0, correct: 0, accuracy: 0 };
+    });
+    
+    // 初始化难度和Prompt类型组合统计
+    difficulties.forEach(diff => {
+        results.byDifficultyAndPromptType[diff] = {};
+        promptTypes.forEach(type => {
+            results.byDifficultyAndPromptType[diff][type] = { total: 0, correct: 0, accuracy: 0 };
+        });
     });
     
     // 统计所有数据
@@ -185,6 +210,19 @@ function analyzeAccuracy(allData) {
             if (results.byCategory[q.category]) {
                 results.byCategory[q.category].total++;
                 if (q.result) results.byCategory[q.category].correct++;
+            }
+            
+            // 按Prompt类型统计
+            if (q.promptType === 'Y' || q.promptType === 'N') {
+                results.byPromptType[q.promptType].total++;
+                if (q.result) results.byPromptType[q.promptType].correct++;
+            }
+            
+            // 按难度和Prompt类型组合统计
+            if ((q.difficulty === 'easy' || q.difficulty === 'hard') && 
+                (q.promptType === 'Y' || q.promptType === 'N')) {
+                results.byDifficultyAndPromptType[q.difficulty][q.promptType].total++;
+                if (q.result) results.byDifficultyAndPromptType[q.difficulty][q.promptType].correct++;
             }
         });
     });
@@ -205,6 +243,22 @@ function analyzeAccuracy(allData) {
         const catData = results.byCategory[cat];
         catData.accuracy = catData.total > 0 ? 
             (catData.correct / catData.total * 100).toFixed(2) : 0;
+    });
+    
+    // 计算Prompt类型准确率
+    promptTypes.forEach(type => {
+        const typeData = results.byPromptType[type];
+        typeData.accuracy = typeData.total > 0 ? 
+            (typeData.correct / typeData.total * 100).toFixed(2) : 0;
+    });
+    
+    // 计算难度和Prompt类型组合准确率
+    difficulties.forEach(diff => {
+        promptTypes.forEach(type => {
+            const comboData = results.byDifficultyAndPromptType[diff][type];
+            comboData.accuracy = comboData.total > 0 ? 
+                (comboData.correct / comboData.total * 100).toFixed(2) : 0;
+        });
     });
     
     return results;
@@ -229,10 +283,10 @@ function generateCompleteCSV(allData, outputPath) {
     allQuestions.sort((a, b) => a.questionNum - b.questionNum);
     
     // 生成CSV内容
-    let csvContent = '题目编号,题目描述,难度,类别,正确答案,用户答案,答题结果,来源文件\n';
+    let csvContent = '题目编号,题目描述,难度,Prompt类型,类别,正确答案,用户答案,答题结果,来源文件\n';
     
     allQuestions.forEach(q => {
-        csvContent += `${q.questionNum},"${q.description}",${q.difficulty},${q.category},${q.correctAnswer},${q.userAnswer},${q.result ? '正确' : '错误'},${q.fileName}\n`;
+        csvContent += `${q.questionNum},"${q.description}",${q.difficulty},${q.promptType},${q.category},${q.correctAnswer},${q.userAnswer},${q.result ? '正确' : '错误'},${q.fileName}\n`;
     });
     
     fs.writeFileSync(outputPath, csvContent, 'utf-8');
@@ -281,6 +335,16 @@ function main() {
     Object.entries(results.byDifficulty).forEach(([difficulty, data]) => {
         console.log(`  ${difficulty}: ${data.correct}/${data.total} = ${data.accuracy}%`);
     });
+    console.log('\n各Prompt类型准确率:');
+    Object.entries(results.byPromptType).forEach(([type, data]) => {
+        console.log(`  ${type}类型: ${data.correct}/${data.total} = ${data.accuracy}%`);
+    });
+    console.log('\n各难度和Prompt类型组合准确率:');
+    Object.entries(results.byDifficultyAndPromptType).forEach(([difficulty, typeData]) => {
+        Object.entries(typeData).forEach(([type, data]) => {
+            console.log(`  ${difficulty}-${type}类型: ${data.correct}/${data.total} = ${data.accuracy}%`);
+        });
+    });
     console.log('\n各类别准确率:');
     Object.entries(results.byCategory).forEach(([category, data]) => {
         console.log(`  ${category}: ${data.correct}/${data.total} = ${data.accuracy}%`);
@@ -298,6 +362,18 @@ function main() {
     // 添加难度统计
     Object.entries(results.byDifficulty).forEach(([difficulty, data]) => {
         reportContent += `难度,${difficulty},${data.correct},${data.total},${data.accuracy}%\n`;
+    });
+    
+    // 添加Prompt类型统计
+    Object.entries(results.byPromptType).forEach(([type, data]) => {
+        reportContent += `Prompt类型,${type}类型,${data.correct},${data.total},${data.accuracy}%\n`;
+    });
+    
+    // 添加难度和Prompt类型组合统计
+    Object.entries(results.byDifficultyAndPromptType).forEach(([difficulty, typeData]) => {
+        Object.entries(typeData).forEach(([type, data]) => {
+            reportContent += `组合,${difficulty}-${type}类型,${data.correct},${data.total},${data.accuracy}%\n`;
+        });
     });
     
     // 添加类别统计
