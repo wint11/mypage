@@ -15,6 +15,8 @@ export class QuestionManager {
     this.currentInviteCodeData = null;
   }
 
+  
+
   /**
    * 加载题目数据
    * @param {Object} inviteCodeData - 邀请码数据，包含inviteCode和setId
@@ -69,7 +71,7 @@ export class QuestionManager {
           await this.loadTask2Questions();
         } else {
           // 默认加载task1数据
-          const response = await fetch('../task1/task1_selected_algorithm2.jsonl');
+          const response = await fetch(this.config.getTaskJsonl('task1'));
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
@@ -144,18 +146,7 @@ export class QuestionManager {
     this.clearLocalStorageCache();
     
     // 根据当前任务确定题目集文件路径
-    let questionSetsPath;
-    if (this.currentTask === 'task5') {
-      questionSetsPath = '../task5/all_question_sets.json';
-    } else if (this.currentTask === 'task4') {
-      questionSetsPath = '../task4/all_question_sets.json';
-    } else if (this.currentTask === 'task3') {
-      questionSetsPath = '../task3/all_question_sets.json';
-    } else if (this.currentTask === 'task2') {
-      questionSetsPath = '../task2/all_question_sets.json';
-    } else {
-      questionSetsPath = '../task1/all_question_sets.json';
-    }
+    const questionSetsPath = this.config.getTaskQuestionSetsPath(this.currentTask);
     
     // 加载对应任务的题目集数据
     const response = await fetch(questionSetsPath);
@@ -176,21 +167,8 @@ export class QuestionManager {
       // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
       if (question.image) {
           // 根据当前任务设置正确的图片基础路径
-          if (this.currentTask === 'task5') {
-            // task5的图片路径
-            question.image_path = '../task5/task5_selected/' + question.image;
-          } else if (this.currentTask === 'task4') {
-            // task4的图片路径 - 修复路径问题，使用相对路径
-            question.image_path = '../task4/task4_selected/' + question.image;
-          } else if (this.currentTask === 'task3') {
-            // task3的图片路径，数据文件中已包含fold/前缀
-            question.image_path = '../task3/task3_selected/' + question.image;
-          } else if (this.currentTask === 'task2') {
-            // task2的图片路径需要根据实际情况调整
-            question.image_path = '../task2/task2_selected/' + question.image;
-          } else {
-            question.image_path = this.config.getImageBasePath() + question.image;
-          }
+          const base = this.config.getTaskImageBase(this.currentTask);
+          question.image_path = base + question.image;
       }
       // 为题目添加唯一ID（如果还没有的话）
       if (!question.id) {
@@ -313,7 +291,7 @@ export class QuestionManager {
   async loadTask2Questions() {
     try {
       // 从merged_dataset_fixed_paths.jsonl文件加载题目数据
-      const response = await fetch('../task2/task2_selected/merged_dataset_fixed_paths.jsonl');
+    const response = await fetch(this.config.getTask2MergedJsonl());
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -361,9 +339,9 @@ export class QuestionManager {
              }
              
              this.allQuestions.push({
-               id: `task2_${index + 1}`, // 为题目添加唯一ID
+               id: `task2_${index + 1}`,
                image: questionData.image,
-               image_path: `../task2/task2_selected/${questionData.image}`,
+               image_path: this.config.getTaskImageBase('task2') + questionData.image,
                answer: questionData.answer,
                steps: steps,
                shape: shape,
@@ -400,7 +378,7 @@ export class QuestionManager {
       sampleQuestions.push({
         id: `task2_sample_${i}`, // 为示例题目添加唯一ID
         image: imageName,
-        image_path: `../task2/test_images/${imageName}`,
+        image_path: this.config.getTask2TestImagesBase() + imageName,
         answer: ['A', 'B', 'C', 'D'][i % 4],
         steps: step,
         shape: shape
@@ -503,18 +481,7 @@ export class QuestionManager {
   async loadRandomQuestionSet() {
     try {
       // 根据当前任务确定题目集文件路径
-      let questionSetsPath;
-      if (this.currentTask === 'task5') {
-        questionSetsPath = '../task5/all_question_sets.json';
-      } else if (this.currentTask === 'task4') {
-        questionSetsPath = '../task4/all_question_sets.json';
-      } else if (this.currentTask === 'task3') {
-        questionSetsPath = '../task3/all_question_sets.json';
-      } else if (this.currentTask === 'task2') {
-        questionSetsPath = '../task2/all_question_sets.json';
-      } else {
-        questionSetsPath = '../task1/all_question_sets.json';
-      }
+      const questionSetsPath = this.config.getTaskQuestionSetsPath(this.currentTask);
       
       // 加载所有题目集
       const response = await fetch(questionSetsPath);
@@ -538,18 +505,8 @@ export class QuestionManager {
       this.allQuestions = selectedQuestionSet.questions.map((question, index) => {
         // 转换数据格式：将 'image' 字段转换为 'image_path' 并添加完整路径
         if (question.image) {
-          // 根据当前任务设置正确的图片基础路径
-          if (this.currentTask === 'task5') {
-            question.image_path = '../task5/task5_selected/' + question.image;
-          } else if (this.currentTask === 'task4') {
-            question.image_path = '../task4/task4_selected/' + question.image;
-          } else if (this.currentTask === 'task3') {
-            question.image_path = '../task3/task3_selected/' + question.image;
-          } else if (this.currentTask === 'task2') {
-            question.image_path = '../task2/task2_selected/' + question.image;
-          } else {
-            question.image_path = this.config.getImageBasePath() + question.image;
-          }
+          const base = this.config.getTaskImageBase(this.currentTask);
+          question.image_path = base + question.image;
         }
         // 为题目添加唯一ID（如果还没有的话）
         if (!question.id) {

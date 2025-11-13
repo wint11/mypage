@@ -16,6 +16,8 @@ export class Task3Filter {
     this.currentSeed = null;
   }
 
+  
+
   /**
    * 初始化筛选器，加载题目集数据
    */
@@ -47,7 +49,7 @@ export class Task3Filter {
   async loadFromServer() {
     try {
       // 加载题目集数据
-      const response = await fetch('/task3/all_question_sets.json');
+      const response = await fetch(this.config.getTaskQuestionSetsPath('task3'));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -86,10 +88,10 @@ export class Task3Filter {
       
       // 转换数据格式以兼容现有系统
       this.filteredQuestions = this.currentQuestionSet.map((item, index) => ({
-        id: `task3_set${setIndex + 1}_${index + 1}`, // 为题目添加唯一ID
-        image_path: '/task3/task3_selected/' + item.image,
-        question: '', // 任务三没有题干文字
-        options: ['A', 'B', 'C', 'D'], // 固定选项
+        id: `task3_set${setIndex + 1}_${index + 1}`,
+        image_path: this.config.getTaskImageBase('task3') + item.image,
+        question: '',
+        options: ['A', 'B', 'C', 'D'],
         correct_answer: item.answer
       }));
       

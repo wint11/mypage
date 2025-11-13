@@ -36,10 +36,11 @@ export class Config {
       }
     };
     
-    // 数据路径配置
+  // 数据路径配置
+    this.baseDir = '/AAAI 2026';
     this.dataConfig = {
-      jsonlPath: '../task1/task1_selected_algorithm2.jsonl',
-      imagePath: '../task1/task1_selected_algorithm2/'
+      jsonlPath: '/AAAI 2026/task1/task1_selected_algorithm2.jsonl',
+      imagePath: '/AAAI 2026/task1/task1_selected_algorithm2/'
     };
   }
   
@@ -83,6 +84,36 @@ export class Config {
    */
   getImageBasePath() {
     return this.dataConfig.imagePath;
+  }
+
+  getBaseDir() {
+    return this.baseDir;
+  }
+
+  getTaskQuestionSetsPath(task) {
+    return `${this.baseDir}/${task}/all_question_sets.json`;
+  }
+
+  getTaskImageBase(task) {
+    if (task === 'task1') return `${this.baseDir}/task1/task1_selected_algorithm2/`;
+    if (task === 'task2') return `${this.baseDir}/task2/task2_selected/`;
+    if (task === 'task3') return `${this.baseDir}/task3/task3_selected/`;
+    if (task === 'task4') return `${this.baseDir}/task4/task4_selected/`;
+    if (task === 'task5') return `${this.baseDir}/task5/task5_selected/`;
+    return `${this.baseDir}/task1/task1_selected_algorithm2/`;
+  }
+
+  getTaskJsonl(task) {
+    if (task === 'task1') return `${this.baseDir}/task1/task1_selected_algorithm2.jsonl`;
+    return this.getDataPath();
+  }
+
+  getTask2MergedJsonl() {
+    return `${this.baseDir}/task2/task2_selected/merged_dataset_fixed_paths.jsonl`;
+  }
+
+  getTask2TestImagesBase() {
+    return `${this.baseDir}/task2/test_images/`;
   }
   
   /**

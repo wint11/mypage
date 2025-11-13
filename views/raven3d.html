@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>折纸游戏</title>
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/paperfolding.css">
+</head>
+
+<body>
+  <div id="nav-container"></div>
+
+  <!-- 答题须知页面 -->
+  <div id="instructionsPage" class="instructions-page">
+    <div class="instructions-container">
+      <div class="instructions-content">
+        <h2 class="instructions-title">答题须知</h2>
+        <div class="instructions-text">
+          <p>欢迎同学参加3D推理游戏测试！请仔细阅读以下说明：</p>
+          <ul>
+            <li>本测试包含多道3D推理题目，每题都有4个选项</li>
+            <li>请根据题干中的3D模型，选择最可能正确的推理过程</li>
+            <li>一共需要回答每个任务各30道题目，并可以随时跳转到指定题目</li>
+            <li>请认真思考每一道题目，确保答案准确</li>
+          </ul>
+          <p class="instructions-note">请确认您已阅读并理解以上说明，然后输入邀请码点击确认。</p>
+        </div>
+        <div class="instructions-actions">
+          <div class="invite-code-section">
+            <label for="inviteCodeInput" class="invite-code-label">邀请码：</label>
+            <input type="text" id="inviteCodeInput" class="invite-code-input" placeholder="请输入邀请码">
+          </div>
+          <button id="confirmBtn" class="confirm-btn" disabled>
+            <span id="confirmText">确认 (5)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="main-content" style="display: none;">
+    <div class="test-container">
+      <div class="filter-controls">
+        <div class="controls-row">
+          <div class="version-controls">
+            <div class="version-switch">
+              <label class="switch-label">任务模式：</label>
+              <select class="version-select" id="versionSelect">
+                <option value="task1" selected>任务壹</option>
+                <option value="task2">任务贰</option>
+                <option value="task3">任务叁</option>
+                <option value="task4">任务肆</option>
+                <option value="task5">任务伍</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-section">
+             <label class="filter-label">题目筛选：</label>
+             <div class="filter-buttons">
+               <button class="filter-btn active" data-filter="all">全部题目</button>
+               <button class="filter-btn" data-filter="easy">简单</button>
+               <button class="filter-btn" data-filter="hard">困难</button>
+               <button class="filter-btn" data-filter="3">3步折叠</button>
+               <button class="filter-btn" data-filter="4">4步折叠</button>
+               <button class="filter-btn" data-filter="5">5步折叠</button>
+               <button class="regenerate-btn" id="regenerateBtn">
+                 <i class="bi bi-arrow-clockwise"></i>
+                 重新生成题目
+               </button>
+             </div>
+           </div>
+           <div class="filter-info">
+             <span id="filterInfo">显示全部 6 道题目</span>
+           </div>
+           <div class="ai-section">
+             <button class="ai-btn" id="aiAnalyzeBtn">
+               <i class="bi bi-robot"></i>
+               <span>AI解答</span>
+             </button>
+           </div>
+         </div>
+      </div>
+      
+      <!-- 题目内容 -->
+      <div class="question-content">
+        <!-- 题干区域 -->
+        <div class="question-stem">
+          <h3 id="questionNumber">第 1 题</h3>
+          <div class="stem-images-container">
+            <div class="stem-images" id="stemImages">
+              <!-- 题干图片将在这里动态加载 -->
+            </div>
+            <div class="zoom-controls">
+              <button class="btn btn-outline-secondary btn-sm" id="zoomOutBtn" title="缩小"><i class="bi bi-dash"></i></button>
+              <button class="btn btn-outline-secondary btn-sm" id="zoomInBtn" title="放大"><i class="bi bi-plus"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 选项区域 -->
+        <div class="question-options">
+          <h3> </h3>
+          <div class="options-container">
+            <div class="option" data-option="A">
+              <img id="optionA" src="" alt="选项A">
+              <div class="option-label">A</div>
+            </div>
+            <div class="option" data-option="B">
+              <img id="optionB" src="" alt="选项B">
+              <div class="option-label">B</div>
+            </div>
+            <div class="option" data-option="C">
+              <img id="optionC" src="" alt="选项C">
+              <div class="option-label">C</div>
+            </div>
+            <div class="option" data-option="D">
+              <img id="optionD" src="" alt="选项D">
+              <div class="option-label">D</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 导航控制 -->
+      <div class="navigation-controls">
+        <!-- 桌面端导航按钮 -->
+        <div class="left-section">
+          <button id="prevBtnDesktop" class="nav-btn prev-btn" disabled>
+            <i class="bi bi-chevron-left"></i>
+            上一题
+          </button>
+        </div>
+        
+        <!-- 移动端导航按钮容器 -->
+        <div class="nav-buttons-container">
+          <div class="left-section">
+            <button id="prevBtn" class="nav-btn prev-btn" disabled>
+              <i class="bi bi-chevron-left"></i>
+              上一题
+            </button>
+          </div>
+          <div class="nav-next-container">
+            <button id="nextBtn" class="nav-btn next-btn">
+              下一题
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="center-section">
+          <div class="answer-feedback" id="answerFeedback">
+            <!-- 答题反馈信息 -->
+          </div>
+          <div class="progress-info">
+            <span>进度：<span id="progressText">0/0</span></span>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="jump-controls">
+              <input type="number" id="jumpInput" placeholder="题号" min="1" class="jump-input">
+              <button id="jumpBtn" class="jump-btn">跳转</button>
+              <button id="downloadBtn" class="download-btn">
+                <i class="bi bi-download"></i>
+                下载该题
+              </button>
+              <button id="downloadAllBtn" class="download-all-btn">
+                <i class="bi bi-cloud-download"></i>
+                下载全部
+              </button>
+              <button id="quickSelectBtn" class="quick-select-btn">
+                <i class="bi bi-lightning-fill"></i>
+                一键选择
+              </button>
+              <button id="nextBtnDesktop" class="nav-btn next-btn desktop-next-btn">
+                下一题
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="right-section">
+          <button id="submitBtn" class="nav-btn submit-btn" disabled>
+            已答题 0/0
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <script src="../js/firebase-app-compat.js"></script>
+  <script src="../js/firebase-auth-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="../js/components-loader-views.js"></script>
+  
+  <!-- 使用模块化版本 -->
+  <script type="module">
+    import Raven3DTest from './js/raven3d/index.js';
+    const stemImages = document.getElementById('stemImages');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtnDesktop = document.getElementById('prevBtnDesktop');
+    const nextBtnDesktop = document.getElementById('nextBtnDesktop');
+    const jumpInput = document.getElementById('jumpInput');
+    const jumpBtn = document.getElementById('jumpBtn');
+    const filterInfo = document.getElementById('filterInfo');
+    const questionNumber = document.getElementById('questionNumber');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const filterButtons = Array.from(document.querySelectorAll('.filter-buttons .btn'));
+    const test = new Raven3DTest();
+    let scale = 1;
+    function render(q, total, index){
+      stemImages.innerHTML = q ? `<img id="stemImg" src="${q.image_path}" />` : '';
+      questionNumber.textContent = `第 ${index+1} 题`;
+      progressText.textContent = `${index+1}/${total}`;
+      progressFill.style.width = total?`${Math.round(((index+1)/total)*100)}%`: '0%';
+      prevBtn.disabled = index===0; prevBtnDesktop.disabled = index===0;
+      nextBtn.disabled = index>=total-1; nextBtnDesktop.disabled = index>=total-1;
+      jumpInput.max = total; jumpInput.placeholder = `1-${total}`;
+      filterInfo.textContent = `${total} 题`;
+    }
+    function update(){ const q = test.current(); const total = test.manager.all.length; const index = test.manager.idx; render(q,total,index); }
+    await test.init(); update();
+    prevBtn.addEventListener('click', ()=>{ test.prev(); update(); });
+    nextBtn.addEventListener('click', ()=>{ test.next(); update(); });
+    prevBtnDesktop.addEventListener('click', ()=>{ test.prev(); update(); });
+    nextBtnDesktop.addEventListener('click', ()=>{ test.next(); update(); });
+    jumpBtn.addEventListener('click', ()=>{ const n = parseInt(jumpInput.value||'1',10); test.jump(n); update(); });
+    zoomInBtn.addEventListener('click', ()=>{ const img = document.getElementById('stemImg'); if(!img) return; scale = Math.min(2, scale+0.1); img.style.transform = `scale(${scale})`; img.style.transformOrigin = 'center'; });
+    zoomOutBtn.addEventListener('click', ()=>{ const img = document.getElementById('stemImg'); if(!img) return; scale = Math.max(0.5, scale-0.1); img.style.transform = `scale(${scale})`; img.style.transformOrigin = 'center'; });
+    filterButtons.forEach(b=>{ b.addEventListener('click', ()=>{ const t = b.getAttribute('data-filter'); test.applyFilter(t); update(); }); });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>趣味游戏</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+body{background:linear-gradient(135deg,#f5f7ff 0%,#eef2ff 40%,#e9f7ff 100%);padding-top:72px}
+.hero{background:linear-gradient(135deg,#7aa2ff 0%,#5ad1ff 100%);color:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 10px 24px rgba(0,0,0,.1)}
+.hero .lead{opacity:.95}
+.section-title{font-weight:600}
+.card-game{border:0;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);transition:transform .2s ease,box-shadow .2s ease;background:#fff}
+.card-game:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.1)}
+.card-icon{width:48px;height:48px;border-radius:12px;background:#f0f7ff;display:flex;align-items:center;justify-content:center;color:#3b82f6}
+.tag{display:inline-block;padding:.25rem .5rem;border-radius:999px;font-size:.75rem;background:#f8fafc;border:1px solid #e5e7eb;color:#4b5563}
+.btn-play{border-radius:999px}
+.coming{opacity:.7}
+</style>
+</head>
+<body>
+<div id="nav-container"></div>
+<div class="container py-4">
+<h2 class="section-title h6 text-muted mb-3">全部游戏</h2>
+
+<div class="row g-3">
+<div class="col-12 col-md-6 col-lg-4">
+<div class="card card-game h-100">
+<div class="card-body d-flex flex-column gap-3">
+<div class="d-flex align-items-center gap-3">
+<div class="card-icon"><i class="bi bi-layout-three-columns"></i></div>
+<div>
+<div class="h6 mb-1">折纸游戏</div>
+<div class="text-muted small">AAAI 纸张折叠测试</div>
+</div>
+</div>
+<div class="d-flex align-items-center gap-2 flex-wrap">
+<span class="tag">任务壹-伍</span>
+<span class="tag">多题集</span>
+<span class="tag">支持筛选</span>
+</div>
+<div class="mt-auto d-flex justify-content-between align-items-center">
+<span class="text-muted small">提升空间想象与推理能力</span>
+<a href="paperfolding.html" class="btn btn-primary btn-sm btn-play"><i class="bi bi-play-fill"></i> 进入游戏</a>
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-12 col-md-6 col-lg-4">
+<div class="card card-game h-100">
+<div class="card-body d-flex flex-column gap-3">
+<div class="d-flex align-items-center gap-3">
+<div class="card-icon"><i class="bi bi-box"></i></div>
+<div>
+<div class="h6 mb-1">Raven 3D 推理</div>
+<div class="text-muted small">ICML 逻辑图形推理</div>
+</div>
+</div>
+<div class="d-flex align-items-center gap-2 flex-wrap">
+<span class="tag">易/难筛选</span>
+<span class="tag">图像预加载</span>
+</div>
+<div class="mt-auto d-flex justify-content-between align-items-center">
+<span class="text-muted small">练习抽象与图形推理</span>
+<a href="raven3d.html" class="btn btn-primary btn-sm btn-play"><i class="bi bi-play-fill"></i> 进入游戏</a>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<!-- <div id="footer-container"></div> -->
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../js/components-loader-views.js"></script>
+</body>
+</html>

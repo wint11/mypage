@@ -17,6 +17,8 @@ export class Task5Filter {
     this.currentSeed = null;
   }
 
+  
+
   /**
    * 初始化筛选器，加载题目集数据
    */
@@ -48,7 +50,7 @@ export class Task5Filter {
   async loadFromServer() {
     try {
       // 加载题目集数据 - 使用相对路径，与task2、task3保持一致
-      const response = await fetch('../task5/all_question_sets.json');
+      const response = await fetch(this.config.getTaskQuestionSetsPath('task5'));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -111,7 +113,7 @@ export class Task5Filter {
       
       // 转换题目格式以适配现有系统 - 修复路径问题，使用与task2、task3一致的相对路径
       this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task5/task5_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task5') + q.image,
         answer: q.answer,
         // 从路径中提取题目类型和难度
         questionType: this.extractQuestionTypeFromPath(q.image),
@@ -199,7 +201,7 @@ export class Task5Filter {
     if (filterType === 'all') {
       // 显示当前题目集的所有题目 - 重新生成完整的题目列表
       this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task5/task5_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task5') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
@@ -208,7 +210,7 @@ export class Task5Filter {
     } else if (filterType === 'easy') {
       // 只显示简单题目 - 保持原始索引
       const allQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task5/task5_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task5') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
@@ -219,7 +221,7 @@ export class Task5Filter {
     } else if (filterType === 'hard') {
       // 只显示困难题目 - 保持原始索引
       const allQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task5/task5_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task5') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),

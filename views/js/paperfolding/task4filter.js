@@ -16,6 +16,8 @@ export class Task4Filter {
     this.currentSeed = null;
   }
 
+  
+
   /**
    * 初始化筛选器，加载题目集数据
    */
@@ -47,7 +49,7 @@ export class Task4Filter {
   async loadFromServer() {
     try {
       // 加载题目集数据 - 修复路径问题，使用相对路径与task2、task3保持一致
-      const response = await fetch('../task4/all_question_sets.json');
+      const response = await fetch(this.config.getTaskQuestionSetsPath('task4'));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -110,7 +112,7 @@ export class Task4Filter {
       
       // 转换题目格式以适配现有系统
       this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task4/task4_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task4') + q.image,
         answer: q.answer,
         // 从路径中提取题目类型和难度
         questionType: this.extractQuestionTypeFromPath(q.image),
@@ -198,7 +200,7 @@ export class Task4Filter {
     if (filterType === 'all') {
       // 显示当前题目集的所有题目 - 重新生成完整的题目列表
       this.filteredQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task4/task4_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task4') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
@@ -207,7 +209,7 @@ export class Task4Filter {
     } else if (filterType === 'easy') {
       // 只显示简单题目 - 保持原始索引
       const allQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task4/task4_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task4') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
@@ -218,7 +220,7 @@ export class Task4Filter {
     } else if (filterType === 'hard') {
       // 只显示困难题目 - 保持原始索引
       const allQuestions = this.currentQuestionSet.map((q, index) => ({
-        image_path: '../task4/task4_selected/' + q.image,
+        image_path: this.config.getTaskImageBase('task4') + q.image,
         answer: q.answer,
         questionType: this.extractQuestionTypeFromPath(q.image),
         difficulty: this.extractDifficultyFromPath(q.image),
