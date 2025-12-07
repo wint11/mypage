@@ -220,16 +220,18 @@ body {
   flex-wrap: wrap;
 }
 
-/* 版本切换控件 */
+/* 版本切换和筛选控制 */
 .version-controls {
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap; /* 允许换行，适应小屏幕 */
 }
 
 .version-switch {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* 题目筛选区域 */
@@ -305,7 +307,7 @@ body {
   border-radius: 20px;
   background-color: #ffffff;
   color: #495057;
-  min-width: 140px;
+  min-width: 100px; /* Reduced min-width to fit multiple selects */
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
