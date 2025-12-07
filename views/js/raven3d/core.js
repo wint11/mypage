@@ -1,8 +1,9 @@
 export class ImageCacheR3D {
   constructor() {
-    this.c = new Map();
-    this.o = [];
-    this.m = 100;
+    this.c = new Map(); // Cache: url -> data/src
+    this.o = []; // Order (LRU)
+    this.m = 100; // Max size
+    this.pending = new Map(); // In-flight requests: url -> Promise
   }
   a(p, s) {
     if (this.c.size >= this.m) this.e();
@@ -17,16 +18,29 @@ export class ImageCacheR3D {
     this.c.delete(p);
   }
   preload(u) {
-    return new Promise((r) => {
-      if (this.c.has(u)) {
-        r(this.c.get(u));
-        return;
-      }
+    if (this.c.has(u)) {
+      return Promise.resolve(this.c.get(u));
+    }
+    if (this.pending.has(u)) {
+      return this.pending.get(u);
+    }
+
+    const p = new Promise((r) => {
       const img = new Image();
-      img.onload = () => { this.a(u, img.src); r(img.src); };
-      img.onerror = () => { r(null); };
+      img.onload = () => {
+        this.a(u, img.src);
+        this.pending.delete(u);
+        r(img.src);
+      };
+      img.onerror = () => {
+        this.pending.delete(u);
+        r(null);
+      };
       img.src = u;
     });
+
+    this.pending.set(u, p);
+    return p;
   }
 }
 

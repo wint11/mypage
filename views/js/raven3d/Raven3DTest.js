@@ -9,6 +9,7 @@ export default class Raven3DTest {
     this.questionManager = new QuestionManager(this.config);
     this.navigationManager = new NavigationManager();
     this.cache = new ImageCacheR3D();
+    this.isPreloading = false;
   }
 
   async init(inviteCode) {
@@ -21,11 +22,13 @@ export default class Raven3DTest {
   }
 
   async switchTask(taskName) {
+    this.stopPreload(); // Stop previous task's preload
     const success = await this.questionManager.switchTask(taskName);
     if (success) {
       this.navigationManager.setTotal(this.questionManager.getQuestionCount());
       this.navigationManager.jump(0); // Reset to first question
       this.preloadAround();
+      this.startBackgroundPreload(); // Start sequential preload
     }
     return success;
   }
@@ -88,5 +91,33 @@ export default class Raven3DTest {
         this.cache.preload(questions[i].image_path);
       }
     }
+  }
+
+  stopPreload() {
+    this.isPreloading = false;
+  }
+
+  async startBackgroundPreload() {
+    this.isPreloading = true;
+    const questions = this.questionManager.getAllQuestions();
+    
+    // Sequentially preload all images
+    for (let i = 0; i < questions.length; i++) {
+      if (!this.isPreloading) break;
+      
+      const q = questions[i];
+      if (q && q.image_path) {
+        try {
+            // Await to ensure sequential loading
+            await this.cache.preload(q.image_path);
+        } catch (e) {
+            console.warn(`Failed to preload image for question ${i}`, e);
+        }
+      }
+      
+      // Small yield to allow UI responsiveness and priority requests
+      await new Promise(r => setTimeout(r, 20));
+    }
+    this.isPreloading = false;
   }
 }
