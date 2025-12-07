@@ -86,8 +86,13 @@ export class QuestionManager {
     if (question.answer) return question.answer;
 
     try {
-        const response = await fetch(question.xml_path);
-        if (!response.ok) return null;
+        // Encode URI to handle spaces in paths (e.g., "ICML 2026")
+        const url = encodeURI(question.xml_path);
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error(`HTTP error loading answer for ${question.id}: ${response.status} ${response.statusText} at ${url}`);
+            return null;
+        }
         
         const text = await response.text();
         // Parse XML: <Data answer="E" />

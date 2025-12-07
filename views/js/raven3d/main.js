@@ -1,4 +1,11 @@
 import Raven3DTest from './index.js';
+
+// Check for file:// protocol
+if (window.location.protocol === 'file:') {
+    alert('⚠️ 警告：检测到您正在使用本地文件协议 (file://) 运行。\n\n由于浏览器安全限制，无法读取题目答案文件 (XML)，这将导致下载的结果中正确答案为 null。\n\n请使用本地服务器 (如 VS Code Live Server, python http.server) 或部署到 Web 服务器运行。');
+    console.warn('Running via file:// protocol. Fetch requests will fail.');
+}
+
 const stemView = document.getElementById('stemView');
 // const prevBtn = document.getElementById('prevBtn'); // Removed as not in HTML
 // const nextBtn = document.getElementById('nextBtn'); // Removed as not in HTML
@@ -188,10 +195,11 @@ function render(q, total, index){
     });
 
     // Restore selection if answered
-    const savedAnswer = userAnswers[index];
+    // Use q.index (unique question ID) instead of UI index to ensure consistency with submission logic
+    const savedAnswer = q ? userAnswers[q.index] : null;
     if (savedAnswer) {
-         const selectedOption = document.querySelector(`.option-image-btn[data-option="${savedAnswer}"]`);
-         if (selectedOption) selectedOption.classList.add('selected');
+        const opt = document.querySelector(`.option-image-btn[data-option="${savedAnswer}"]`);
+        if (opt) opt.classList.add('selected');
     }
 
     // Update submit button
@@ -305,14 +313,16 @@ options.forEach(opt => {
         const selectedAnswer = opt.getAttribute('data-option');
         
         // Save answer
-        const currentIndex = test.getIndex();
-        userAnswers[currentIndex] = selectedAnswer;
+        // Use unique question index instead of UI index
+        const currentQ = test.getCurrentQuestion();
+        if (currentQ) {
+            userAnswers[currentQ.index] = selectedAnswer;
+        }
 
         // Update submit button text
         // Call render to update button state consistently
         const total = test.getTotal();
-        // currentIndex is already defined above
-        const currentQ = test.getCurrentQuestion(); // Although render takes q, total, index
+        const currentIndex = test.getIndex();
         render(currentQ, total, currentIndex);
     });
 });

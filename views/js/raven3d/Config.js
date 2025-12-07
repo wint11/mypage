@@ -1,6 +1,8 @@
 export class Raven3DConfig {
   constructor() {
-    this.baseDir = '/ICML 2026';
+    // Change absolute path to relative path to support GitHub Pages and subdirectories
+    // From views/raven3d.html to ICML 2026 folder is one level up
+    this.baseDir = '../ICML 2026'; 
     this.tasks = Array.from({ length: 22 }, (_, i) => `task${i + 1}`);
     this.taskMapping = {
       // Easy Tasks (1-11)
